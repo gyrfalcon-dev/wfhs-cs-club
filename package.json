@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/patch-next-telemetry.js && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "node scripts/patch-next-telemetry.js"
   },
   "dependencies": {
+    "gray-matter": "^4.0.3",
     "next": "16.2.2",
     "react": "19.2.4",
     "react-dom": "19.2.4"
