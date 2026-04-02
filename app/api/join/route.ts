@@ -15,8 +15,8 @@ export async function POST(request: Request) {
   return NextResponse.json(
     {
       status: "ok",
-      message: "Thanks for joining the compile loop!",
+      message: "Thanks — we'll be in touch soon.",
     },
-    { status: 201 }
+    { status: 201 },
   );
 }

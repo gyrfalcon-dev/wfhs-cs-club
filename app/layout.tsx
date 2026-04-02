@@ -13,12 +13,13 @@ const navLinks = [
   { label: "About", href: "/compilers" },
   { label: "Projects", href: "/projects" },
   { label: "Events", href: "/terminal" },
+  { label: "Sponsored", href: "/sponsored" },
 ];
 
 export const metadata: Metadata = {
   title: "WFHS Computer Science Club",
   description:
-    "Wake Forest High School students building robot AI, game labs, and hackathons.",
+    "Wake Forest High School students building games, robots, tools, and the occasional glorious mess.",
 };
 
 export default function RootLayout({
@@ -61,7 +62,7 @@ export default function RootLayout({
               <div className="footer-brand">
                 <div className="footer-info">
                   <h4>WFHS Computer Science Club</h4>
-                  <p>Building the future, one commit at a time</p>
+                  <p>Making stuff, learning fast, and debugging together</p>
                 </div>
               </div>
               <div className="footer-links">
@@ -70,6 +71,7 @@ export default function RootLayout({
                   <Link href="/compilers">About</Link>
                   <Link href="/projects">Projects</Link>
                   <Link href="/terminal">Events</Link>
+                  <Link href="/sponsored">Sponsored</Link>
                   <Link href="/join">Join Us</Link>
                 </div>
                 <div className="footer-section">

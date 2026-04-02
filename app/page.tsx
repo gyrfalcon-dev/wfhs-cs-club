@@ -6,7 +6,7 @@ const stats = [
   {
     label: "Active Projects",
     value: "5+",
-    detail: "Driven by students weekly",
+    detail: "Built in small teams, then argued over in a good way",
   },
   { label: "Lines Written", value: "1000+", detail: "Since the fall showcase" },
 ];
@@ -33,21 +33,22 @@ export default function HomePage() {
             <span className="title-line-2">Computer Science Club</span>
           </h1>
           <p className="hero-subtitle">
-            Building robot AI, game labs, and hackathon projects while mentoring
-            every level of coder along the way.
+            We build games, robots, and useful little tools. Some weeks
+            it&apos;s a polished showcase; some weeks it&apos;s a prototype that
+            taught us something before lunch.
           </p>
           <div className="hero-cta-grid">
             <Link href="/terminal" className="cta-card">
               <div>
                 <h3>Upcoming Events</h3>
-                <p>See what we have planned</p>
+                <p>Check the next meeting, sprint, or deadline</p>
               </div>
               <span className="card-arrow">→</span>
             </Link>
             <Link href="/projects" className="cta-card">
               <div>
                 <h3>View Projects</h3>
-                <p>Explore what we&apos;re building</p>
+                <p>See what the club has actually shipped</p>
               </div>
               <span className="card-arrow">→</span>
             </Link>
@@ -59,29 +60,31 @@ export default function HomePage() {
       <section className="full-width-text">
         <div className="container">
           <p>
-            We balance rigorous problem-solving with playful experimentation.
+            We care about solid problem-solving, but we don&apos;t treat every
+            project like a lab report.
           </p>
           <p>
-            Wake Forest High School&apos;s computer science community ships real
-            projects every semester — from Fallout-inspired terminals to
-            autonomous robot AI. We believe the best way to learn is to build,
-            break, and ship together.
+            Wake Forest High School&apos;s computer science club ships real
+            things every semester: terminal-style web pages, Scratch games,
+            robot experiments, mobile prototypes, and the occasional project
+            that starts as a joke and turns into the best thing we made all
+            month.
           </p>
           <p>
-            Whether you&apos;re writing your first line of Python or deploying
-            full-stack apps, there&apos;s a place for you here. Check out our{" "}
+            Whether you&apos;re writing your first line of Python or already
+            shipping full apps, there&apos;s room for you here. Browse the{" "}
             <Link href="/projects" className="text-link">
-              active projects
+              project board
             </Link>
             , meet the{" "}
             <Link href="/compilers" className="text-link">
-              team
+              people running the club
             </Link>
             , or{" "}
             <Link href="/join" className="text-link">
-              join us
+              jump in
             </Link>{" "}
-            at our next meeting.
+            at the next meeting.
           </p>
         </div>
       </section>
@@ -107,7 +110,7 @@ export default function HomePage() {
           <div className="homepage-section-header">
             <h2 className="section-heading no-margin">Projects</h2>
             <Link href="/projects" className="text-link text-link-strong">
-              View all →
+              See the whole pile →
             </Link>
           </div>
           <div className="project-grid">
@@ -143,7 +146,7 @@ export default function HomePage() {
             <div className="homepage-section-header">
               <h2 className="section-heading no-margin">Upcoming Events</h2>
               <Link href="/terminal" className="text-link text-link-strong">
-                All events →
+                Full schedule →
               </Link>
             </div>
             <div className="event-list">
@@ -191,7 +194,8 @@ export default function HomePage() {
         <div className="container">
           <h2 className="section-heading">Ready to join?</h2>
           <p className="join-copy">
-            We meet Tuesdays at 3 PM in Lab C204. Bring a laptop and curiosity.
+            We meet Tuesdays at 3 PM in Lab C204. Bring a laptop if you have
+            one, and curiosity either way.
           </p>
           <Link href="/join" className="btn-primary">
             Get Started

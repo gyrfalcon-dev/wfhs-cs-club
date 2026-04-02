@@ -26,8 +26,8 @@ export default function ProjectsIndexPage() {
         <div className="container">
           <h1 className="page-title">Projects</h1>
           <p className="page-subtitle">
-            Our experiments, competitions, and showcase builds. Click a project
-            to learn more.
+            Things the club has built, is building, or keeps talking about
+            building until somebody finally starts the repo.
           </p>
         </div>
       </div>
