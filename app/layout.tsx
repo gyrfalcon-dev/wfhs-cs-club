@@ -1,6 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { Sora } from "next/font/google";
 import "./globals.css";
+
+const sora = Sora({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -21,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={sora.variable}>
       <body>
         <nav className="navbar">
           <div className="nav-container">
@@ -74,7 +80,10 @@ export default function RootLayout({
               </div>
             </div>
             <div className="footer-bottom">
-              <p>© {new Date().getFullYear()} Wake Forest High School Computer Science Club</p>
+              <p>
+                © {new Date().getFullYear()} Wake Forest High School Computer
+                Science Club
+              </p>
             </div>
           </div>
         </footer>

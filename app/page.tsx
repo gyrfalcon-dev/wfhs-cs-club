@@ -3,7 +3,11 @@ import { getFeaturedProjects, getUpcomingEvents } from "@/lib/content";
 
 const stats = [
   { label: "Members", value: "30+", detail: "Every grade level represented" },
-  { label: "Active Projects", value: "5+", detail: "Driven by students weekly" },
+  {
+    label: "Active Projects",
+    value: "5+",
+    detail: "Driven by students weekly",
+  },
   { label: "Lines Written", value: "1000+", detail: "Since the fall showcase" },
 ];
 
@@ -58,25 +62,34 @@ export default function HomePage() {
             We balance rigorous problem-solving with playful experimentation.
           </p>
           <p>
-            Wake Forest High School&apos;s computer science community ships real projects every
-            semester — from Fallout-inspired terminals to autonomous robot AI. We believe
-            the best way to learn is to build, break, and ship together.
+            Wake Forest High School&apos;s computer science community ships real
+            projects every semester — from Fallout-inspired terminals to
+            autonomous robot AI. We believe the best way to learn is to build,
+            break, and ship together.
           </p>
           <p>
-            Whether you&apos;re writing your first line of Python or deploying full-stack apps,
-            there&apos;s a place for you here. Check out our{" "}
-            <Link href="/projects" className="text-link">active projects</Link>,
-            meet the{" "}
-            <Link href="/compilers" className="text-link">team</Link>, or{" "}
-            <Link href="/join" className="text-link">join us</Link> at our next meeting.
+            Whether you&apos;re writing your first line of Python or deploying
+            full-stack apps, there&apos;s a place for you here. Check out our{" "}
+            <Link href="/projects" className="text-link">
+              active projects
+            </Link>
+            , meet the{" "}
+            <Link href="/compilers" className="text-link">
+              team
+            </Link>
+            , or{" "}
+            <Link href="/join" className="text-link">
+              join us
+            </Link>{" "}
+            at our next meeting.
           </p>
         </div>
       </section>
 
       {/* Stats */}
-      <section style={{ padding: "80px 0" }}>
+      <section className="homepage-section">
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
+          <div className="stats-grid">
             {stats.map((stat) => (
               <div key={stat.label} className="stat-block">
                 <span className="stat-number">{stat.value}</span>
@@ -89,15 +102,15 @@ export default function HomePage() {
       </section>
 
       {/* Featured Projects */}
-      <section style={{ padding: "0 0 80px" }}>
+      <section className="homepage-section homepage-section-tight-top">
         <div className="container">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
-            <h2 className="section-heading" style={{ marginBottom: 0 }}>Projects</h2>
-            <Link href="/projects" className="text-link" style={{ fontWeight: 600 }}>
+          <div className="homepage-section-header">
+            <h2 className="section-heading no-margin">Projects</h2>
+            <Link href="/projects" className="text-link text-link-strong">
               View all →
             </Link>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "24px" }}>
+          <div className="project-grid">
             {featuredProjects.map((project) => (
               <Link
                 key={project.slug}
@@ -105,14 +118,16 @@ export default function HomePage() {
                 className="card"
                 style={{ textDecoration: "none" }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                <div className="card-row">
                   <span className="tag">{project.projectType}</span>
                 </div>
-                <h3 style={{ marginBottom: "8px" }}>{project.title}</h3>
-                <p style={{ marginBottom: "16px" }}>{project.summary}</p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                <h3 className="card-title">{project.title}</h3>
+                <p className="card-summary">{project.summary}</p>
+                <div className="tag-list">
                   {project.stack?.map((tech) => (
-                    <span key={tech} className="tag">{tech}</span>
+                    <span key={tech} className="tag">
+                      {tech}
+                    </span>
                   ))}
                 </div>
               </Link>
@@ -123,30 +138,44 @@ export default function HomePage() {
 
       {/* Events Preview */}
       {upcomingEvents.length > 0 && (
-        <section style={{ padding: "80px 0", background: "var(--bg-secondary)" }}>
+        <section className="homepage-section events-preview-section">
           <div className="container">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
-              <h2 className="section-heading" style={{ marginBottom: 0 }}>Upcoming Events</h2>
-              <Link href="/terminal" className="text-link" style={{ fontWeight: 600 }}>
+            <div className="homepage-section-header">
+              <h2 className="section-heading no-margin">Upcoming Events</h2>
+              <Link href="/terminal" className="text-link text-link-strong">
                 All events →
               </Link>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="event-list">
               {upcomingEvents.map((event) => (
                 <div key={event.slug} className="event-card">
                   <div className="event-date-block">
                     <div className="event-month">
-                      {new Date(event.date).toLocaleDateString("en-US", { month: "short" })}
+                      {new Date(event.date).toLocaleDateString("en-US", {
+                        month: "short",
+                      })}
                     </div>
                     <div className="event-day">
                       {new Date(event.date).getDate()}
                     </div>
                   </div>
                   <div>
-                    <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "4px" }}>
+                    <h3
+                      style={{
+                        fontSize: "18px",
+                        fontWeight: 600,
+                        marginBottom: "4px",
+                      }}
+                    >
                       {event.title}
                     </h3>
-                    <p style={{ fontSize: "14px", color: "var(--text-secondary)", margin: 0 }}>
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        color: "var(--text-secondary)",
+                        margin: 0,
+                      }}
+                    >
                       {event.location || "WFHS Lab"}
                     </p>
                   </div>
@@ -158,10 +187,10 @@ export default function HomePage() {
       )}
 
       {/* Join CTA */}
-      <section style={{ padding: "80px 0", textAlign: "center" }}>
+      <section className="homepage-section join-section">
         <div className="container">
           <h2 className="section-heading">Ready to join?</h2>
-          <p style={{ fontSize: "18px", color: "var(--text-secondary)", marginBottom: "32px", maxWidth: "500px", margin: "0 auto 32px" }}>
+          <p className="join-copy">
             We meet Tuesdays at 3 PM in Lab C204. Bring a laptop and curiosity.
           </p>
           <Link href="/join" className="btn-primary">
