@@ -48,7 +48,7 @@ export default function ProjectsIndexPage() {
 
               const cardContent = (
                 <article
-                  className="project-card"
+                  className={`project-card ${project.projectType === "group" ? "project-card-collection" : ""}`}
                   style={{ display: "flex", flexDirection: "column", gap: "0" }}
                 >
                   {/* Image Preview / Placeholder */}
@@ -166,7 +166,7 @@ export default function ProjectsIndexPage() {
                 <Link
                   key={project.slug}
                   href={`/projects/${project.slug}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
+                  className="project-card-link"
                 >
                   {cardContent}
                 </Link>
