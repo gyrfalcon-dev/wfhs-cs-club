@@ -1,3 +1,5 @@
+# Legacy Decap CMS config kept only as historical reference.
+# The active admin is implemented in app/admin and persists content to Supabase.
 backend:
   name: github
   repo: gyrfalcon-dev/wfhs-cs-club

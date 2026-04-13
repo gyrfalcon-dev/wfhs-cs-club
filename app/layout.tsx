@@ -1,18 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Sora } from "next/font/google";
 import "./globals.css";
-
-const sora = Sora({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/compilers" },
   { label: "Projects", href: "/projects" },
   { label: "Events", href: "/terminal" },
+  { label: "Dev Logs", href: "/devlogs" },
   { label: "Sponsored", href: "/sponsored" },
 ];
 
@@ -28,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={sora.variable}>
+    <html lang="en">
       <body>
         <nav className="navbar">
           <div className="nav-container">
@@ -71,13 +66,15 @@ export default function RootLayout({
                   <Link href="/compilers">About</Link>
                   <Link href="/projects">Projects</Link>
                   <Link href="/terminal">Events</Link>
+                  <Link href="/devlogs">Dev Logs</Link>
                   <Link href="/sponsored">Sponsored</Link>
                   <Link href="/join">Join Us</Link>
                 </div>
                 <div className="footer-section">
                   <h5>Connect</h5>
                   <Link href="https://discord.gg/wfhs-cs">Discord</Link>
-                  <Link href="/terminal">Newsletter</Link>
+                  <Link href="/devlogs">Build Log</Link>
+                  <Link href="/admin/login">Admin</Link>
                 </div>
               </div>
             </div>

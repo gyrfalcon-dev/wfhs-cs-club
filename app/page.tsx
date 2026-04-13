@@ -11,13 +11,14 @@ const stats = [
   { label: "Lines Written", value: "1000+", detail: "Since the fall showcase" },
 ];
 
-export default function HomePage() {
-  const featuredProjects = getFeaturedProjects();
-  const upcomingEvents = getUpcomingEvents().slice(0, 2);
+export const revalidate = 300;
+
+export default async function HomePage() {
+  const featuredProjects = await getFeaturedProjects();
+  const upcomingEvents = await getUpcomingEvents(2);
 
   return (
     <>
-      {/* Hero */}
       <section className="hero">
         <div className="hero-bg">
           <div className="grid-overlay" />
@@ -33,9 +34,9 @@ export default function HomePage() {
             <span className="title-line-2">Computer Science Club</span>
           </h1>
           <p className="hero-subtitle">
-            We build games, robots, and useful little tools. Some weeks
-            it&apos;s a polished showcase; some weeks it&apos;s a prototype that
-            taught us something before lunch.
+            We build games, robots, and useful little tools. Some weeks it&apos;s
+            a polished showcase; some weeks it&apos;s a prototype that taught us
+            something before lunch.
           </p>
           <div className="hero-cta-grid">
             <Link href="/terminal" className="cta-card">
@@ -56,7 +57,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* About Text */}
       <section className="full-width-text">
         <div className="container">
           <p>
@@ -89,7 +89,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats */}
       <section className="homepage-section">
         <div className="container">
           <div className="stats-grid">
@@ -104,7 +103,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Projects */}
       <section className="homepage-section homepage-section-tight-top">
         <div className="container">
           <div className="homepage-section-header">
@@ -126,20 +124,12 @@ export default function HomePage() {
                 </div>
                 <h3 className="card-title">{project.title}</h3>
                 <p className="card-summary">{project.summary}</p>
-                <div className="tag-list">
-                  {project.stack?.map((tech) => (
-                    <span key={tech} className="tag">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Events Preview */}
       {upcomingEvents.length > 0 && (
         <section className="homepage-section events-preview-section">
           <div className="container">
@@ -151,15 +141,19 @@ export default function HomePage() {
             </div>
             <div className="event-list">
               {upcomingEvents.map((event) => (
-                <div key={event.slug} className="event-card">
+                <Link
+                  key={event.slug}
+                  href={`/events/${event.slug}`}
+                  className="event-card event-card-link"
+                >
                   <div className="event-date-block">
                     <div className="event-month">
-                      {new Date(event.date).toLocaleDateString("en-US", {
+                      {new Date(event.eventAt).toLocaleDateString("en-US", {
                         month: "short",
                       })}
                     </div>
                     <div className="event-day">
-                      {new Date(event.date).getDate()}
+                      {new Date(event.eventAt).getDate()}
                     </div>
                   </div>
                   <div>
@@ -182,14 +176,13 @@ export default function HomePage() {
                       {event.location || "WFHS Lab"}
                     </p>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
         </section>
       )}
 
-      {/* Join CTA */}
       <section className="homepage-section join-section">
         <div className="container">
           <h2 className="section-heading">Ready to join?</h2>

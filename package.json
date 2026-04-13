@@ -7,13 +7,18 @@
     "build": "node scripts/patch-next-telemetry.js && next build",
     "start": "next start",
     "lint": "eslint",
+    "import:content": "node scripts/import-content-to-supabase.mjs",
     "postinstall": "node scripts/patch-next-telemetry.js"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.103.0",
     "gray-matter": "^4.0.3",
     "next": "16.2.2",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

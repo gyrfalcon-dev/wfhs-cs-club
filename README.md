@@ -2,73 +2,33 @@
 
 Official site for the Wake Forest High School Computer Science Club.
 
-The site is built with Next.js (App Router) and uses MDX content files for projects and events, so most updates can be made without changing React components.
+The site is built with Next.js App Router and now uses Supabase for:
 
-## What This Site Includes
+- public content storage for `projects`, `events`, and `dev_logs`
+- admin authentication and allowlisted sign-in
+- join form submissions
+- image uploads for admin-authored content
+- optional join-form email notifications through Resend
 
-### Core Pages
+Markdown is still the authoring format, but the live content source is Supabase rather than repo-tracked MDX.
 
-- Home page with hero, stats, featured projects, and upcoming events
-- About page with leadership and advisor section
-- Projects index with card previews, collection/group support, and nested project routing
-- Project detail pages at dynamic routes
-- Events and dev-log timeline page
-- Join page with form submission API route
-- Sponsored page with placeholder sponsor sections
+## What the App Includes
 
-### Content System
-
-- File-based content under content/projects and content/events
-- Frontmatter parsing with gray-matter
-- Support for:
-  - standalone projects
-  - collection/group projects with children
-  - featured projects
-  - event/devlog splitting
-
-### Hidden Editor (CMS)
-
-- Hidden admin editor available at /admin
-- Decap CMS config in public/admin/config.yml
-- GitHub-backed content editing
-- Media upload path configured to public/uploads
+- Home page with featured projects and upcoming events
+- Project index and project detail pages, including collection/group support
+- Events and dev-log timeline pages
+- Join form with server-side Supabase submission handling
+- Supabase-backed admin at `/admin` for projects, events, dev logs, uploads, and join inbox
 
 ## Tech Stack
 
 - Next.js 16.2.2
 - React 19.2.4
 - TypeScript
-- Tailwind CSS v4 (plus custom global CSS)
-- gray-matter for frontmatter parsing
+- Supabase (`@supabase/supabase-js`, `@supabase/ssr`)
+- `react-markdown` for public article rendering
 
-## Project Structure
-
-```text
-app/
-	api/join/route.ts         # Join form API endpoint
-	compilers/page.tsx        # About page
-	join/page.tsx             # Join form page
-	projects/page.tsx         # Projects index page
-	projects/[slug]/page.tsx  # Project detail page
-	sponsored/page.tsx        # Sponsor placeholder page
-	terminal/page.tsx         # Events + dev logs page
-	globals.css               # Global styles and theme
-	layout.tsx                # Nav, footer, metadata
-	page.tsx                  # Home page
-
-content/
-	projects/*.mdx            # Project entries
-	events/*.mdx              # Event + devlog entries
-
-lib/
-	content.ts                # Content loading, parsing, and selectors
-
-public/
-	admin/                    # Decap CMS shell + config
-	uploads/                  # CMS uploaded assets
-```
-
-## Run Locally
+## Local Setup
 
 1. Install dependencies:
 
@@ -76,107 +36,112 @@ public/
 npm install
 ```
 
-2. Start development server:
+2. Create `.env.local` with:
+
+```bash
+SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+SUPABASE_JOIN_TABLE=join_submissions
+SUPABASE_CONTENT_BUCKET=content-media
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+ADMIN_EMAILS=you@example.com
+RESEND_API_KEY=...
+NOTIFICATION_FROM_EMAIL=WFHS CS Club <notifications@example.com>
+JOIN_NOTIFICATION_TO_EMAILS=advisor@example.com,officer@example.com
+```
+
+You can also copy the defaults from [`.env.example`](./.env.example).
+
+3. Apply the schema in [`supabase/schema.sql`](./supabase/schema.sql) to your Supabase project.
+
+This creates:
+
+- `projects`
+- `events`
+- `dev_logs`
+- the public `content-media` storage bucket
+
+`join_submissions` is still expected to exist as the join inbox table. It is the only table name currently configurable through env.
+
+4. Optional: import the legacy repo content into Supabase:
+
+```bash
+npm run import:content
+```
+
+5. Start the app:
 
 ```bash
 npm run dev
 ```
 
-3. Open:
+6. Open:
 
-- Main site: http://localhost:3000
-- Hidden editor: http://localhost:3000/admin
+- Main site: `http://localhost:3000`
+- Admin login: `http://localhost:3000/admin/login`
 
 ## Available Scripts
 
-- npm run dev: start local dev server
-- npm run build: patch telemetry behavior, then build production bundle
-- npm run start: run production server from built output
-- npm run lint: run ESLint
+- `npm run dev` starts the local dev server
+- `npm run build` patches telemetry behavior and builds the production bundle
+- `npm run start` runs the production server
+- `npm run lint` runs ESLint
+- `npm run import:content` imports `content/projects` and `content/events` into Supabase
 
-## Content Authoring Guide
+## Content Model
 
-### Add a Project
+### Projects
 
-Create a file in content/projects with .mdx extension and frontmatter like:
+Stored in the `projects` table with support for:
 
-```md
----
-title: "Example Project"
-summary: "One-line project summary"
-status: "active"
-projectType: "project"
-stack:
-	- TypeScript
-	- Next.js
-cover: "/uploads/example-cover.png"
-featured: false
----
+- standalone projects
+- collection/group projects
+- featured projects
+- parent-child relationships via `parent_project_id`
 
-Longer project description goes here.
-```
+### Events
 
-### Create a Project Collection
+Stored in the `events` table with:
 
-Use projectType: group and add children slugs:
+- title
+- description
+- event date/time
+- location
+- markdown body
+- optional cover image
 
-```md
----
-title: "Scratch Collection"
-summary: "Collection of beginner Scratch games"
-status: "active"
-projectType: "group"
-children:
-	- scratch-maze-escape
-	- scratch-puzzle-lab
----
-```
+### Dev Logs
 
-### Add an Event or Dev Log
+Stored in the `dev_logs` table with:
 
-Create a file in content/events:
+- title
+- description
+- publish date/time
+- markdown body
+- optional cover image
 
-```md
----
-title: "Spring Hack Night"
-date: "2026-05-14"
-description: "Build night with demos and feedback"
-kind: "event"
-location: "WFHS Lab C204"
----
+## Admin Notes
 
-Optional longer details here.
-```
+- The active admin is implemented in `app/admin`, not Decap CMS.
+- Public pages render stored markdown through React components using `react-markdown`.
+- Image uploads go to the Supabase storage bucket defined by `SUPABASE_CONTENT_BUCKET`.
+- Admin access requires both a valid Supabase user account and an email listed in `ADMIN_EMAILS`.
+- Join-form emails are optional and only sent when `RESEND_API_KEY`, `NOTIFICATION_FROM_EMAIL`, and `JOIN_NOTIFICATION_TO_EMAILS` are set.
 
-Set kind: devlog to show it in the dev-log section.
+## Legacy Content Bootstrap
 
-## Navigation and Routing Notes
+The `content/` directory is still useful as seed data. Run `npm run import:content` to upsert those MDX files into Supabase when bootstrapping a new environment.
 
-- Top nav links are defined in app/layout.tsx
-- Sponsored tab points to /sponsored
-- Hidden admin link is intentionally not shown in the top nav
-- /admin is handled by rewrites in next.config.ts and serves public/admin/index.html
+After import, ongoing edits should happen through the live admin UI unless you intentionally want to reseed from files.
 
-## Deployment Notes
+## Troubleshooting
 
-- The repo currently tracks master as the primary working branch
-- Local branch workflows are used for feature development
-- If using the CMS in production, ensure GitHub authentication is configured for your hosting environment
-
-## Maintenance Tips
-
-- Keep project slugs stable because collection children reference them
-- Prefer short, clear summaries so cards stay readable
-- Use uploaded local images (/uploads/...) instead of temporary external URLs when possible
-- Validate new content frontmatter keys against lib/content.ts types
-
-## Contributing Workflow
-
-1. Create a branch from master
-2. Make changes
-3. Run lint/build checks as needed
-4. Commit with descriptive message
-5. Merge back into master
+- If admin pages fail with a missing relation/table error, apply `supabase/schema.sql` to the target Supabase project.
+- If sign-in fails before auth initializes, verify `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+- If uploads fail, verify the `content-media` bucket exists or set `SUPABASE_CONTENT_BUCKET` to the bucket you created.
+- If join submissions fail, verify the `SUPABASE_JOIN_TABLE` table exists and the service role key is valid.
+- If join emails are not arriving, verify the Resend API key, sender domain/address, and recipient list.
 
 ## Repository
 

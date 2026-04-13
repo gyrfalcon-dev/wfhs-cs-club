@@ -1,0 +1,48 @@
+# Supabase Setup
+
+Apply [`schema.sql`](./schema.sql) to the target Supabase project before using the site admin.
+
+## What `schema.sql` creates
+
+- `projects`
+- `events`
+- `dev_logs`
+- `content-media` storage bucket
+- `updated_at` trigger helpers for the content tables
+
+## Required environment variables
+
+```bash
+SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+```
+
+## Optional environment variables
+
+```bash
+SUPABASE_JOIN_TABLE=join_submissions
+SUPABASE_CONTENT_BUCKET=content-media
+ADMIN_EMAILS=you@example.com
+RESEND_API_KEY=...
+NOTIFICATION_FROM_EMAIL=WFHS CS Club <notifications@example.com>
+JOIN_NOTIFICATION_TO_EMAILS=advisor@example.com,officer@example.com
+```
+
+## Bootstrapping content
+
+If you want to seed Supabase from the legacy MDX content in `content/`, run:
+
+```bash
+npm run import:content
+```
+
+This upserts:
+
+- `content/projects/*.mdx` into `projects`
+- `content/events/*.mdx` into `events` or `dev_logs`
+
+The join inbox table is not created by the import script. Create `join_submissions` separately if your Supabase project does not already have it.
+
+Join notification emails are optional and only sent when the Resend-related env vars are configured.

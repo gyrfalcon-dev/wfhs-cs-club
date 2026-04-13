@@ -1,155 +1,746 @@
-import fs from "node:fs";
-import path from "node:path";
-import matter from "gray-matter";
+import "server-only";
 
-const contentRoot = path.join(process.cwd(), "content");
+import { PostgrestError } from "@supabase/supabase-js";
+import { cache } from "react";
+import {
+  formatSupabaseSetupError,
+  getContentTableNames,
+  getJoinTable,
+  getServiceSupabase,
+} from "@/lib/supabase";
 
-type ProjectMeta = {
-  title: string;
+export type ProjectStatus = "active" | "planning" | "archived";
+export type ProjectType = "project" | "group";
+
+export type Project = {
+  bodyMarkdown: string;
+  childCount?: number;
+  coverImageUrl?: string | null;
+  createdAt: string;
+  featured: boolean;
+  id: number;
+  parentProjectId?: number | null;
+  projectType: ProjectType;
+  published: boolean;
+  slug: string;
+  status: ProjectStatus;
   summary: string;
-  status?: "active" | "planning" | "archived";
-  projectType?: "project" | "group";
-  stack?: string[];
-  children?: string[];
-  cover?: string;
-  featured?: boolean;
-};
-
-type EventMeta = {
   title: string;
-  date: string;
+  updatedAt: string;
+};
+
+export type Event = {
+  bodyMarkdown: string;
+  coverImageUrl?: string | null;
+  createdAt: string;
   description: string;
-  kind?: "event" | "devlog";
-  location?: string;
-};
-
-type Project = ProjectMeta & {
+  eventAt: string;
+  id: number;
+  location?: string | null;
+  published: boolean;
   slug: string;
-  body: string;
+  title: string;
+  updatedAt: string;
 };
 
-type Event = EventMeta & {
+export type DevLog = {
+  bodyMarkdown: string;
+  coverImageUrl?: string | null;
+  createdAt: string;
+  description: string;
+  id: number;
+  published: boolean;
+  publishedAt: string;
   slug: string;
-  body: string;
+  title: string;
+  updatedAt: string;
 };
 
-const projectCache: Project[] = [];
-const eventCache: Event[] = [];
-let projectLoaded = false;
-let eventLoaded = false;
+export type JoinSubmissionRecord = {
+  createdAt?: string | null;
+  email: string;
+  experience: string;
+  grade: string;
+  id: number;
+  message?: string | null;
+  name: string;
+};
 
-const getFiles = (subdir: string) => {
-  const directory = path.join(contentRoot, subdir);
-  if (!fs.existsSync(directory)) {
+export type ProjectInput = {
+  bodyMarkdown: string;
+  coverImageUrl?: string | null;
+  featured: boolean;
+  parentProjectId?: number | null;
+  projectType: ProjectType;
+  published: boolean;
+  slug: string;
+  status: ProjectStatus;
+  summary: string;
+  title: string;
+};
+
+export type EventInput = {
+  bodyMarkdown: string;
+  coverImageUrl?: string | null;
+  description: string;
+  eventAt: string;
+  location?: string | null;
+  published: boolean;
+  slug: string;
+  title: string;
+};
+
+export type DevLogInput = {
+  bodyMarkdown: string;
+  coverImageUrl?: string | null;
+  description: string;
+  published: boolean;
+  publishedAt: string;
+  slug: string;
+  title: string;
+};
+
+type ProjectRow = {
+  body_markdown: string | null;
+  cover_image_url: string | null;
+  created_at: string;
+  featured: boolean | null;
+  id: number;
+  parent_project_id: number | null;
+  project_type: ProjectType | null;
+  published: boolean | null;
+  slug: string;
+  status: ProjectStatus | null;
+  summary: string;
+  title: string;
+  updated_at: string;
+};
+
+type EventRow = {
+  body_markdown: string | null;
+  cover_image_url: string | null;
+  created_at: string;
+  description: string;
+  event_at: string;
+  id: number;
+  location: string | null;
+  published: boolean | null;
+  slug: string;
+  title: string;
+  updated_at: string;
+};
+
+type DevLogRow = {
+  body_markdown: string | null;
+  cover_image_url: string | null;
+  created_at: string;
+  description: string;
+  id: number;
+  published: boolean | null;
+  published_at: string;
+  slug: string;
+  title: string;
+  updated_at: string;
+};
+
+type JoinSubmissionRow = {
+  created_at: string | null;
+  email: string;
+  experience: string;
+  grade: string;
+  id: number;
+  message: string | null;
+  name: string;
+};
+
+function logPublicQueryError(context: string, error: PostgrestError | Error) {
+  console.error(`Supabase content query failed in ${context}`, error);
+}
+
+function createContentError(resource: string, error: PostgrestError) {
+  return new Error(formatSupabaseSetupError(resource, error.message));
+}
+
+function mapProject(row: ProjectRow): Project {
+  return {
+    bodyMarkdown: row.body_markdown ?? "",
+    coverImageUrl: row.cover_image_url,
+    createdAt: row.created_at,
+    featured: Boolean(row.featured),
+    id: row.id,
+    parentProjectId: row.parent_project_id,
+    projectType: row.project_type ?? "project",
+    published: row.published ?? true,
+    slug: row.slug,
+    status: row.status ?? "active",
+    summary: row.summary,
+    title: row.title,
+    updatedAt: row.updated_at,
+  };
+}
+
+function mapEvent(row: EventRow): Event {
+  return {
+    bodyMarkdown: row.body_markdown ?? "",
+    coverImageUrl: row.cover_image_url,
+    createdAt: row.created_at,
+    description: row.description,
+    eventAt: row.event_at,
+    id: row.id,
+    location: row.location,
+    published: row.published ?? true,
+    slug: row.slug,
+    title: row.title,
+    updatedAt: row.updated_at,
+  };
+}
+
+function mapDevLog(row: DevLogRow): DevLog {
+  return {
+    bodyMarkdown: row.body_markdown ?? "",
+    coverImageUrl: row.cover_image_url,
+    createdAt: row.created_at,
+    description: row.description,
+    id: row.id,
+    published: row.published ?? true,
+    publishedAt: row.published_at,
+    slug: row.slug,
+    title: row.title,
+    updatedAt: row.updated_at,
+  };
+}
+
+function mapJoinSubmission(row: JoinSubmissionRow): JoinSubmissionRecord {
+  return {
+    createdAt: row.created_at,
+    email: row.email,
+    experience: row.experience,
+    grade: row.grade,
+    id: row.id,
+    message: row.message,
+    name: row.name,
+  };
+}
+
+function addProjectChildCounts(projects: Project[]): Project[] {
+  const childCounts = new Map<number, number>();
+
+  for (const project of projects) {
+    if (project.parentProjectId) {
+      childCounts.set(
+        project.parentProjectId,
+        (childCounts.get(project.parentProjectId) ?? 0) + 1,
+      );
+    }
+  }
+
+  return projects.map((project) => ({
+    ...project,
+    childCount: childCounts.get(project.id) ?? 0,
+  }));
+}
+
+const fetchPublishedProjects = cache(async (): Promise<Project[]> => {
+  const supabase = getServiceSupabase();
+  const { projects } = getContentTableNames();
+  const { data, error } = await supabase
+    .from(projects)
+    .select(
+      "id, slug, title, summary, status, project_type, featured, cover_image_url, body_markdown, parent_project_id, published, created_at, updated_at",
+    )
+    .eq("published", true)
+    .order("featured", { ascending: false })
+    .order("title", { ascending: true });
+
+  if (error) {
+    logPublicQueryError(
+      "fetchPublishedProjects",
+      createContentError(projects, error),
+    );
     return [];
   }
-  return fs
-    .readdirSync(directory)
-    .filter((file) => file.endsWith(".mdx"))
-    .map((file) => path.join(directory, file));
-};
 
-const parseProject = (filePath: string): Project => {
-  const content = fs.readFileSync(filePath, "utf-8");
-  const { data, content: body } = matter(content);
-  const meta = data as ProjectMeta;
-  const slug = path.parse(filePath).name;
+  return addProjectChildCounts((data satisfies ProjectRow[]).map(mapProject));
+});
 
-  return {
-    slug,
-    title: meta.title ?? "Untitled",
-    summary: meta.summary ?? "Coming soon",
-    status: meta.status ?? "active",
-    projectType: meta.projectType ?? "project",
-    stack: Array.isArray(meta.stack) ? meta.stack.map(String) : [],
-    children: Array.isArray(meta.children) ? meta.children.map(String) : [],
-    cover: typeof meta.cover === "string" ? meta.cover : undefined,
-    featured: Boolean(meta.featured),
-    body: body.trim(),
-  };
-};
+const fetchFeaturedProjects = cache(async (): Promise<Project[]> => {
+  const supabase = getServiceSupabase();
+  const { projects } = getContentTableNames();
+  const { data, error } = await supabase
+    .from(projects)
+    .select(
+      "id, slug, title, summary, status, project_type, featured, cover_image_url, body_markdown, parent_project_id, published, created_at, updated_at",
+    )
+    .eq("published", true)
+    .eq("featured", true)
+    .order("updated_at", { ascending: false })
+    .limit(3);
 
-const parseEvent = (filePath: string): Event => {
-  const content = fs.readFileSync(filePath, "utf-8");
-  const { data, content: body } = matter(content);
-  const meta = data as EventMeta;
-  const slug = path.parse(filePath).name;
-
-  return {
-    slug,
-    title: meta.title ?? "Untitled",
-    date: meta.date ?? new Date().toISOString(),
-    description: meta.description ?? "",
-    kind: meta.kind ?? "event",
-    location: meta.location,
-    body: body.trim(),
-  };
-};
-
-const loadProjects = () => {
-  if (projectLoaded) {
-    return projectCache;
-  }
-  projectCache.length = 0;
-  getFiles("projects").forEach((file) => {
-    projectCache.push(parseProject(file));
-  });
-  projectLoaded = true;
-  return projectCache;
-};
-
-const loadEvents = () => {
-  if (eventLoaded) {
-    return eventCache;
-  }
-  eventCache.length = 0;
-  getFiles("events").forEach((file) => {
-    eventCache.push(parseEvent(file));
-  });
-  eventLoaded = true;
-  return eventCache;
-};
-
-const sortByTitle = (a: Project, b: Project) => a.title.localeCompare(b.title);
-
-const projectIndexEntries = () => {
-  const projects = loadProjects();
-  const childSlugs = new Set(projects.flatMap((project) => project.children ?? []));
-  return projects
-    .filter((project) => !childSlugs.has(project.slug))
-    .sort((a, b) => {
-      if (a.featured && !b.featured) return -1;
-      if (!a.featured && b.featured) return 1;
-      return sortByTitle(a, b);
-    });
-};
-
-const toTimestamp = (value: string | Date) => new Date(value).getTime();
-
-const eventsByKind = (kind: "event" | "devlog") => {
-  return loadEvents()
-    .filter((event) => event.kind === kind)
-    .sort((a, b) => toTimestamp(a.date) - toTimestamp(b.date));
-};
-
-export const getFeaturedProjects = () => projectIndexEntries().filter((project) => project.featured).slice(0, 3);
-
-export const getProjectBySlug = (slug: string) =>
-  loadProjects().find((project) => project.slug === slug);
-
-export const getProjectChildren = (project: Project) => {
-  if (!project.children || project.children.length === 0) {
+  if (error) {
+    logPublicQueryError(
+      "fetchFeaturedProjects",
+      createContentError(projects, error),
+    );
     return [];
   }
-  return project.children
-    .map((slug) => loadProjects().find((entry) => entry.slug === slug))
-    .filter((child): child is Project => Boolean(child));
-};
 
-export const getAllProjects = () => projectIndexEntries();
+  return (data satisfies ProjectRow[]).map(mapProject);
+});
 
-export const getUpcomingEvents = () => eventsByKind("event");
+const fetchUpcomingEvents = cache(
+  async (limit?: number): Promise<Event[]> => {
+    const supabase = getServiceSupabase();
+    const { events } = getContentTableNames();
+    let query = supabase
+      .from(events)
+      .select(
+        "id, slug, title, description, event_at, location, cover_image_url, body_markdown, published, created_at, updated_at",
+      )
+      .eq("published", true)
+      .gte("event_at", new Date().toISOString())
+      .order("event_at", { ascending: true });
 
-export const getDevLogs = () => eventsByKind("devlog");
+    if (typeof limit === "number") {
+      query = query.limit(limit);
+    }
 
-export const getNextEvent = () => getUpcomingEvents()[0];
+    const { data, error } = await query;
+
+    if (error) {
+      logPublicQueryError(
+        "fetchUpcomingEvents",
+        createContentError(events, error),
+      );
+      return [];
+    }
+
+    return (data satisfies EventRow[]).map(mapEvent);
+  },
+);
+
+const fetchPublishedDevLogs = cache(
+  async (limit?: number): Promise<DevLog[]> => {
+    const supabase = getServiceSupabase();
+    const { devLogs } = getContentTableNames();
+    let query = supabase
+      .from(devLogs)
+      .select(
+        "id, slug, title, description, published_at, cover_image_url, body_markdown, published, created_at, updated_at",
+      )
+      .eq("published", true)
+      .order("published_at", { ascending: false });
+
+    if (typeof limit === "number") {
+      query = query.limit(limit);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      logPublicQueryError(
+        "fetchPublishedDevLogs",
+        createContentError(devLogs, error),
+      );
+      return [];
+    }
+
+    return (data satisfies DevLogRow[]).map(mapDevLog);
+  },
+);
+
+const fetchProjectBySlug = cache(async (slug: string): Promise<Project | null> => {
+  const supabase = getServiceSupabase();
+  const { projects } = getContentTableNames();
+  const { data, error } = await supabase
+    .from(projects)
+    .select(
+      "id, slug, title, summary, status, project_type, featured, cover_image_url, body_markdown, parent_project_id, published, created_at, updated_at",
+    )
+    .eq("slug", slug)
+    .eq("published", true)
+    .maybeSingle();
+
+  if (error) {
+    logPublicQueryError(
+      `getProjectBySlug:${slug}`,
+      createContentError(projects, error),
+    );
+    return null;
+  }
+
+  return data ? mapProject(data satisfies ProjectRow) : null;
+});
+
+const fetchProjectChildren = cache(
+  async (projectId: number): Promise<Project[]> => {
+    const supabase = getServiceSupabase();
+    const { projects } = getContentTableNames();
+    const { data, error } = await supabase
+      .from(projects)
+      .select(
+        "id, slug, title, summary, status, project_type, featured, cover_image_url, body_markdown, parent_project_id, published, created_at, updated_at",
+      )
+      .eq("published", true)
+      .eq("parent_project_id", projectId)
+      .order("title", { ascending: true });
+
+    if (error) {
+      logPublicQueryError(
+        `getProjectChildren:${projectId}`,
+        createContentError(projects, error),
+      );
+      return [];
+    }
+
+    return (data satisfies ProjectRow[]).map(mapProject);
+  },
+);
+
+const fetchEventBySlug = cache(async (slug: string): Promise<Event | null> => {
+  const supabase = getServiceSupabase();
+  const { events } = getContentTableNames();
+  const { data, error } = await supabase
+    .from(events)
+    .select(
+      "id, slug, title, description, event_at, location, cover_image_url, body_markdown, published, created_at, updated_at",
+    )
+    .eq("slug", slug)
+    .eq("published", true)
+    .maybeSingle();
+
+  if (error) {
+    logPublicQueryError(
+      `getEventBySlug:${slug}`,
+      createContentError(events, error),
+    );
+    return null;
+  }
+
+  return data ? mapEvent(data satisfies EventRow) : null;
+});
+
+const fetchDevLogBySlug = cache(async (slug: string): Promise<DevLog | null> => {
+  const supabase = getServiceSupabase();
+  const { devLogs } = getContentTableNames();
+  const { data, error } = await supabase
+    .from(devLogs)
+    .select(
+      "id, slug, title, description, published_at, cover_image_url, body_markdown, published, created_at, updated_at",
+    )
+    .eq("slug", slug)
+    .eq("published", true)
+    .maybeSingle();
+
+  if (error) {
+    logPublicQueryError(
+      `getDevLogBySlug:${slug}`,
+      createContentError(devLogs, error),
+    );
+    return null;
+  }
+
+  return data ? mapDevLog(data satisfies DevLogRow) : null;
+});
+
+export async function getFeaturedProjects(): Promise<Project[]> {
+  return fetchFeaturedProjects();
+}
+
+export async function getAllProjects(): Promise<Project[]> {
+  const projects = await fetchPublishedProjects();
+  return projects.filter((project) => !project.parentProjectId);
+}
+
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  return fetchProjectBySlug(slug);
+}
+
+export async function getProjectChildren(projectId: number): Promise<Project[]> {
+  return fetchProjectChildren(projectId);
+}
+
+export async function getUpcomingEvents(limit?: number): Promise<Event[]> {
+  return fetchUpcomingEvents(limit);
+}
+
+export async function getDevLogs(limit?: number): Promise<DevLog[]> {
+  return fetchPublishedDevLogs(limit);
+}
+
+export async function getEventBySlug(slug: string): Promise<Event | null> {
+  return fetchEventBySlug(slug);
+}
+
+export async function getDevLogBySlug(slug: string): Promise<DevLog | null> {
+  return fetchDevLogBySlug(slug);
+}
+
+export async function getAdminProjects(): Promise<Project[]> {
+  const supabase = getServiceSupabase();
+  const { projects } = getContentTableNames();
+  const { data, error } = await supabase
+    .from(projects)
+    .select(
+      "id, slug, title, summary, status, project_type, featured, cover_image_url, body_markdown, parent_project_id, published, created_at, updated_at",
+    )
+    .order("updated_at", { ascending: false });
+
+  if (error) {
+    throw createContentError(projects, error);
+  }
+
+  return (data satisfies ProjectRow[]).map(mapProject);
+}
+
+export async function getAdminProjectById(id: number): Promise<Project | null> {
+  const supabase = getServiceSupabase();
+  const { projects } = getContentTableNames();
+  const { data, error } = await supabase
+    .from(projects)
+    .select(
+      "id, slug, title, summary, status, project_type, featured, cover_image_url, body_markdown, parent_project_id, published, created_at, updated_at",
+    )
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw createContentError(projects, error);
+  }
+
+  return data ? mapProject(data satisfies ProjectRow) : null;
+}
+
+export async function getAdminEvents(): Promise<Event[]> {
+  const supabase = getServiceSupabase();
+  const { events } = getContentTableNames();
+  const { data, error } = await supabase
+    .from(events)
+    .select(
+      "id, slug, title, description, event_at, location, cover_image_url, body_markdown, published, created_at, updated_at",
+    )
+    .order("event_at", { ascending: false });
+
+  if (error) {
+    throw createContentError(events, error);
+  }
+
+  return (data satisfies EventRow[]).map(mapEvent);
+}
+
+export async function getAdminEventById(id: number): Promise<Event | null> {
+  const supabase = getServiceSupabase();
+  const { events } = getContentTableNames();
+  const { data, error } = await supabase
+    .from(events)
+    .select(
+      "id, slug, title, description, event_at, location, cover_image_url, body_markdown, published, created_at, updated_at",
+    )
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw createContentError(events, error);
+  }
+
+  return data ? mapEvent(data satisfies EventRow) : null;
+}
+
+export async function getAdminDevLogs(): Promise<DevLog[]> {
+  const supabase = getServiceSupabase();
+  const { devLogs } = getContentTableNames();
+  const { data, error } = await supabase
+    .from(devLogs)
+    .select(
+      "id, slug, title, description, published_at, cover_image_url, body_markdown, published, created_at, updated_at",
+    )
+    .order("published_at", { ascending: false });
+
+  if (error) {
+    throw createContentError(devLogs, error);
+  }
+
+  return (data satisfies DevLogRow[]).map(mapDevLog);
+}
+
+export async function getAdminDevLogById(id: number): Promise<DevLog | null> {
+  const supabase = getServiceSupabase();
+  const { devLogs } = getContentTableNames();
+  const { data, error } = await supabase
+    .from(devLogs)
+    .select(
+      "id, slug, title, description, published_at, cover_image_url, body_markdown, published, created_at, updated_at",
+    )
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw createContentError(devLogs, error);
+  }
+
+  return data ? mapDevLog(data satisfies DevLogRow) : null;
+}
+
+export async function getJoinSubmissions(): Promise<JoinSubmissionRecord[]> {
+  const supabase = getServiceSupabase();
+  const { data, error } = await supabase
+    .from(getJoinTable())
+    .select("id, name, email, grade, experience, message, created_at")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw createContentError(getJoinTable(), error);
+  }
+
+  return (data satisfies JoinSubmissionRow[]).map(mapJoinSubmission);
+}
+
+export async function getAdminSummary(): Promise<{
+  devLogs: number;
+  events: number;
+  projects: number;
+  submissions: number;
+}> {
+  const [projects, events, devLogs, submissions] = await Promise.all([
+    getAdminProjects(),
+    getAdminEvents(),
+    getAdminDevLogs(),
+    getJoinSubmissions(),
+  ]);
+
+  return {
+    devLogs: devLogs.length,
+    events: events.length,
+    projects: projects.length,
+    submissions: submissions.length,
+  };
+}
+
+export async function saveProject(
+  id: number | null,
+  input: ProjectInput,
+): Promise<Project> {
+  const supabase = getServiceSupabase();
+  const { projects } = getContentTableNames();
+  const payload = {
+    body_markdown: input.bodyMarkdown,
+    cover_image_url: input.coverImageUrl ?? null,
+    featured: input.featured,
+    parent_project_id: input.parentProjectId ?? null,
+    project_type: input.projectType,
+    published: input.published,
+    slug: input.slug,
+    status: input.status,
+    summary: input.summary,
+    title: input.title,
+  };
+
+  const builder = id
+    ? supabase.from(projects).update(payload).eq("id", id)
+    : supabase.from(projects).insert(payload);
+  const { data, error } = await builder
+    .select(
+      "id, slug, title, summary, status, project_type, featured, cover_image_url, body_markdown, parent_project_id, published, created_at, updated_at",
+    )
+    .single();
+
+  if (error) {
+    throw createContentError(projects, error);
+  }
+
+  return mapProject(data satisfies ProjectRow);
+}
+
+export async function deleteProject(id: number) {
+  const supabase = getServiceSupabase();
+  const { projects } = getContentTableNames();
+  const { error } = await supabase.from(projects).delete().eq("id", id);
+
+  if (error) {
+    throw createContentError(projects, error);
+  }
+}
+
+export async function saveEvent(
+  id: number | null,
+  input: EventInput,
+): Promise<Event> {
+  const supabase = getServiceSupabase();
+  const { events } = getContentTableNames();
+  const payload = {
+    body_markdown: input.bodyMarkdown,
+    cover_image_url: input.coverImageUrl ?? null,
+    description: input.description,
+    event_at: input.eventAt,
+    location: input.location ?? null,
+    published: input.published,
+    slug: input.slug,
+    title: input.title,
+  };
+
+  const builder = id
+    ? supabase.from(events).update(payload).eq("id", id)
+    : supabase.from(events).insert(payload);
+  const { data, error } = await builder
+    .select(
+      "id, slug, title, description, event_at, location, cover_image_url, body_markdown, published, created_at, updated_at",
+    )
+    .single();
+
+  if (error) {
+    throw createContentError(events, error);
+  }
+
+  return mapEvent(data satisfies EventRow);
+}
+
+export async function deleteEvent(id: number) {
+  const supabase = getServiceSupabase();
+  const { events } = getContentTableNames();
+  const { error } = await supabase.from(events).delete().eq("id", id);
+
+  if (error) {
+    throw createContentError(events, error);
+  }
+}
+
+export async function saveDevLog(
+  id: number | null,
+  input: DevLogInput,
+): Promise<DevLog> {
+  const supabase = getServiceSupabase();
+  const { devLogs } = getContentTableNames();
+  const payload = {
+    body_markdown: input.bodyMarkdown,
+    cover_image_url: input.coverImageUrl ?? null,
+    description: input.description,
+    published: input.published,
+    published_at: input.publishedAt,
+    slug: input.slug,
+    title: input.title,
+  };
+
+  const builder = id
+    ? supabase.from(devLogs).update(payload).eq("id", id)
+    : supabase.from(devLogs).insert(payload);
+  const { data, error } = await builder
+    .select(
+      "id, slug, title, description, published_at, cover_image_url, body_markdown, published, created_at, updated_at",
+    )
+    .single();
+
+  if (error) {
+    throw createContentError(devLogs, error);
+  }
+
+  return mapDevLog(data satisfies DevLogRow);
+}
+
+export async function deleteDevLog(id: number) {
+  const supabase = getServiceSupabase();
+  const { devLogs } = getContentTableNames();
+  const { error } = await supabase.from(devLogs).delete().eq("id", id);
+
+  if (error) {
+    throw createContentError(devLogs, error);
+  }
+}
