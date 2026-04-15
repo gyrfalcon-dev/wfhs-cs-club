@@ -1,21 +1,21 @@
 const leadership = [
   {
-    name: "Avery Kim",
+    name: "Joaquin",
     role: "President",
-    language: "Rust & TypeScript",
-    initials: "AK",
+    language: "",
+    initials: "J",
   },
   {
-    name: "Jordan Lee",
+    name: "Owen",
     role: "Vice President",
-    language: "Python",
-    initials: "JL",
+    language: "",
+    initials: "O",
   },
   {
-    name: "Maya Patel",
-    role: "Projects Lead",
-    language: "C++ & Unity",
-    initials: "MP",
+    name: "Connor",
+    role: "Secretary",
+    language: "",
+    initials: "C",
   },
 ];
 
@@ -96,7 +96,7 @@ export default function CompilersPage() {
                 marginBottom: "12px",
               }}
             >
-              Ms. Rivera
+              Ms. Raye
             </h2>
             <p
               style={{
@@ -105,10 +105,10 @@ export default function CompilersPage() {
                 lineHeight: 1.7,
               }}
             >
-              Ms. Rivera keeps the whole thing moving. She helps us get
-              hardware, backs field trips, and makes sure our ideas do not die
-              in a Google Doc. She also gives useful feedback when a project
-              needs one more round of reality checking before a showcase.
+              Ms. Raye keeps the whole thing moving. She helps us get hardware,
+              backs field trips, and makes sure our ideas do not die in a Google
+              Doc. She also gives useful feedback when a project needs one more
+              round of reality checking before a showcase.
             </p>
             <p
               style={{
@@ -117,7 +117,7 @@ export default function CompilersPage() {
                 marginTop: "16px",
               }}
             >
-              Computer Science Department
+              Business Department
             </p>
           </div>
         </div>
