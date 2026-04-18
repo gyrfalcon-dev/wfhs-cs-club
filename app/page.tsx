@@ -53,6 +53,13 @@ export default async function HomePage() {
               </div>
               <span className="card-arrow">→</span>
             </Link>
+            <Link href="/opportunities" className="cta-card">
+              <div>
+                <h3>Open Opportunities</h3>
+                <p>Volunteer, submit a dev log, or sign up for the next showcase</p>
+              </div>
+              <span className="card-arrow">→</span>
+            </Link>
           </div>
         </div>
       </section>
@@ -84,7 +91,12 @@ export default async function HomePage() {
             <Link href="/join" className="text-link">
               jump in
             </Link>{" "}
-            at the next meeting.
+            at the next meeting. When officers need volunteers, showcase
+            entries, or event signups, the{" "}
+            <Link href="/opportunities" className="text-link">
+              opportunities board
+            </Link>{" "}
+            is where it goes.
           </p>
         </div>
       </section>

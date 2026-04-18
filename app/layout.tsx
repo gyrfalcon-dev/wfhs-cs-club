@@ -7,6 +7,7 @@ const navLinks = [
   { label: "About", href: "/compilers" },
   { label: "Projects", href: "/projects" },
   { label: "Events", href: "/terminal" },
+  { label: "Opportunities", href: "/opportunities" },
   { label: "Dev Logs", href: "/devlogs" },
   { label: "Sponsored", href: "/sponsored" },
 ];
@@ -66,6 +67,7 @@ export default function RootLayout({
                   <Link href="/compilers">About</Link>
                   <Link href="/projects">Projects</Link>
                   <Link href="/terminal">Events</Link>
+                  <Link href="/opportunities">Opportunities</Link>
                   <Link href="/devlogs">Dev Logs</Link>
                   <Link href="/sponsored">Sponsored</Link>
                   <Link href="/join">Join Us</Link>
@@ -74,7 +76,7 @@ export default function RootLayout({
                   <h5>Connect</h5>
                   <Link href="https://discord.gg/wfhs-cs">Discord</Link>
                   <Link href="/devlogs">Build Log</Link>
-                  <Link href="/admin/login">Admin</Link>
+                  <Link href="/admin">Admin</Link>
                 </div>
               </div>
             </div>

@@ -65,6 +65,111 @@ create index if not exists events_event_at_idx
 create index if not exists dev_logs_published_at_idx
   on public.dev_logs(published_at);
 
+create table if not exists public.content_entries (
+  id uuid primary key default gen_random_uuid(),
+  type text not null check (type in ('project', 'event', 'devlog')),
+  title text not null,
+  slug text not null unique,
+  summary text not null default '',
+  body text not null default '',
+  status text not null default 'draft'
+    check (status in ('draft', 'pending_review', 'published', 'archived')),
+  author_name text not null default '',
+  author_email text not null default '',
+  event_date timestamptz,
+  location text,
+  project_status text check (project_status in ('active', 'planning', 'archived')),
+  project_type text check (project_type in ('project', 'group')),
+  stack text[] not null default '{}',
+  children text[] not null default '{}',
+  cover text,
+  featured boolean not null default false,
+  source text not null default 'admin' check (source in ('submission', 'admin')),
+  review_notes text,
+  published_at timestamptz,
+  deleted_at timestamptz,
+  deleted_by_user_id uuid,
+  restored_from_version_id uuid,
+  created_at timestamptz not null default timezone('utc', now()),
+  updated_at timestamptz not null default timezone('utc', now())
+);
+
+create index if not exists content_entries_status_idx
+  on public.content_entries(status);
+
+create index if not exists content_entries_type_idx
+  on public.content_entries(type);
+
+create table if not exists public.content_versions (
+  id uuid primary key default gen_random_uuid(),
+  entry_id uuid not null references public.content_entries(id) on delete cascade,
+  version_kind text not null,
+  actor_email text,
+  snapshot jsonb not null,
+  created_at timestamptz not null default timezone('utc', now())
+);
+
+create index if not exists content_versions_entry_id_idx
+  on public.content_versions(entry_id, created_at desc);
+
+create table if not exists public.admin_allowlist (
+  email text primary key,
+  created_at timestamptz not null default timezone('utc', now())
+);
+
+create table if not exists public.opportunities (
+  id uuid primary key default gen_random_uuid(),
+  slug text not null unique,
+  title text not null,
+  summary text not null default '',
+  description text not null default '',
+  kind text not null
+    check (
+      kind in (
+        'project_showcase',
+        'devlog_submission',
+        'volunteer_signup',
+        'event_signup',
+        'custom'
+      )
+    ),
+  form_mode text not null default 'structured'
+    check (form_mode in ('content', 'structured')),
+  status text not null default 'draft'
+    check (status in ('draft', 'published', 'closed')),
+  visibility text not null default 'public'
+    check (visibility in ('public', 'private')),
+  cta_label text not null default 'Apply now',
+  location text,
+  opens_at timestamptz,
+  closes_at timestamptz,
+  sort_order integer not null default 0,
+  published boolean not null default false,
+  form_schema jsonb not null default '{"fields": []}'::jsonb,
+  success_message text not null default 'Thanks. Your response has been received.',
+  admin_notes text,
+  created_at timestamptz not null default timezone('utc', now()),
+  updated_at timestamptz not null default timezone('utc', now())
+);
+
+create index if not exists opportunities_published_idx
+  on public.opportunities(published, visibility, sort_order, opens_at);
+
+create table if not exists public.opportunity_responses (
+  id uuid primary key default gen_random_uuid(),
+  opportunity_id uuid not null references public.opportunities(id) on delete cascade,
+  submitted_at timestamptz not null default timezone('utc', now()),
+  name text not null,
+  email text not null,
+  status text not null default 'new'
+    check (status in ('new', 'reviewed', 'converted', 'archived')),
+  payload jsonb not null default '{}'::jsonb,
+  source_metadata jsonb not null default '{}'::jsonb
+);
+
+create index if not exists opportunity_responses_opportunity_idx
+  on public.opportunity_responses(opportunity_id, submitted_at desc);
+
 drop trigger if exists set_projects_updated_at on public.projects;
 create trigger set_projects_updated_at
 before update on public.projects
@@ -80,6 +185,18 @@ execute function public.set_updated_at();
 drop trigger if exists set_dev_logs_updated_at on public.dev_logs;
 create trigger set_dev_logs_updated_at
 before update on public.dev_logs
+for each row
+execute function public.set_updated_at();
+
+drop trigger if exists set_content_entries_updated_at on public.content_entries;
+create trigger set_content_entries_updated_at
+before update on public.content_entries
+for each row
+execute function public.set_updated_at();
+
+drop trigger if exists set_opportunities_updated_at on public.opportunities;
+create trigger set_opportunities_updated_at
+before update on public.opportunities
 for each row
 execute function public.set_updated_at();
 
