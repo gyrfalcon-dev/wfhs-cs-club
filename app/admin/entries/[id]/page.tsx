@@ -1,19 +1,23 @@
 import { notFound, redirect } from "next/navigation";
+import { RouteToast } from "@/app/_components/route-toast";
 import { EntryForm } from "@/app/admin/_components/entry-form";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { getEntryById, getEntryVersions } from "@/lib/content-store";
+import { getToastFromSearchParams } from "@/lib/redirect-toast";
 
 type PageProps = {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ toast?: string; message?: string }>;
 };
 
-export default async function AdminEntryPage({ params }: PageProps) {
+export default async function AdminEntryPage({ params, searchParams }: PageProps) {
   const admin = await getAdminIdentity();
   if (!admin) {
     redirect("/admin");
   }
 
   const { id } = await params;
+  const toast = getToastFromSearchParams(await searchParams);
   const entry = await getEntryById(id);
 
   if (!entry) {
@@ -35,6 +39,7 @@ export default async function AdminEntryPage({ params }: PageProps) {
 
       <section style={{ padding: "0 0 80px" }}>
         <div className="container">
+          {toast ? <RouteToast tone={toast.tone} message={toast.message} /> : null}
           <EntryForm
             action={`/api/admin/entries/${entry.id}`}
             type={entry.type}

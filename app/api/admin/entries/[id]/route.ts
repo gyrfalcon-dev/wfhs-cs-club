@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { parseSubmissionForm } from "@/lib/forms";
+import { setRedirectToast } from "@/lib/redirect-toast";
 import { softDeleteEntry, updateEntry } from "@/lib/content-store";
 
 type RouteProps = {
@@ -20,7 +21,9 @@ export async function POST(request: Request, { params }: RouteProps) {
 
   if (intent === "delete") {
     await softDeleteEntry(id, admin.email);
-    return NextResponse.redirect(new URL("/admin?state=deleted", request.url));
+    return NextResponse.redirect(
+      setRedirectToast(new URL("/admin", request.url), "success", "Entry archived."),
+    );
   }
 
   if (!hasEditorFields && (intent === "publish" || intent === "unpublish" || intent === "archive")) {
@@ -37,13 +40,25 @@ export async function POST(request: Request, { params }: RouteProps) {
       },
       admin.email,
     );
-    return NextResponse.redirect(new URL(`/admin/entries/${id}`, request.url));
+    const message =
+      intent === "publish"
+        ? "Entry published."
+        : intent === "unpublish"
+          ? "Entry moved back to drafts."
+          : "Entry archived.";
+    return NextResponse.redirect(
+      setRedirectToast(new URL(`/admin/entries/${id}`, request.url), "success", message),
+    );
   }
 
   const parsed = parseSubmissionForm(formData);
   if (!parsed.ok) {
     return NextResponse.redirect(
-      new URL(`/admin/entries/${id}?state=${encodeURIComponent(parsed.error)}`, request.url),
+      setRedirectToast(
+        new URL(`/admin/entries/${id}`, request.url),
+        "error",
+        parsed.error,
+      ),
     );
   }
 
@@ -82,5 +97,15 @@ export async function POST(request: Request, { params }: RouteProps) {
     admin.email,
   );
 
-  return NextResponse.redirect(new URL(`/admin/entries/${id}`, request.url));
+  return NextResponse.redirect(
+    setRedirectToast(
+      new URL(`/admin/entries/${id}`, request.url),
+      "success",
+      intent === "publish"
+        ? "Entry published."
+        : intent === "archive"
+          ? "Entry archived."
+          : "Draft saved.",
+    ),
+  );
 }

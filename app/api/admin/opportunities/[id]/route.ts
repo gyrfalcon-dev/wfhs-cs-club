@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { parseOpportunityAdminForm, updateOpportunity } from "@/lib/opportunities";
+import { setRedirectToast } from "@/lib/redirect-toast";
 
 type RouteProps = {
   params: Promise<{ id: string }>;
@@ -18,15 +19,20 @@ export async function POST(request: Request, { params }: RouteProps) {
 
   if (!parsed.ok) {
     return NextResponse.redirect(
-      new URL(
-        `/admin/opportunities/${id}?state=${encodeURIComponent(parsed.error)}`,
-        request.url,
+      setRedirectToast(
+        new URL(`/admin/opportunities/${id}`, request.url),
+        "error",
+        parsed.error,
       ),
     );
   }
 
   await updateOpportunity(id, parsed.values);
   return NextResponse.redirect(
-    new URL(`/admin/opportunities/${id}?state=saved`, request.url),
+    setRedirectToast(
+      new URL(`/admin/opportunities/${id}`, request.url),
+      "success",
+      "Opportunity saved.",
+    ),
   );
 }

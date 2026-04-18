@@ -1,16 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { RouteToast } from "@/app/_components/route-toast";
 import { OpportunityResponseForm } from "@/app/opportunities/_components/opportunity-response-form";
 import {
   getOpportunityKindLabel,
   getPublishedOpportunityBySlug,
   isOpportunityOpen,
 } from "@/lib/opportunities";
+import { getToastFromSearchParams } from "@/lib/redirect-toast";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ state?: string; error?: string }>;
+  searchParams: Promise<{ toast?: string; message?: string }>;
 };
 
 export async function generateMetadata({
@@ -39,6 +41,7 @@ export default async function OpportunityDetailPage({
 }: PageProps) {
   const { slug } = await params;
   const query = await searchParams;
+  const toast = getToastFromSearchParams(query);
   const opportunity = await getPublishedOpportunityBySlug(slug);
 
   if (!opportunity) {
@@ -72,18 +75,9 @@ export default async function OpportunityDetailPage({
       <section className="opportunity-detail-shell">
         <div className="container opportunity-detail-grid">
           <article className="card opportunity-detail-card">
+            {toast ? <RouteToast tone={toast.tone} message={toast.message} /> : null}
             <h2>About this opportunity</h2>
             <p>{opportunity.description}</p>
-            {query.state === "submitted" ? (
-              <div className="status-banner status-banner-success">
-                {opportunity.success_message}
-              </div>
-            ) : null}
-            {query.error ? (
-              <div className="status-banner status-banner-error">
-                {decodeURIComponent(query.error)}
-              </div>
-            ) : null}
             {open ? (
               <OpportunityResponseForm opportunity={opportunity} />
             ) : (

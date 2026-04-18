@@ -2,10 +2,15 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { isSupabaseConfigured } from "@/lib/env";
+import { setRedirectToast } from "@/lib/redirect-toast";
 import { supabaseConfig } from "@/lib/supabase/config";
 
 export async function POST(request: Request) {
-  const redirectUrl = new URL("/admin?state=signed-out", request.url);
+  const redirectUrl = setRedirectToast(
+    new URL("/admin", request.url),
+    "success",
+    "Signed out.",
+  );
 
   if (!isSupabaseConfigured) {
     return NextResponse.redirect(redirectUrl);

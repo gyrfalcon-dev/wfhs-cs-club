@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RouteToast } from "@/app/_components/route-toast";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { listDashboardEntries } from "@/lib/content-store";
 import { isSupabaseConfigured } from "@/lib/env";
@@ -6,9 +7,10 @@ import {
   listAdminOpportunities,
   listRecentOpportunityResponses,
 } from "@/lib/opportunities";
+import { getToastFromSearchParams } from "@/lib/redirect-toast";
 
 type PageProps = {
-  searchParams: Promise<{ state?: string }>;
+  searchParams: Promise<{ toast?: string; message?: string }>;
 };
 
 export const dynamic = "force-dynamic";
@@ -22,6 +24,7 @@ const bucketLabels = [
 
 export default async function AdminPage({ searchParams }: PageProps) {
   const query = await searchParams;
+  const toast = getToastFromSearchParams(query);
   const admin = await getAdminIdentity();
   const dashboard = admin ? await listDashboardEntries() : null;
   const opportunities = admin ? await listAdminOpportunities() : [];
@@ -41,15 +44,12 @@ export default async function AdminPage({ searchParams }: PageProps) {
 
       <section style={{ padding: "0 0 80px" }}>
         <div className="container">
+          {toast ? <RouteToast tone={toast.tone} message={toast.message} /> : null}
           {!isSupabaseConfigured && (
             <div className="status-banner status-banner-warn">
               Supabase is not configured yet. Set the values in `.env.local`,
               run the SQL in `supabase/schema.sql`, and reload this page.
             </div>
-          )}
-
-          {query.state && (
-            <div className="status-banner status-banner-success">{query.state}</div>
           )}
 
           {!admin ? (

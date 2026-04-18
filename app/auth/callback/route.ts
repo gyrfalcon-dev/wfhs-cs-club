@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { isSupabaseConfigured } from "@/lib/env";
+import { setRedirectToast } from "@/lib/redirect-toast";
 import { supabaseConfig } from "@/lib/supabase/config";
 
 export async function GET(request: Request) {
@@ -12,7 +13,13 @@ export async function GET(request: Request) {
   const next = url.searchParams.get("next") || "/admin";
 
   if (!isSupabaseConfigured || (!code && !tokenHash)) {
-    return NextResponse.redirect(new URL("/admin?state=invalid-link", request.url));
+    return NextResponse.redirect(
+      setRedirectToast(
+        new URL("/admin", request.url),
+        "error",
+        "That sign-in link is invalid or expired.",
+      ),
+    );
   }
 
   const cookieStore = await cookies();
@@ -44,7 +51,13 @@ export async function GET(request: Request) {
       });
 
   if (error) {
-    return NextResponse.redirect(new URL("/admin?state=invalid-link", request.url));
+    return NextResponse.redirect(
+      setRedirectToast(
+        new URL("/admin", request.url),
+        "error",
+        "That sign-in link is invalid or expired.",
+      ),
+    );
   }
 
   return response;

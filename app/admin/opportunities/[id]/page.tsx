@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { RouteToast } from "@/app/_components/route-toast";
 import { OpportunityEditor } from "@/app/admin/_components/opportunity-editor";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import {
@@ -7,10 +8,11 @@ import {
   getOpportunityKindLabel,
   listOpportunityResponses,
 } from "@/lib/opportunities";
+import { getToastFromSearchParams } from "@/lib/redirect-toast";
 
 type PageProps = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ state?: string }>;
+  searchParams: Promise<{ toast?: string; message?: string }>;
 };
 
 export default async function AdminOpportunityDetailPage({
@@ -24,6 +26,7 @@ export default async function AdminOpportunityDetailPage({
 
   const { id } = await params;
   const query = await searchParams;
+  const toast = getToastFromSearchParams(query);
   const opportunity = await getOpportunityById(id);
 
   if (!opportunity) {
@@ -47,9 +50,7 @@ export default async function AdminOpportunityDetailPage({
       <section style={{ padding: "0 0 80px" }}>
         <div className="container opportunity-admin-layout">
           <div>
-            {query.state ? (
-              <div className="status-banner status-banner-success">{query.state}</div>
-            ) : null}
+            {toast ? <RouteToast tone={toast.tone} message={toast.message} /> : null}
             <OpportunityEditor
               action={`/api/admin/opportunities/${opportunity.id}`}
               opportunity={opportunity}

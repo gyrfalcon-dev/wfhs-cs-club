@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { createOpportunity, parseOpportunityAdminForm } from "@/lib/opportunities";
+import { setRedirectToast } from "@/lib/redirect-toast";
 
 export async function POST(request: Request) {
   const admin = await getAdminIdentity();
@@ -13,12 +14,20 @@ export async function POST(request: Request) {
 
   if (!parsed.ok) {
     return NextResponse.redirect(
-      new URL(`/admin/opportunities?state=${encodeURIComponent(parsed.error)}`, request.url),
+      setRedirectToast(
+        new URL("/admin/opportunities", request.url),
+        "error",
+        parsed.error,
+      ),
     );
   }
 
   const opportunity = await createOpportunity(parsed.values);
   return NextResponse.redirect(
-    new URL(`/admin/opportunities/${opportunity.id}?state=created`, request.url),
+    setRedirectToast(
+      new URL(`/admin/opportunities/${opportunity.id}`, request.url),
+      "success",
+      "Opportunity created.",
+    ),
   );
 }

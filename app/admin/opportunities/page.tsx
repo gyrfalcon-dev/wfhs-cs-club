@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { RouteToast } from "@/app/_components/route-toast";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { getOpportunityKindLabel, listAdminOpportunities } from "@/lib/opportunities";
+import { getToastFromSearchParams } from "@/lib/redirect-toast";
 
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-  searchParams: Promise<{ state?: string }>;
+  searchParams: Promise<{ toast?: string; message?: string }>;
 };
 
 export default async function AdminOpportunitiesPage({ searchParams }: PageProps) {
@@ -17,6 +19,7 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
 
   const opportunities = await listAdminOpportunities();
   const query = await searchParams;
+  const toast = getToastFromSearchParams(query);
 
   return (
     <>
@@ -32,9 +35,7 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
 
       <section style={{ padding: "0 0 80px" }}>
         <div className="container">
-          {query.state ? (
-            <div className="status-banner status-banner-success">{query.state}</div>
-          ) : null}
+          {toast ? <RouteToast tone={toast.tone} message={toast.message} /> : null}
 
           <div className="admin-toolbar">
             <div>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { createEntry } from "@/lib/content-store";
 import { parseSubmissionForm } from "@/lib/forms";
+import { setRedirectToast } from "@/lib/redirect-toast";
 
 export async function POST(request: Request) {
   const admin = await getAdminIdentity();
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
 
   if (!parsed.ok) {
     return NextResponse.redirect(
-      new URL(`/admin?state=${encodeURIComponent(parsed.error)}`, request.url),
+      setRedirectToast(new URL("/admin", request.url), "error", parsed.error),
     );
   }
 
@@ -49,5 +50,11 @@ export async function POST(request: Request) {
     admin.email,
   );
 
-  return NextResponse.redirect(new URL(`/admin/entries/${entry.id}`, request.url));
+  return NextResponse.redirect(
+    setRedirectToast(
+      new URL(`/admin/entries/${entry.id}`, request.url),
+      "success",
+      intent === "publish" ? "Entry published." : "Draft saved.",
+    ),
+  );
 }
