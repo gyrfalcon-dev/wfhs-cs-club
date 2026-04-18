@@ -16,7 +16,7 @@ const navLinks = [
 export const metadata: Metadata = {
   title: "WFHS Computer Science Club",
   description:
-    "Wake Forest High School students building games, robots, tools, and the occasional glorious mess.",
+    "Wake Forest High School students building games, robots, tools, and real club projects.",
 };
 
 export default function RootLayout({
@@ -60,7 +60,7 @@ export default function RootLayout({
                 <div className="footer-brand">
                   <div className="footer-info">
                     <h4>WFHS Computer Science Club</h4>
-                    <p>Making stuff, learning fast, and debugging together</p>
+                    <p>Building projects, learning together, and sharing the work</p>
                   </div>
                 </div>
                 <div className="footer-links">

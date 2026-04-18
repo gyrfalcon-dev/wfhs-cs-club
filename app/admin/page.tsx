@@ -40,8 +40,8 @@ export default async function AdminPage({ searchParams }: PageProps) {
         <div className="container">
           <h1 className="page-title">Admin</h1>
           <p className="page-subtitle">
-            Keep the site current, review what members submitted, and move the
-            next item forward without hunting through five screens.
+            Review submissions, publish updates, and keep the club site in sync
+            with what members are doing.
           </p>
         </div>
       </div>
@@ -87,8 +87,8 @@ export default async function AdminPage({ searchParams }: PageProps) {
                   <p className="admin-eyebrow">Signed in as</p>
                   <h2 className="admin-command-title">{admin.email}</h2>
                   <p className="admin-muted admin-command-copy">
-                    Prioritize review work first, then keep published sections
-                    fresh and opportunities visible.
+                    Start with the review queue, then update live content and
+                    active opportunities.
                   </p>
                 </div>
                 <div className="admin-command-actions">

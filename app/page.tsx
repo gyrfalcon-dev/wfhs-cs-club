@@ -49,7 +49,7 @@ export default async function HomePage() {
             <Link href="/projects" className="cta-card">
               <div>
                 <h3>View Projects</h3>
-                <p>See what the club has actually shipped</p>
+                <p>See what members have built this year</p>
               </div>
               <span className="card-arrow">→</span>
             </Link>
@@ -120,7 +120,7 @@ export default async function HomePage() {
           <div className="homepage-section-header">
             <h2 className="section-heading no-margin">Projects</h2>
             <Link href="/projects" className="text-link text-link-strong">
-              See the whole pile →
+              View all projects →
             </Link>
           </div>
           <div className="project-grid">
