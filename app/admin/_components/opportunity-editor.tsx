@@ -115,9 +115,10 @@ export function OpportunityEditor({
         value={JSON.stringify({ fields })}
         readOnly
       />
+      <input type="hidden" name="visibility" value="public" />
 
-      <div className="card admin-panel">
-        <div className="admin-editor-grid">
+      <div className="opportunity-editor-shell">
+        <div className="admin-editor-grid opportunity-editor-grid-compact">
           <div className="form-group">
             <label className="form-label">Title</label>
             <input
@@ -138,7 +139,7 @@ export function OpportunityEditor({
           </div>
         </div>
 
-        <div className="form-group">
+        <div className="form-group opportunity-form-group-tight">
           <label className="form-label">Summary</label>
           <textarea
             name="summary"
@@ -149,7 +150,7 @@ export function OpportunityEditor({
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group opportunity-form-group-tight">
           <label className="form-label">Description</label>
           <textarea
             name="description"
@@ -160,7 +161,7 @@ export function OpportunityEditor({
           />
         </div>
 
-        <div className="admin-editor-grid">
+        <div className="admin-editor-grid opportunity-editor-grid-compact">
           <div className="form-group">
             <label className="form-label">Kind</label>
             <select
@@ -207,18 +208,11 @@ export function OpportunityEditor({
           </div>
           <div className="form-group">
             <label className="form-label">Visibility</label>
-            <select
-              name="visibility"
-              defaultValue={opportunity?.visibility || "public"}
-              className="form-input"
-            >
-              <option value="public">public</option>
-              <option value="private">private</option>
-            </select>
+            <input value="Public (default)" readOnly className="form-input" />
           </div>
         </div>
 
-        <div className="admin-editor-grid">
+        <div className="admin-editor-grid opportunity-editor-grid-compact">
           <div className="form-group">
             <label className="form-label">CTA Label</label>
             <input
@@ -237,7 +231,7 @@ export function OpportunityEditor({
           </div>
         </div>
 
-        <div className="admin-editor-grid">
+        <div className="admin-editor-grid opportunity-editor-grid-compact">
           <div className="form-group">
             <label className="form-label">Opens At</label>
             <input
@@ -258,7 +252,7 @@ export function OpportunityEditor({
           </div>
         </div>
 
-        <div className="admin-editor-grid">
+        <div className="admin-editor-grid opportunity-editor-grid-compact">
           <div className="form-group">
             <label className="form-label">Sort Order</label>
             <input
@@ -285,12 +279,12 @@ export function OpportunityEditor({
           <input
             type="checkbox"
             name="published"
-            defaultChecked={Boolean(opportunity?.published)}
+            defaultChecked={opportunity ? Boolean(opportunity.published) : true}
           />
-          Visible on the public opportunities board
+          Show on public opportunities
         </label>
 
-        <div className="form-group">
+        <div className="form-group opportunity-form-group-tight">
           <label className="form-label">Admin Notes</label>
           <textarea
             name="adminNotes"
@@ -319,14 +313,14 @@ export function OpportunityEditor({
             </div>
 
             {fields.length === 0 ? (
-              <div className="card admin-empty-state">
+              <div className="admin-empty-panel">
                 No structured fields yet.
               </div>
             ) : (
               <div className="opportunity-builder-list">
                 {fields.map((field, index) => (
-                  <div key={field.id} className="card opportunity-builder-card">
-                    <div className="admin-editor-grid">
+                  <div key={field.id} className="opportunity-builder-card opportunity-builder-card-compact">
+                    <div className="admin-editor-grid opportunity-editor-grid-compact">
                       <div className="form-group">
                         <label className="form-label">Field Label</label>
                         <input
@@ -349,7 +343,7 @@ export function OpportunityEditor({
                       </div>
                     </div>
 
-                    <div className="admin-editor-grid">
+                    <div className="admin-editor-grid opportunity-editor-grid-compact">
                       <div className="form-group">
                         <label className="form-label">Field Type</label>
                         <select
@@ -380,7 +374,7 @@ export function OpportunityEditor({
                       </div>
                     </div>
 
-                    <div className="form-group">
+                    <div className="form-group opportunity-form-group-tight">
                       <label className="form-label">Help Text</label>
                       <input
                         value={field.helpText || ""}
@@ -394,10 +388,10 @@ export function OpportunityEditor({
                     {field.type === "select" ||
                     field.type === "multi_select" ||
                     field.type === "date_slot_group" ? (
-                      <div className="form-group">
+                      <div className="form-group opportunity-form-group-tight">
                         <label className="form-label">Options</label>
                         <textarea
-                          rows={4}
+                          rows={3}
                           value={serializeOptions(field.options)}
                           onChange={(event) =>
                             updateField(index, {
@@ -413,7 +407,7 @@ export function OpportunityEditor({
                       </div>
                     ) : null}
 
-                    <div className="admin-actions">
+                    <div className="opportunity-field-actions">
                       <label className="admin-checkbox">
                         <input
                           type="checkbox"
@@ -426,7 +420,7 @@ export function OpportunityEditor({
                       </label>
                       <button
                         type="button"
-                        className="btn-secondary"
+                        className="btn-secondary admin-action-btn"
                         onClick={() =>
                           setFields((current) =>
                             current.filter((_, fieldIndex) => fieldIndex !== index),
@@ -442,7 +436,7 @@ export function OpportunityEditor({
             )}
           </div>
         ) : (
-          <div className="card opportunity-content-note">
+          <div className="opportunity-content-note">
             <h3>Built-in content submission form</h3>
             <p>
               Public applicants will get the standard long-form project or dev

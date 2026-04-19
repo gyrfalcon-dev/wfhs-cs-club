@@ -15,7 +15,7 @@ export default async function AdminNewOpportunityPage() {
           <p className="admin-kicker">Opportunities</p>
           <h1 className="page-title">Create opportunity</h1>
           <p className="page-subtitle">
-            Set up the listing, configure the form, and publish it when ready.
+            Post a clear call for students with only the fields you need.
           </p>
         </div>
       </div>

@@ -2151,6 +2151,23 @@ body::after {
   gap: 18px;
 }
 
+.opportunity-editor-shell {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid rgba(49, 42, 60, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 253, 250, 0.92);
+}
+
+.opportunity-editor-grid-compact {
+  gap: 10px;
+}
+
+.opportunity-form-group-tight {
+  gap: 6px;
+}
+
 .opportunity-form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2180,26 +2197,55 @@ body::after {
 
 .opportunity-builder {
   display: grid;
-  gap: 18px;
+  gap: 10px;
 }
 
 .opportunity-builder-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
 }
 
 .opportunity-builder-list,
 .opportunity-response-list {
   display: grid;
-  gap: 16px;
+  gap: 10px;
 }
 
 .opportunity-builder-card,
 .opportunity-response-card,
 .opportunity-content-note {
   padding: 22px;
+}
+
+.opportunity-builder-card-compact {
+  padding: 12px;
+  border: 1px solid rgba(49, 42, 60, 0.12);
+  border-radius: 12px;
+  background: rgba(247, 245, 242, 0.9);
+}
+
+.opportunity-field-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.opportunity-content-note {
+  border: 1px solid rgba(49, 42, 60, 0.12);
+  border-radius: 12px;
+  background: rgba(247, 245, 242, 0.9);
+  padding: 12px;
+}
+
+.opportunity-content-note h3 {
+  margin: 0 0 4px;
+}
+
+.opportunity-content-note p {
+  margin: 0;
 }
 
 .opportunity-json-preview {
