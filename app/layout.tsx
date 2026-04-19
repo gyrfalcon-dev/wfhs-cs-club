@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { ThemeToggle } from "@/app/_components/theme-toggle";
 import { ToastProvider } from "@/app/_components/toast-provider";
 import "./globals.css";
 
@@ -19,6 +20,23 @@ export const metadata: Metadata = {
     "Wake Forest High School students building games, robots, tools, and real club projects.",
 };
 
+const themeBootstrapScript = `
+(() => {
+  try {
+    const stored = window.localStorage.getItem("wfhs-theme");
+    const resolved =
+      stored === "light" || stored === "dark"
+        ? stored
+        : window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+    document.documentElement.setAttribute("data-theme", resolved);
+  } catch {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
+})();
+`;
+
 export default function RootLayout({
   children,
 }: {
@@ -26,6 +44,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
+      </head>
       <body>
         <ToastProvider>
           <nav className="navbar">
@@ -45,6 +66,7 @@ export default function RootLayout({
                     {link.label}
                   </Link>
                 ))}
+                <ThemeToggle />
                 <Link href="/join" className="nav-cta">
                   Join Us
                 </Link>

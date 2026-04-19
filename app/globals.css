@@ -37,95 +37,6 @@
   --font-code: "IBM Plex Mono", "Consolas", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: #1d1a19;
-    --bg-secondary: #262220;
-    --bg-tertiary: #302a27;
-    --text-primary: #efe8df;
-    --text-secondary: #c8bcaf;
-    --text-muted: #a39484;
-    --accent-green: #b8a7cb;
-    --accent-gold: #d0a27f;
-    --accent-deep: #c7b8d8;
-    --border-subtle: #4c433e;
-    --border-highlight: rgba(184, 167, 203, 0.42);
-    --gradient-primary: linear-gradient(135deg, #5b4a68 0%, #7b6890 100%);
-    --gradient-accent: linear-gradient(135deg, #8e799f 0%, #b39bc7 100%);
-    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.28);
-    --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.36);
-    --shadow-lg: 0 16px 34px rgba(0, 0, 0, 0.44);
-  }
-
-  body::before {
-    background: radial-gradient(
-      circle at 20% 0%,
-      rgba(184, 167, 203, 0.16) 0%,
-      rgba(184, 167, 203, 0) 48%
-    );
-  }
-
-  body::after {
-    background-image:
-      linear-gradient(rgba(214, 201, 188, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(214, 201, 188, 0.05) 1px, transparent 1px);
-  }
-
-  .navbar {
-    background: rgba(29, 26, 25, 0.9);
-  }
-
-  .card,
-  .admin-empty-panel,
-  .editorial-ledger-row,
-  .opportunity-list-row,
-  .opportunity-ledger,
-  .opportunity-editor-shell,
-  .opportunity-content-note,
-  .admin-ops-ledger,
-  .admin-stream-pane,
-  .admin-side-block {
-    background: rgba(39, 34, 32, 0.9);
-  }
-
-  .opportunity-spotlight {
-    background: rgba(39, 34, 32, 0.92);
-    border-color: rgba(184, 167, 203, 0.24);
-  }
-
-  .hero-bg {
-    background:
-      radial-gradient(
-        circle at 50% 8%,
-        rgba(184, 167, 203, 0.16) 0%,
-        rgba(184, 167, 203, 0) 46%
-      ),
-      linear-gradient(
-        180deg,
-        rgba(63, 53, 49, 0.42) 0%,
-        rgba(29, 26, 25, 0) 100%
-      );
-  }
-
-  .btn-secondary,
-  .admin-action-btn.btn-secondary {
-    background: rgba(39, 34, 32, 0.9);
-    border-color: rgba(184, 167, 203, 0.3);
-    color: var(--text-primary);
-  }
-
-  .form-input,
-  .admin-action-select {
-    background: rgba(44, 38, 35, 0.96);
-    color: var(--text-primary);
-    border-color: var(--border-subtle);
-  }
-
-  .form-input::placeholder {
-    color: var(--text-muted);
-  }
-}
-
 * {
   box-sizing: border-box;
 }
@@ -272,6 +183,24 @@ body::after {
   transform: translateY(-1px);
   box-shadow: 0 8px 18px rgba(75, 63, 93, 0.22);
   background: var(--accent-deep);
+}
+
+.theme-toggle {
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  border-color: var(--border-highlight);
+  background: rgba(91, 78, 109, 0.08);
 }
 
 .hero {
@@ -3142,153 +3071,175 @@ body::after {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: #161412;
-    --bg-secondary: #201c19;
-    --bg-tertiary: #2a2521;
-    --text-primary: #eee4d8;
-    --text-secondary: #c8b8a7;
-    --text-muted: #9f8f80;
-    --accent-green: #bba8ce;
-    --accent-gold: #d4a580;
-    --accent-deep: #9f87b7;
-    --border-subtle: #473f38;
-    --border-highlight: rgba(187, 168, 206, 0.42);
-  }
+html[data-theme="dark"] {
+  --bg-primary: #161412;
+  --bg-secondary: #201c19;
+  --bg-tertiary: #2a2521;
+  --text-primary: #eee4d8;
+  --text-secondary: #c8b8a7;
+  --text-muted: #9f8f80;
+  --accent-green: #bba8ce;
+  --accent-gold: #d4a580;
+  --accent-deep: #9f87b7;
+  --border-subtle: #473f38;
+  --border-highlight: rgba(187, 168, 206, 0.42);
+  color-scheme: dark;
+  background: var(--bg-primary) !important;
+}
 
-  html,
-  body {
-    background: var(--bg-primary) !important;
-    color: var(--text-primary) !important;
-    color-scheme: dark;
-  }
+html[data-theme="dark"] body {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
 
-  body::before {
-    background: radial-gradient(
-      circle at 20% 0%,
+html[data-theme="dark"] body::before {
+  background: radial-gradient(
+    circle at 20% 0%,
+    rgba(187, 168, 206, 0.14) 0%,
+    rgba(187, 168, 206, 0) 50%
+  );
+}
+
+html[data-theme="dark"] body::after {
+  background-image:
+    linear-gradient(rgba(200, 184, 167, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 184, 167, 0.06) 1px, transparent 1px);
+}
+
+html[data-theme="dark"] .navbar {
+  background: rgba(22, 20, 18, 0.94) !important;
+  border-bottom-color: var(--border-subtle);
+}
+
+html[data-theme="dark"] .hero-bg {
+  background:
+    radial-gradient(
+      circle at 50% 8%,
       rgba(187, 168, 206, 0.14) 0%,
-      rgba(187, 168, 206, 0) 50%
+      rgba(187, 168, 206, 0) 48%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(52, 43, 37, 0.42) 0%,
+      rgba(22, 20, 18, 0) 100%
     );
-  }
+}
 
-  body::after {
-    background-image:
-      linear-gradient(rgba(200, 184, 167, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(200, 184, 167, 0.06) 1px, transparent 1px);
-  }
+html[data-theme="dark"] .shape-1 {
+  background: rgba(187, 168, 206, 0.2);
+}
 
-  .navbar {
-    background: rgba(22, 20, 18, 0.94) !important;
-    border-bottom-color: var(--border-subtle);
-  }
+html[data-theme="dark"] .shape-2 {
+  background: rgba(212, 165, 128, 0.18);
+}
 
-  .hero-bg {
-    background:
-      radial-gradient(
-        circle at 50% 8%,
-        rgba(187, 168, 206, 0.14) 0%,
-        rgba(187, 168, 206, 0) 48%
-      ),
-      linear-gradient(
-        180deg,
-        rgba(52, 43, 37, 0.42) 0%,
-        rgba(22, 20, 18, 0) 100%
-      );
-  }
+html[data-theme="dark"] .shape-3 {
+  background: rgba(187, 168, 206, 0.14);
+}
 
-  .full-width-text,
-  .events-preview-section,
-  .footer,
-  .admin-sidebar {
-    background: var(--bg-secondary);
-    border-color: var(--border-subtle);
-  }
+html[data-theme="dark"] .opportunities-header::after {
+  background:
+    linear-gradient(180deg, rgba(22, 20, 18, 0) 0%, rgba(22, 20, 18, 0.97) 100%),
+    radial-gradient(circle at 15% 10%, rgba(212, 165, 128, 0.12), transparent 42%);
+}
 
-  .card,
-  .member-card,
-  .project-card,
-  .project-card-collection,
-  .event-card,
-  .admin-login-card,
-  .admin-editor,
-  .admin-upload-card,
-  .admin-danger-card,
-  .admin-empty-panel,
-  .admin-command-strip,
-  .admin-board,
-  .admin-pipeline-board,
-  .admin-note-panel,
-  .admin-command-bar-v2,
-  .admin-ops-ledger,
-  .admin-stream-pane,
-  .admin-side-block,
-  .admin-stream-row,
-  .admin-side-row,
-  .editorial-ledger-row,
-  .opportunity-ledger,
-  .opportunities-hero-panel,
-  .opportunity-list-row,
-  .opportunity-spotlight,
-  .opportunity-editor-shell,
-  .opportunity-builder-card-compact,
-  .opportunity-content-note,
-  .opportunity-fieldset,
-  .opportunity-slot-option,
-  .admin-action-select {
-    background: rgba(34, 30, 27, 0.92) !important;
-    border-color: var(--border-subtle) !important;
-  }
+html[data-theme="dark"] .opportunities-hero-pills span {
+  background: rgba(45, 39, 35, 0.92);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
 
-  .admin-activity-lane,
-  .admin-pipeline-row,
-  .opportunity-ledger-head,
-  .opportunity-meta-list span,
-  .opportunity-ledger-pill,
-  .opportunities-hero-stats div,
-  .tag,
-  .project-card-image,
-  .project-card-collection .project-card-image {
-    background: rgba(45, 39, 35, 0.92) !important;
-    border-color: var(--border-subtle) !important;
-    color: var(--text-primary);
-  }
+html[data-theme="dark"] .full-width-text,
+html[data-theme="dark"] .events-preview-section,
+html[data-theme="dark"] .footer,
+html[data-theme="dark"] .admin-sidebar {
+  background: var(--bg-secondary);
+  border-color: var(--border-subtle);
+}
 
-  .opportunity-spotlight .opportunity-meta-list span {
-    color: var(--text-primary);
-  }
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .member-card,
+html[data-theme="dark"] .project-card,
+html[data-theme="dark"] .project-card-collection,
+html[data-theme="dark"] .event-card,
+html[data-theme="dark"] .admin-login-card,
+html[data-theme="dark"] .admin-editor,
+html[data-theme="dark"] .admin-upload-card,
+html[data-theme="dark"] .admin-danger-card,
+html[data-theme="dark"] .admin-empty-panel,
+html[data-theme="dark"] .admin-command-strip,
+html[data-theme="dark"] .admin-board,
+html[data-theme="dark"] .admin-pipeline-board,
+html[data-theme="dark"] .admin-note-panel,
+html[data-theme="dark"] .admin-command-bar-v2,
+html[data-theme="dark"] .admin-ops-ledger,
+html[data-theme="dark"] .admin-stream-pane,
+html[data-theme="dark"] .admin-side-block,
+html[data-theme="dark"] .admin-stream-row,
+html[data-theme="dark"] .admin-side-row,
+html[data-theme="dark"] .editorial-ledger-row,
+html[data-theme="dark"] .opportunity-ledger,
+html[data-theme="dark"] .opportunities-hero-panel,
+html[data-theme="dark"] .opportunity-list-row,
+html[data-theme="dark"] .opportunity-spotlight,
+html[data-theme="dark"] .opportunity-editor-shell,
+html[data-theme="dark"] .opportunity-builder-card-compact,
+html[data-theme="dark"] .opportunity-content-note,
+html[data-theme="dark"] .opportunity-fieldset,
+html[data-theme="dark"] .opportunity-slot-option,
+html[data-theme="dark"] .admin-action-select {
+  background: rgba(34, 30, 27, 0.92) !important;
+  border-color: var(--border-subtle) !important;
+}
 
-  .form-input,
-  textarea.form-input,
-  select.form-input,
-  .admin-action-select {
-    background: rgba(40, 35, 31, 0.96) !important;
-    color: var(--text-primary) !important;
-    border-color: var(--border-subtle) !important;
-  }
+html[data-theme="dark"] .admin-activity-lane,
+html[data-theme="dark"] .admin-pipeline-row,
+html[data-theme="dark"] .opportunity-ledger-head,
+html[data-theme="dark"] .opportunity-meta-list span,
+html[data-theme="dark"] .opportunity-ledger-pill,
+html[data-theme="dark"] .opportunities-hero-stats div,
+html[data-theme="dark"] .tag,
+html[data-theme="dark"] .project-card-image,
+html[data-theme="dark"] .project-card-collection .project-card-image {
+  background: rgba(45, 39, 35, 0.92) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-primary);
+}
 
-  .form-input::placeholder {
-    color: var(--text-muted);
-  }
+html[data-theme="dark"] .opportunity-spotlight .opportunity-meta-list span {
+  color: var(--text-primary);
+}
 
-  .btn-secondary,
-  .admin-action-btn.btn-secondary {
-    background: rgba(38, 33, 29, 0.94);
-    border-color: var(--border-subtle);
-    color: var(--text-primary);
-  }
+html[data-theme="dark"] .form-input,
+html[data-theme="dark"] textarea.form-input,
+html[data-theme="dark"] select.form-input,
+html[data-theme="dark"] .admin-action-select {
+  background: rgba(40, 35, 31, 0.96) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-subtle) !important;
+}
 
-  .btn-secondary:hover,
-  .admin-action-btn.btn-secondary:hover {
-    background: rgba(50, 43, 38, 0.96);
-    border-color: var(--border-highlight);
-  }
+html[data-theme="dark"] .form-input::placeholder {
+  color: var(--text-muted);
+}
 
-  .toast-success,
-  .toast-error,
-  .toast-warn,
-  .toast-loading {
-    background: rgba(34, 30, 27, 0.96);
-    border-color: var(--border-subtle);
-  }
+html[data-theme="dark"] .btn-secondary,
+html[data-theme="dark"] .admin-action-btn.btn-secondary {
+  background: rgba(38, 33, 29, 0.94);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+html[data-theme="dark"] .btn-secondary:hover,
+html[data-theme="dark"] .admin-action-btn.btn-secondary:hover {
+  background: rgba(50, 43, 38, 0.96);
+  border-color: var(--border-highlight);
+}
+
+html[data-theme="dark"] .toast-success,
+html[data-theme="dark"] .toast-error,
+html[data-theme="dark"] .toast-warn,
+html[data-theme="dark"] .toast-loading {
+  background: rgba(34, 30, 27, 0.96);
+  border-color: var(--border-subtle);
 }
