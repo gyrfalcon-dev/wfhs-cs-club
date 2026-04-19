@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { RouteToast } from "@/app/_components/route-toast";
+import { QuickActionsMenu } from "@/app/admin/_components/quick-actions-menu";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { getOpportunityKindLabel, listAdminOpportunities } from "@/lib/opportunities";
 import { getToastFromSearchParams } from "@/lib/redirect-toast";
@@ -48,19 +49,12 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
               </p>
             </div>
             <div className="admin-command-actions">
-              <details className="admin-action-menu">
-                <summary className="btn-primary admin-action-btn admin-action-btn-primary">
-                  Quick actions
-                </summary>
-                <div className="admin-action-popover">
-                  <Link href="/admin/opportunities/new" className="admin-menu-link">
-                    Start opportunity
-                  </Link>
-                  <Link href="/opportunities" className="admin-menu-link">
-                    Open public board
-                  </Link>
-                </div>
-              </details>
+              <QuickActionsMenu
+                items={[
+                  { href: "/admin/opportunities/new", label: "Start opportunity" },
+                  { href: "/opportunities", label: "Open public board" },
+                ]}
+              />
             </div>
           </div>
 

@@ -1670,16 +1670,7 @@ body::after {
   z-index: 60;
 }
 
-.admin-action-menu summary {
-  list-style: none;
-  cursor: pointer;
-}
-
-.admin-action-menu summary::-webkit-details-marker {
-  display: none;
-}
-
-.admin-action-menu[open] .admin-action-btn-primary {
+.admin-action-menu.is-open .admin-action-btn-primary {
   background: linear-gradient(135deg, #51405f 0%, #625372 100%);
 }
 
@@ -1688,7 +1679,7 @@ body::after {
   top: calc(100% + 8px);
   left: 0;
   min-width: 220px;
-  display: none;
+  display: grid;
   gap: 4px;
   padding: 8px;
   border: 1px solid rgba(49, 42, 60, 0.24);
@@ -1696,10 +1687,6 @@ body::after {
   background: #fffdfa;
   box-shadow: 0 18px 34px rgba(38, 29, 48, 0.2);
   z-index: 80;
-}
-
-.admin-action-menu[open] .admin-action-popover {
-  display: grid;
 }
 
 .admin-menu-link,

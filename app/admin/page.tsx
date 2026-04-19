@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { RouteToast } from "@/app/_components/route-toast";
+import { QuickActionsMenu } from "@/app/admin/_components/quick-actions-menu";
 import { ToastForm } from "@/app/_components/toast-form";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { listDashboardEntries } from "@/lib/content-store";
@@ -119,38 +120,16 @@ export default async function AdminPage({ searchParams }: PageProps) {
                     </p>
                   </div>
                   <div className="admin-command-actions">
-                    <details className="admin-action-menu">
-                      <summary className="btn-primary admin-action-btn admin-action-btn-primary">
-                        Quick actions
-                      </summary>
-                      <div className="admin-action-popover">
-                        <Link href="/admin/opportunities/new" className="admin-menu-link">
-                          Start opportunity
-                        </Link>
-                        <Link href="/admin/new?type=event" className="admin-menu-link">
-                          Create event
-                        </Link>
-                        <Link href="/admin/new?type=project" className="admin-menu-link">
-                          Create project
-                        </Link>
-                        <Link href="/admin/new?type=devlog" className="admin-menu-link">
-                          Create devlog
-                        </Link>
-                        <Link href="/admin/submissions" className="admin-menu-link">
-                          Open join inbox
-                        </Link>
-                        <ToastForm
-                          action="/api/admin/logout"
-                          method="post"
-                          pendingMessage="Signing you out..."
-                          toastScope="admin-auth"
-                        >
-                          <button type="submit" className="admin-menu-button">
-                            Sign out
-                          </button>
-                        </ToastForm>
-                      </div>
-                    </details>
+                    <QuickActionsMenu
+                      includeSignOut
+                      items={[
+                        { href: "/admin/opportunities/new", label: "Start opportunity" },
+                        { href: "/admin/new?type=event", label: "Create event" },
+                        { href: "/admin/new?type=project", label: "Create project" },
+                        { href: "/admin/new?type=devlog", label: "Create devlog" },
+                        { href: "/admin/submissions", label: "Open join inbox" },
+                      ]}
+                    />
                   </div>
                 </section>
 
