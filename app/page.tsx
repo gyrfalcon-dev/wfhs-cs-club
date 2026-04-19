@@ -2,13 +2,13 @@ import Link from "next/link";
 import { getFeaturedProjects, getUpcomingEvents } from "@/lib/content";
 
 const stats = [
-  { label: "Members", value: "30+", detail: "Every grade level represented" },
+  { label: "Members", value: "30+", detail: "Freshmen through seniors, all building" },
   {
     label: "Active Projects",
     value: "5+",
-    detail: "Built in small teams, then argued over in a good way",
+    detail: "Shipped by small teams with strong opinions",
   },
-  { label: "Lines Written", value: "1000+", detail: "Since the fall showcase" },
+  { label: "Lines Written", value: "1000+", detail: "Since this school year started" },
 ];
 
 export const revalidate = 300;
@@ -34,15 +34,14 @@ export default async function HomePage() {
             <span className="title-line-2">Computer Science Club</span>
           </h1>
           <p className="hero-subtitle">
-            We build games, robots, and useful little tools. Some weeks it&apos;s
-            a polished showcase; some weeks it&apos;s a prototype that taught us
-            something before lunch.
+            We design, code, test, and demo real projects. Some weeks we ship
+            polished work. Some weeks we break things on purpose and learn fast.
           </p>
           <div className="hero-cta-grid">
             <Link href="/terminal" className="cta-card">
               <div>
                 <h3>Upcoming Events</h3>
-                <p>Check the next meeting, sprint, or deadline</p>
+                <p>See the next build session, deadline, or demo day</p>
               </div>
               <span className="card-arrow">→</span>
             </Link>
@@ -56,7 +55,7 @@ export default async function HomePage() {
             <Link href="/opportunities" className="cta-card">
               <div>
                 <h3>Open Opportunities</h3>
-                <p>Volunteer, submit a dev log, or sign up for the next showcase</p>
+                <p>Take the next open role, submission call, or event slot</p>
               </div>
               <span className="card-arrow">→</span>
             </Link>
@@ -67,36 +66,33 @@ export default async function HomePage() {
       <section className="full-width-text">
         <div className="container">
           <p>
-            We care about solid problem-solving, but we don&apos;t treat every
-            project like a lab report.
+            We care about craft, but we also care about momentum.
           </p>
           <p>
-            Wake Forest High School&apos;s computer science club ships real
-            things every semester: terminal-style web pages, Scratch games,
-            robot experiments, mobile prototypes, and the occasional project
-            that starts as a joke and turns into the best thing we made all
-            month.
+            At Wake Forest High School CS Club, ideas move from whiteboard to
+            working demo quickly: web apps, bots, game builds, automations, and
+            experiments that usually become bigger than expected.
           </p>
           <p>
             Whether you&apos;re writing your first line of Python or already
-            shipping full apps, there&apos;s room for you here. Browse the{" "}
+            publishing apps, there&apos;s a place for you here. Explore the{" "}
             <Link href="/projects" className="text-link">
               project board
             </Link>
             , meet the{" "}
             <Link href="/compilers" className="text-link">
-              people running the club
+              student team behind it
             </Link>
             , or{" "}
             <Link href="/join" className="text-link">
               jump in
             </Link>{" "}
-            at the next meeting. When officers need volunteers, showcase
-            entries, or event signups, the{" "}
+            at the next meeting. When officers open new calls for help,
+            showcases, or event signup, the{" "}
             <Link href="/opportunities" className="text-link">
               opportunities board
             </Link>{" "}
-            is where it goes.
+            is where it lands first.
           </p>
         </div>
       </section>
@@ -199,8 +195,8 @@ export default async function HomePage() {
         <div className="container">
           <h2 className="section-heading">Ready to join?</h2>
           <p className="join-copy">
-            We meet Tuesdays at 3 PM in Lab C204. Bring a laptop if you have
-            one, and curiosity either way.
+            We meet Tuesdays at 3 PM in Lab C204. Bring a laptop if you can,
+            questions either way.
           </p>
           <Link href="/join" className="btn-primary">
             Get Started

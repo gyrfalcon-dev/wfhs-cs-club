@@ -101,8 +101,8 @@ export default async function OpportunityDetailPage({
                   <div>
                     <h2>Apply now</h2>
                     <p className="admin-muted">
-                      Fill out the form below and an officer will review your
-                      response.
+                      Send your response and an officer will follow up with next
+                      steps.
                     </p>
                   </div>
                 </div>
@@ -110,14 +110,14 @@ export default async function OpportunityDetailPage({
               </div>
             ) : (
               <div className="status-banner status-banner-warn">
-                This listing is currently closed. Officers can reopen it from
-                the admin dashboard if more responses are needed.
+                This listing is closed right now. Officers can reopen it if the
+                team needs more responses.
               </div>
             )}
           </article>
 
           <aside className="card opportunity-sidebar">
-            <h3>Quick facts</h3>
+            <h3>Before you submit</h3>
             <dl className="opportunity-facts">
               <div>
                 <dt>Type</dt>

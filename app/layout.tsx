@@ -60,7 +60,7 @@ export default function RootLayout({
                 <div className="footer-brand">
                   <div className="footer-info">
                     <h4>WFHS Computer Science Club</h4>
-                    <p>Building projects, learning together, and sharing the work</p>
+                    <p>Building ambitious student projects and shipping them publicly</p>
                   </div>
                 </div>
                 <div className="footer-links">
