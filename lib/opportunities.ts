@@ -532,6 +532,52 @@ export async function updateOpportunity(id: string, input: OpportunityInput) {
   return mapOpportunity(data as Record<string, unknown>);
 }
 
+export async function setOpportunityState(
+  id: string,
+  action: "open" | "close" | "archive",
+) {
+  const client = getClient();
+  if (!client) {
+    throw new Error("Supabase is not configured.");
+  }
+
+  const patch =
+    action === "open"
+      ? { status: "published", published: true, visibility: "public" as const }
+      : action === "close"
+        ? { status: "closed", published: false }
+        : { status: "closed", published: false, visibility: "private" as const };
+
+  const { data, error } = await client
+    .from("opportunities")
+    .update(patch)
+    .eq("id", id)
+    .select(selectOpportunityFields)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return mapOpportunity(data as Record<string, unknown>);
+}
+
+export async function deleteOpportunityById(id: string) {
+  const client = getClient();
+  if (!client) {
+    throw new Error("Supabase is not configured.");
+  }
+
+  const { error } = await client
+    .from("opportunities")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
 export async function listOpportunityResponses(opportunityId: string) {
   const client = getClient();
   if (!client) return [];

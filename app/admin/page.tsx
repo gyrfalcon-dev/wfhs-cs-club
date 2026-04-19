@@ -166,10 +166,10 @@ export default async function AdminPage({ searchParams }: PageProps) {
                       <strong>{draftEntries.length}</strong>
                       <em>Edit and publish</em>
                     </Link>
-                    <Link href="/admin/opportunities" className="admin-ops-row">
+                    <Link href="/admin/opportunities?filter=open" className="admin-ops-row">
                       <span>Open opportunities</span>
                       <strong>{openOpportunities.length}</strong>
-                      <em>Collecting responses</em>
+                      <em>Manage open/close/archive/delete</em>
                     </Link>
                     <Link href="/admin?lane=published" className="admin-ops-row">
                       <span>Published entries</span>
