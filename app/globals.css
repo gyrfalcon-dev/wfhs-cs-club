@@ -39,38 +39,40 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-primary: #15131a;
-    --bg-secondary: #1c1823;
-    --bg-tertiary: #231e2d;
-    --text-primary: #ece7f5;
-    --text-secondary: #c0b7d3;
-    --text-muted: #9f94b8;
-    --accent-green: #b09bcb;
-    --accent-gold: #d7aa88;
-    --accent-deep: #85749d;
-    --border-subtle: #3a3248;
-    --border-highlight: rgba(176, 155, 203, 0.38);
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.24);
-    --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 14px 30px rgba(0, 0, 0, 0.36);
+    --bg-primary: #1d1a19;
+    --bg-secondary: #262220;
+    --bg-tertiary: #302a27;
+    --text-primary: #efe8df;
+    --text-secondary: #c8bcaf;
+    --text-muted: #a39484;
+    --accent-green: #b8a7cb;
+    --accent-gold: #d0a27f;
+    --accent-deep: #c7b8d8;
+    --border-subtle: #4c433e;
+    --border-highlight: rgba(184, 167, 203, 0.42);
+    --gradient-primary: linear-gradient(135deg, #5b4a68 0%, #7b6890 100%);
+    --gradient-accent: linear-gradient(135deg, #8e799f 0%, #b39bc7 100%);
+    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.28);
+    --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.36);
+    --shadow-lg: 0 16px 34px rgba(0, 0, 0, 0.44);
   }
 
   body::before {
     background: radial-gradient(
       circle at 20% 0%,
-      rgba(176, 155, 203, 0.14) 0%,
-      rgba(176, 155, 203, 0) 48%
+      rgba(184, 167, 203, 0.16) 0%,
+      rgba(184, 167, 203, 0) 48%
     );
   }
 
   body::after {
     background-image:
-      linear-gradient(rgba(197, 186, 219, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(197, 186, 219, 0.06) 1px, transparent 1px);
+      linear-gradient(rgba(214, 201, 188, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(214, 201, 188, 0.05) 1px, transparent 1px);
   }
 
   .navbar {
-    background: rgba(21, 19, 26, 0.88);
+    background: rgba(29, 26, 25, 0.9);
   }
 
   .card,
@@ -83,14 +85,44 @@
   .admin-ops-ledger,
   .admin-stream-pane,
   .admin-side-block {
-    background: rgba(30, 26, 38, 0.9);
+    background: rgba(39, 34, 32, 0.9);
+  }
+
+  .opportunity-spotlight {
+    background: rgba(39, 34, 32, 0.92);
+    border-color: rgba(184, 167, 203, 0.24);
+  }
+
+  .hero-bg {
+    background:
+      radial-gradient(
+        circle at 50% 8%,
+        rgba(184, 167, 203, 0.16) 0%,
+        rgba(184, 167, 203, 0) 46%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(63, 53, 49, 0.42) 0%,
+        rgba(29, 26, 25, 0) 100%
+      );
+  }
+
+  .btn-secondary,
+  .admin-action-btn.btn-secondary {
+    background: rgba(39, 34, 32, 0.9);
+    border-color: rgba(184, 167, 203, 0.3);
+    color: var(--text-primary);
   }
 
   .form-input,
   .admin-action-select {
-    background: rgba(31, 27, 39, 0.95);
+    background: rgba(44, 38, 35, 0.96);
     color: var(--text-primary);
     border-color: var(--border-subtle);
+  }
+
+  .form-input::placeholder {
+    color: var(--text-muted);
   }
 }
 
