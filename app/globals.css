@@ -1613,6 +1613,10 @@ body::after {
   margin: 0;
   font-size: 1.9rem;
   line-height: 1.1;
+  max-width: min(100%, 28ch);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .admin-command-copy {

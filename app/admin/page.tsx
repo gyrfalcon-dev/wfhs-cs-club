@@ -34,6 +34,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
   const openOpportunities = opportunities.filter(
     (opportunity) => opportunity.published && opportunity.status === "published",
   );
+  const adminHandle = admin?.email.split("@")[0] || admin?.email || "";
 
   const metrics = [
     { label: "Needs Review", value: pendingEntries.length, detail: "Queue" },
@@ -110,7 +111,9 @@ export default async function AdminPage({ searchParams }: PageProps) {
                 <section className="admin-command-bar-v2">
                   <div>
                     <p className="admin-eyebrow">Signed in</p>
-                    <h2 className="admin-command-title">{admin.email}</h2>
+                    <h2 className="admin-command-title" title={admin.email}>
+                      {adminHandle}
+                    </h2>
                     <p className="admin-muted admin-command-copy">
                       Start with review, then publish and close the loop on responses.
                     </p>
