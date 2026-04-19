@@ -119,19 +119,19 @@ export default async function AdminPage({ searchParams }: PageProps) {
                     </p>
                   </div>
                   <div className="admin-command-actions">
-                    <Link href="/admin/new?type=project" className="btn-secondary">
+                    <Link href="/admin/new?type=project" className="btn-secondary admin-action-btn">
                       New project
                     </Link>
-                    <Link href="/admin/new?type=devlog" className="btn-secondary">
+                    <Link href="/admin/new?type=devlog" className="btn-secondary admin-action-btn">
                       New devlog
                     </Link>
-                    <Link href="/admin/new?type=event" className="btn-secondary">
+                    <Link href="/admin/new?type=event" className="btn-secondary admin-action-btn">
                       New event
                     </Link>
-                    <Link href="/admin/opportunities/new" className="btn-primary">
+                    <Link href="/admin/opportunities/new" className="btn-primary admin-action-btn admin-action-btn-primary">
                       New opportunity
                     </Link>
-                    <Link href="/admin/submissions" className="btn-secondary">
+                    <Link href="/admin/submissions" className="btn-secondary admin-action-btn">
                       Join inbox
                     </Link>
                     <ToastForm
@@ -140,7 +140,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
                       pendingMessage="Signing you out..."
                       toastScope="admin-auth"
                     >
-                      <button type="submit" className="btn-secondary">
+                      <button type="submit" className="btn-secondary admin-action-btn">
                         Sign out
                       </button>
                     </ToastForm>

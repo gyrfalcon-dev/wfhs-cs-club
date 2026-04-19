@@ -48,10 +48,10 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
               </p>
             </div>
             <div className="admin-command-actions">
-              <Link href="/admin/opportunities/new" className="btn-primary">
+              <Link href="/admin/opportunities/new" className="btn-primary admin-action-btn admin-action-btn-primary">
                 New opportunity
               </Link>
-              <Link href="/opportunities" className="btn-secondary">
+              <Link href="/opportunities" className="btn-secondary admin-action-btn">
                 View public board
               </Link>
             </div>
