@@ -49,9 +49,9 @@ export async function POST(request: Request) {
     const opportunity = await createOpportunity(parsed.values);
     return NextResponse.redirect(
       setRedirectToast(
-        new URL(`/admin/opportunities/${opportunity.id}`, request.url),
+        new URL("/admin/opportunities", request.url),
         "success",
-        "Opportunity created.",
+        `Opportunity created: ${opportunity.title}`,
         "opportunity-editor",
       ),
     );

@@ -1,12 +1,20 @@
 import { redirect } from "next/navigation";
+import { RouteToast } from "@/app/_components/route-toast";
 import { OpportunityEditor } from "@/app/admin/_components/opportunity-editor";
 import { getAdminIdentity } from "@/lib/admin-auth";
+import { getToastFromSearchParams } from "@/lib/redirect-toast";
 
-export default async function AdminNewOpportunityPage() {
+type PageProps = {
+  searchParams: Promise<{ toast?: string; message?: string; toastScope?: string }>;
+};
+
+export default async function AdminNewOpportunityPage({ searchParams }: PageProps) {
   const admin = await getAdminIdentity();
   if (!admin) {
     redirect("/admin");
   }
+  const query = await searchParams;
+  const toast = getToastFromSearchParams(query);
 
   return (
     <>
@@ -22,6 +30,9 @@ export default async function AdminNewOpportunityPage() {
 
       <section style={{ padding: "0 0 80px" }}>
         <div className="container">
+          {toast ? (
+            <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
+          ) : null}
           <OpportunityEditor action="/api/admin/opportunities" />
         </div>
       </section>
