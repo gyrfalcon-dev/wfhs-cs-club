@@ -2,13 +2,9 @@ import Link from "next/link";
 import { getFeaturedProjects, getUpcomingEvents } from "@/lib/content";
 
 const stats = [
-  { label: "Members", value: "30+", detail: "Freshmen through seniors, all building" },
-  {
-    label: "Active Projects",
-    value: "5+",
-    detail: "Shipped by small teams with strong opinions",
-  },
-  { label: "Lines Written", value: "1000+", detail: "Since this school year started" },
+  { label: "Members", value: "30+", detail: "Freshmen through seniors" },
+  { label: "Active Projects", value: "5+", detail: "Built in parallel teams" },
+  { label: "Lines Written", value: "1000+", detail: "This school year" },
 ];
 
 export const revalidate = 300;
@@ -19,7 +15,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="hero">
+      <section className="hero editorial-header">
         <div className="hero-bg">
           <div className="grid-overlay" />
           <div className="floating-shapes">
@@ -34,30 +30,20 @@ export default async function HomePage() {
             <span className="title-line-2">Computer Science Club</span>
           </h1>
           <p className="hero-subtitle">
-            We design, code, test, and demo real projects. Some weeks we ship
-            polished work. Some weeks we break things on purpose and learn fast.
+            We build useful software, test ideas quickly, and share what we learn in public.
           </p>
-          <div className="hero-cta-grid">
-            <Link href="/terminal" className="cta-card">
-              <div>
-                <h3>Upcoming Events</h3>
-                <p>See the next build session, deadline, or demo day</p>
-              </div>
-              <span className="card-arrow">→</span>
+          <div className="hero-command-list">
+            <Link href="/terminal" className="hero-command-link">
+              <span>Upcoming Events</span>
+              <em>See the next build session, deadline, or demo day</em>
             </Link>
-            <Link href="/projects" className="cta-card">
-              <div>
-                <h3>View Projects</h3>
-                <p>See what members have built this year</p>
-              </div>
-              <span className="card-arrow">→</span>
+            <Link href="/projects" className="hero-command-link">
+              <span>Project Archive</span>
+              <em>Review what members have shipped this year</em>
             </Link>
-            <Link href="/opportunities" className="cta-card">
-              <div>
-                <h3>Open Opportunities</h3>
-                <p>Take the next open role, submission call, or event slot</p>
-              </div>
-              <span className="card-arrow">→</span>
+            <Link href="/opportunities" className="hero-command-link">
+              <span>Open Opportunities</span>
+              <em>Find active calls for showcases, help, and submissions</em>
             </Link>
           </div>
         </div>
@@ -65,43 +51,25 @@ export default async function HomePage() {
 
       <section className="full-width-text">
         <div className="container">
+          <p>Serious craft, fast iteration, and real work in the open.</p>
           <p>
-            We care about craft, but we also care about momentum.
+            WFHS CS Club turns raw ideas into live demos: web apps, bots, game builds, automations,
+            and experiments that often grow into flagship projects.
           </p>
           <p>
-            At Wake Forest High School CS Club, ideas move from whiteboard to
-            working demo quickly: web apps, bots, game builds, automations, and
-            experiments that usually become bigger than expected.
-          </p>
-          <p>
-            Whether you&apos;re writing your first line of Python or already
-            publishing apps, there&apos;s a place for you here. Explore the{" "}
-            <Link href="/projects" className="text-link">
-              project board
-            </Link>
-            , meet the{" "}
-            <Link href="/compilers" className="text-link">
-              student team behind it
-            </Link>
-            , or{" "}
-            <Link href="/join" className="text-link">
-              jump in
-            </Link>{" "}
-            at the next meeting. When officers open new calls for help,
-            showcases, or event signup, the{" "}
-            <Link href="/opportunities" className="text-link">
-              opportunities board
-            </Link>{" "}
-            is where it lands first.
+            Whether you&apos;re writing your first line of code or already shipping products, there&apos;s room for you.
+            Explore the <Link href="/projects" className="text-link">project board</Link>, meet the{" "}
+            <Link href="/compilers" className="text-link">student team behind it</Link>, or{" "}
+            <Link href="/join" className="text-link">join us</Link>.
           </p>
         </div>
       </section>
 
       <section className="homepage-section">
         <div className="container">
-          <div className="stats-grid">
+          <div className="stat-line">
             {stats.map((stat) => (
-              <div key={stat.label} className="stat-block">
+              <div key={stat.label} className="stat-line-item">
                 <span className="stat-number">{stat.value}</span>
                 <span className="stat-label">{stat.label}</span>
                 <p className="stat-detail">{stat.detail}</p>
@@ -114,24 +82,17 @@ export default async function HomePage() {
       <section className="homepage-section homepage-section-tight-top">
         <div className="container">
           <div className="homepage-section-header">
-            <h2 className="section-heading no-margin">Projects</h2>
+            <h2 className="section-heading no-margin">Featured Projects</h2>
             <Link href="/projects" className="text-link text-link-strong">
               View all projects →
             </Link>
           </div>
-          <div className="project-grid">
+          <div className="editorial-ledger">
             {featuredProjects.map((project) => (
-              <Link
-                key={project.slug}
-                href={`/projects/${project.slug}`}
-                className="card"
-                style={{ textDecoration: "none" }}
-              >
-                <div className="card-row">
-                  <span className="tag">{project.projectType}</span>
-                </div>
-                <h3 className="card-title">{project.title}</h3>
-                <p className="card-summary">{project.summary}</p>
+              <Link key={project.slug} href={`/projects/${project.slug}`} className="editorial-ledger-row">
+                <span className="tag">{project.projectType}</span>
+                <h3>{project.title}</h3>
+                <p>{project.summary}</p>
               </Link>
             ))}
           </div>
@@ -147,40 +108,22 @@ export default async function HomePage() {
                 Full schedule →
               </Link>
             </div>
-            <div className="event-list">
+            <div className="event-list editorial-ledger">
               {upcomingEvents.map((event) => (
-                <Link
-                  key={event.slug}
-                  href={`/events/${event.slug}`}
-                  className="event-card event-card-link"
-                >
+                <Link key={event.slug} href={`/events/${event.slug}`} className="event-card event-card-link editorial-ledger-row">
                   <div className="event-date-block">
                     <div className="event-month">
                       {new Date(event.eventAt).toLocaleDateString("en-US", {
                         month: "short",
                       })}
                     </div>
-                    <div className="event-day">
-                      {new Date(event.eventAt).getDate()}
-                    </div>
+                    <div className="event-day">{new Date(event.eventAt).getDate()}</div>
                   </div>
                   <div>
-                    <h3
-                      style={{
-                        fontSize: "18px",
-                        fontWeight: 600,
-                        marginBottom: "4px",
-                      }}
-                    >
+                    <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "4px" }}>
                       {event.title}
                     </h3>
-                    <p
-                      style={{
-                        fontSize: "14px",
-                        color: "var(--text-secondary)",
-                        margin: 0,
-                      }}
-                    >
+                    <p style={{ fontSize: "14px", color: "var(--text-secondary)", margin: 0 }}>
                       {event.location || "WFHS Lab"}
                     </p>
                   </div>
@@ -195,8 +138,7 @@ export default async function HomePage() {
         <div className="container">
           <h2 className="section-heading">Ready to join?</h2>
           <p className="join-copy">
-            We meet Tuesdays at 3 PM in Lab C204. Bring a laptop if you can,
-            questions either way.
+            We meet Tuesdays at 3 PM in Lab C204. Bring a laptop if you can, questions either way.
           </p>
           <Link href="/join" className="btn-primary">
             Get Started

@@ -21,14 +21,13 @@ export default async function OpportunitiesPage() {
 
   return (
     <>
-      <div className="page-header opportunities-header">
+      <div className="page-header opportunities-header editorial-header">
         <div className="container opportunities-hero-shell">
           <div className="opportunities-hero-copy">
             <p className="admin-kicker">Get involved</p>
             <h1 className="page-title">Opportunities</h1>
             <p className="page-subtitle">
-              Pick what fits your schedule this week: demo your project, help
-              run an event, or jump into a team effort.
+              A clear board of ways to contribute this week, from quick signups to deeper project calls.
             </p>
             <div className="opportunities-hero-pills">
               <span>Project showcases</span>
@@ -39,15 +38,14 @@ export default async function OpportunitiesPage() {
           </div>
 
           <div className="opportunities-hero-panel">
-            <h2>Board at a glance</h2>
+            <h2>Board status</h2>
             <p>
-              Officers publish every call here. Some are quick RSVPs, others are
-              deeper submissions that become featured work on the site.
+              Officers publish every call here first. If something needs student help, it starts on this page.
             </p>
             <div className="opportunities-hero-stats">
               <div>
                 <strong>{opportunities.length}</strong>
-                <span>Listings</span>
+                <span>Total listings</span>
               </div>
               <div>
                 <strong>{opportunities.filter(isOpportunityOpen).length}</strong>
@@ -64,20 +62,18 @@ export default async function OpportunitiesPage() {
             <section className="opportunity-feature">
               <div className="opportunity-feature-head">
                 <div>
-                  <p className="admin-kicker">Featured now</p>
-                  <h2 className="section-heading no-margin">Current priority call</h2>
+                  <p className="admin-kicker">Featured call</p>
+                  <h2 className="section-heading no-margin">Priority this week</h2>
                 </div>
                 <Link href={`/opportunities/${featuredOpportunity.slug}`} className="text-link">
-                  View details →
+                  Open full brief →
                 </Link>
               </div>
 
-              <article className="opportunity-spotlight">
+              <article className="opportunity-spotlight editorial-split">
                 <div className="opportunity-spotlight-main">
                   <div className="opportunity-card-top">
-                    <span className="tag">
-                      {getOpportunityKindLabel(featuredOpportunity.kind)}
-                    </span>
+                    <span className="tag">{getOpportunityKindLabel(featuredOpportunity.kind)}</span>
                     <span
                       className={`opportunity-status ${
                         isOpportunityOpen(featuredOpportunity) ? "is-open" : "is-closed"
@@ -89,9 +85,7 @@ export default async function OpportunitiesPage() {
                   <h3>{featuredOpportunity.title}</h3>
                   <p>{featuredOpportunity.description}</p>
                   <div className="opportunity-meta-list">
-                    {featuredOpportunity.location ? (
-                      <span>{featuredOpportunity.location}</span>
-                    ) : null}
+                    {featuredOpportunity.location ? <span>{featuredOpportunity.location}</span> : null}
                     {featuredOpportunity.opens_at ? (
                       <span>
                         Opens {new Date(featuredOpportunity.opens_at).toLocaleDateString("en-US")}
@@ -106,9 +100,7 @@ export default async function OpportunitiesPage() {
                 </div>
 
                 <div className="opportunity-spotlight-side">
-                  <p className="admin-muted">
-                    Strong fit for members who want a clear next step right now.
-                  </p>
+                  <p className="admin-muted">Strong fit if you want a concrete next step today.</p>
                   <Link href={`/opportunities/${featuredOpportunity.slug}`} className="btn-primary">
                     {isOpportunityOpen(featuredOpportunity)
                       ? featuredOpportunity.cta_label
@@ -128,60 +120,51 @@ export default async function OpportunitiesPage() {
                 </div>
               </div>
               <div className="admin-empty-panel">
-                Nothing is open right now. Check back after the next officer
-                meeting.
+                Nothing is open right now. Check back after the next officer planning cycle.
               </div>
             </section>
           ) : remainingOpportunities.length > 0 || !featuredOpportunity ? (
             <section className="opportunities-section">
               <div className="opportunity-feature-head">
                 <div>
-                  <p className="admin-kicker">Open board</p>
-                  <h2 className="section-heading no-margin">Current listings</h2>
+                  <p className="admin-kicker">All listings</p>
+                  <h2 className="section-heading no-margin">Opportunity ledger</h2>
                 </div>
               </div>
 
               <div className="opportunity-list">
-                {(featuredOpportunity ? remainingOpportunities : opportunities).map(
-                  (opportunity) => {
-                    const open = isOpportunityOpen(opportunity);
+                {(featuredOpportunity ? remainingOpportunities : opportunities).map((opportunity) => {
+                  const open = isOpportunityOpen(opportunity);
 
-                    return (
-                      <article key={opportunity.id} className="opportunity-list-row">
-                        <div className="opportunity-list-main">
-                          <div className="opportunity-card-top">
-                            <span className="tag">
-                              {getOpportunityKindLabel(opportunity.kind)}
-                            </span>
-                            <span className={`opportunity-status ${open ? "is-open" : "is-closed"}`}>
-                              {open ? "Open" : "Closed"}
-                            </span>
-                          </div>
-                          <h2>{opportunity.title}</h2>
-                          <p className="card-summary">{opportunity.summary}</p>
-                          <div className="opportunity-meta-list">
-                            {opportunity.location ? <span>{opportunity.location}</span> : null}
-                            {opportunity.opens_at ? (
-                              <span>
-                                Opens {new Date(opportunity.opens_at).toLocaleDateString("en-US")}
-                              </span>
-                            ) : null}
-                            {opportunity.closes_at ? (
-                              <span>
-                                Closes {new Date(opportunity.closes_at).toLocaleDateString("en-US")}
-                              </span>
-                            ) : null}
-                          </div>
+                  return (
+                    <article key={opportunity.id} className="opportunity-list-row">
+                      <div className="opportunity-list-main">
+                        <div className="opportunity-card-top">
+                          <span className="tag">{getOpportunityKindLabel(opportunity.kind)}</span>
+                          <span className={`opportunity-status ${open ? "is-open" : "is-closed"}`}>
+                            {open ? "Open" : "Closed"}
+                          </span>
                         </div>
-                        <div className="opportunity-list-cta">
-                          <Link href={`/opportunities/${opportunity.slug}`} className="btn-secondary">
-                            {open ? opportunity.cta_label : "View details"}
-                          </Link>
+                        <h2>{opportunity.title}</h2>
+                        <p className="card-summary">{opportunity.summary}</p>
+                        <div className="opportunity-meta-list">
+                          {opportunity.location ? <span>{opportunity.location}</span> : null}
+                          {opportunity.opens_at ? (
+                            <span>Opens {new Date(opportunity.opens_at).toLocaleDateString("en-US")}</span>
+                          ) : null}
+                          {opportunity.closes_at ? (
+                            <span>Closes {new Date(opportunity.closes_at).toLocaleDateString("en-US")}</span>
+                          ) : null}
                         </div>
-                      </article>
-                    );
-                  },
-                )}
+                      </div>
+                      <div className="opportunity-list-cta">
+                        <Link href={`/opportunities/${opportunity.slug}`} className="btn-secondary">
+                          {open ? opportunity.cta_label : "View details"}
+                        </Link>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             </section>
           ) : null}

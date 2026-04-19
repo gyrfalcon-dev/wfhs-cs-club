@@ -23,29 +23,28 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
 
   return (
     <>
-      <div className="page-header">
+      <div className="page-header editorial-header">
         <div className="container">
-          <p className="admin-kicker">Admin</p>
-          <h1 className="page-title">Opportunity management</h1>
+          <p className="admin-kicker">Admin Opportunity Desk</p>
+          <h1 className="page-title">Opportunity ledger</h1>
           <p className="page-subtitle">
-            Run every listing from one ledger: publish calls, watch responses,
-            and keep deadlines visible.
+            One clear list for every active and draft call, optimized for fast decisions.
           </p>
         </div>
       </div>
 
-      <section style={{ padding: "0 0 80px" }}>
+      <section className="admin-console-shell">
         <div className="container">
           {toast ? (
             <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
           ) : null}
 
-          <div className="admin-command-strip">
+          <div className="admin-command-bar-v2">
             <div>
-              <p className="admin-eyebrow">Live workflow</p>
-              <h2 style={{ margin: "8px 0" }}>{opportunities.length} opportunities</h2>
+              <p className="admin-eyebrow">Current board state</p>
+              <h2 className="admin-command-title">{opportunities.length} total listings</h2>
               <p className="admin-muted" style={{ margin: 0 }}>
-                Use this board as the source of truth for current club calls.
+                Publish new calls quickly and keep every response path visible.
               </p>
             </div>
             <div className="admin-command-actions">
@@ -60,16 +59,15 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
 
           {opportunities.length === 0 ? (
             <div className="admin-empty-panel">
-              No opportunities yet. Publish your first call and it will appear
-              on the public board immediately.
+              No opportunities yet. Publish your first call and it will appear on the public board.
             </div>
           ) : (
             <section className="opportunity-ledger" aria-label="Opportunity ledger">
               <div className="opportunity-ledger-head">
                 <span>Listing</span>
-                <span>Status</span>
+                <span>State</span>
                 <span>Responses</span>
-                <span>Mode</span>
+                <span>Form mode</span>
               </div>
               <div className="opportunity-ledger-body">
                 {opportunities.map((opportunity) => (
