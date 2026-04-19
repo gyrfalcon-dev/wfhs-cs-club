@@ -18,6 +18,7 @@ export async function POST(request: Request) {
         new URL("/admin/opportunities", request.url),
         "error",
         parsed.error,
+        "opportunity-editor",
       ),
     );
   }
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
       new URL(`/admin/opportunities/${opportunity.id}`, request.url),
       "success",
       "Opportunity created.",
+      "opportunity-editor",
     ),
   );
 }

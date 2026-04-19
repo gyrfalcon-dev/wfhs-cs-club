@@ -14,8 +14,6 @@ export const isSupabaseConfigured =
   Boolean(env.supabaseAnonKey) &&
   Boolean(env.supabaseServiceRoleKey);
 
-export const getBaseUrl = () => env.siteUrl || "http://localhost:3000";
-
 export const getStaticAdminAllowlist = () =>
   env.adminEmailAllowlist
     .split(",")

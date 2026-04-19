@@ -7,7 +7,7 @@ import { getToastFromSearchParams } from "@/lib/redirect-toast";
 
 type PageProps = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ toast?: string; message?: string }>;
+  searchParams: Promise<{ toast?: string; message?: string; toastScope?: string }>;
 };
 
 export default async function AdminEntryPage({ params, searchParams }: PageProps) {
@@ -39,7 +39,9 @@ export default async function AdminEntryPage({ params, searchParams }: PageProps
 
       <section style={{ padding: "0 0 80px" }}>
         <div className="container">
-          {toast ? <RouteToast tone={toast.tone} message={toast.message} /> : null}
+          {toast ? (
+            <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
+          ) : null}
           <EntryForm
             action={`/api/admin/entries/${entry.id}`}
             type={entry.type}

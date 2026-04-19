@@ -1,4 +1,5 @@
 import { ImageUploadField } from "@/app/_components/image-upload-field";
+import { ToastForm } from "@/app/_components/toast-form";
 import type { ContentEntry, ContentType, ContentVersion } from "@/lib/content-store";
 
 type EntryFormProps = {
@@ -21,7 +22,14 @@ export function EntryForm({ action, type, entry, versions = [] }: EntryFormProps
   return (
     <div className="admin-grid admin-grid-wide">
       <div className="card admin-panel">
-        <form action={action} method="post" style={{ display: "grid", gap: "18px" }}>
+        <ToastForm
+          action={action}
+          method="post"
+          style={{ display: "grid", gap: "18px" }}
+          pendingMessage={entry ? "Saving entry..." : "Creating entry..."}
+          invalidMessage="Complete the required entry fields before saving."
+          toastScope="entry-editor"
+        >
           <input type="hidden" name="type" value={type} />
 
           <div className="form-group">
@@ -220,7 +228,7 @@ export function EntryForm({ action, type, entry, versions = [] }: EntryFormProps
               </>
             )}
           </div>
-        </form>
+        </ToastForm>
       </div>
 
       <aside className="card admin-panel">
@@ -243,11 +251,13 @@ export function EntryForm({ action, type, entry, versions = [] }: EntryFormProps
           ) : (
             <div style={{ display: "grid", gap: "12px" }}>
               {versions.map((version) => (
-                <form
+                <ToastForm
                   key={version.id}
                   action={`/api/admin/entries/${version.entry_id}/restore`}
                   method="post"
                   className="admin-version"
+                  pendingMessage="Restoring version..."
+                  toastScope="entry-editor"
                 >
                   <input type="hidden" name="versionId" value={version.id} />
                   <div>
@@ -259,7 +269,7 @@ export function EntryForm({ action, type, entry, versions = [] }: EntryFormProps
                   <button className="btn-secondary" type="submit">
                     Restore
                   </button>
-                </form>
+                </ToastForm>
               ))}
             </div>
           )}

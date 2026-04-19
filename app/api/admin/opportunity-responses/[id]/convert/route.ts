@@ -22,13 +22,19 @@ export async function POST(request: Request, { params }: RouteProps) {
         new URL(`/admin/entries/${entry.id}`, request.url),
         "success",
         "Response converted to a draft entry.",
+        "opportunity-editor",
       ),
     );
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Could not convert response.";
     return NextResponse.redirect(
-      setRedirectToast(new URL("/admin/opportunities", request.url), "error", message),
+      setRedirectToast(
+        new URL("/admin/opportunities", request.url),
+        "error",
+        message,
+        "opportunity-editor",
+      ),
     );
   }
 }

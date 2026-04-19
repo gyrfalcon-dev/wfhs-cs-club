@@ -1543,6 +1543,11 @@ body::after {
   border-color: rgba(193, 132, 94, 0.24);
 }
 
+.toast-loading {
+  background: rgba(243, 247, 255, 0.98);
+  border-color: rgba(78, 109, 170, 0.22);
+}
+
 .toast-copy {
   display: grid;
   gap: 6px;
@@ -1562,6 +1567,10 @@ body::after {
   color: var(--text-secondary);
 }
 
+.toast-loading .toast-label::after {
+  content: " ...";
+}
+
 .toast-close {
   border: none;
   background: transparent;
@@ -1570,6 +1579,11 @@ body::after {
   line-height: 1;
   cursor: pointer;
   padding: 0;
+}
+
+.admin-login-form {
+  display: grid;
+  gap: 14px;
 }
 
 .admin-command-center {
@@ -1792,23 +1806,120 @@ body::after {
   padding: 0 0 80px;
 }
 
-.opportunities-lead {
+.opportunities-hero-shell {
   display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 20px;
-  margin-bottom: 28px;
+  grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.9fr);
+  gap: 22px;
+  align-items: end;
 }
 
-.opportunity-lead-card {
+.opportunities-hero-copy {
+  display: grid;
+  gap: 16px;
+}
+
+.opportunities-hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.opportunities-hero-pills span {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 252, 247, 0.86);
+  border: 1px solid rgba(107, 91, 119, 0.16);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.opportunities-hero-panel {
   padding: 28px;
   background:
-    linear-gradient(145deg, rgba(255, 253, 250, 0.98), rgba(240, 235, 228, 0.92));
+    linear-gradient(145deg, rgba(255, 253, 249, 0.98), rgba(241, 236, 229, 0.94));
 }
 
-.opportunity-lead-accent {
+.opportunities-hero-panel h2,
+.opportunity-feature-copy h3 {
+  margin: 0;
+}
+
+.opportunities-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.opportunities-hero-stats div {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(107, 91, 119, 0.06);
+}
+
+.opportunities-hero-stats strong {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.opportunities-hero-stats span {
+  color: var(--text-secondary);
+}
+
+.opportunity-feature,
+.opportunities-section {
+  display: grid;
+  gap: 18px;
+}
+
+.opportunity-feature {
+  margin-bottom: 34px;
+}
+
+.opportunity-feature-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: end;
+}
+
+.opportunity-feature-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.8fr);
+  gap: 24px;
+  padding: 30px;
   background:
-    linear-gradient(145deg, rgba(49, 42, 60, 0.96), rgba(87, 72, 100, 0.96));
-  color: #f9f6f1;
+    linear-gradient(145deg, rgba(49, 42, 60, 0.98), rgba(87, 72, 100, 0.96));
+  color: #faf7f2;
+  border-color: rgba(87, 72, 100, 0.32);
+}
+
+.opportunity-feature-copy {
+  display: grid;
+  gap: 18px;
+}
+
+.opportunity-feature-copy h3 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  line-height: 1.05;
+}
+
+.opportunity-feature-copy p {
+  margin: 0;
+  color: rgba(250, 247, 242, 0.82);
+}
+
+.opportunity-feature-card .opportunity-meta-list span {
+  background: rgba(255, 255, 255, 0.09);
+  color: #faf7f2;
+}
+
+.opportunity-feature-cta {
+  display: grid;
+  align-content: end;
+  gap: 14px;
 }
 
 .opportunity-grid {
@@ -1878,6 +1989,11 @@ body::after {
   align-items: flex-start;
 }
 
+.opportunity-detail-hero-shell {
+  display: grid;
+  gap: 18px;
+}
+
 .opportunity-hero-status {
   padding-top: 16px;
 }
@@ -1894,6 +2010,18 @@ body::after {
 .opportunity-sidebar,
 .opportunity-response-panel {
   padding: 28px;
+}
+
+.opportunity-detail-section {
+  display: grid;
+  gap: 14px;
+}
+
+.opportunity-form-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: start;
 }
 
 .opportunity-sidebar {
@@ -2008,7 +2136,8 @@ body::after {
     padding: 24px 18px 40px;
   }
 
-  .opportunities-lead,
+  .opportunities-hero-shell,
+  .opportunity-feature-card,
   .opportunity-grid,
   .opportunity-detail-grid,
   .opportunity-admin-layout,
@@ -2063,7 +2192,9 @@ body::after {
   }
 
   .opportunity-builder-header,
-  .opportunity-card-top {
+  .opportunity-card-top,
+  .opportunity-feature-head,
+  .opportunity-form-head {
     align-items: flex-start;
     flex-direction: column;
   }

@@ -8,7 +8,7 @@ import { getToastFromSearchParams } from "@/lib/redirect-toast";
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-  searchParams: Promise<{ toast?: string; message?: string }>;
+  searchParams: Promise<{ toast?: string; message?: string; toastScope?: string }>;
 };
 
 export default async function AdminOpportunitiesPage({ searchParams }: PageProps) {
@@ -35,7 +35,9 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
 
       <section style={{ padding: "0 0 80px" }}>
         <div className="container">
-          {toast ? <RouteToast tone={toast.tone} message={toast.message} /> : null}
+          {toast ? (
+            <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
+          ) : null}
 
           <div className="admin-toolbar">
             <div>

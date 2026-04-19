@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ToastForm } from "@/app/_components/toast-form";
 import {
   getDefaultFormSchema,
   opportunityFieldTypes,
@@ -100,7 +101,14 @@ export function OpportunityEditor({
   };
 
   return (
-    <form action={action} method="post" className="opportunity-admin-editor">
+    <ToastForm
+      action={action}
+      method="post"
+      className="opportunity-admin-editor"
+      pendingMessage={opportunity ? "Saving opportunity..." : "Creating opportunity..."}
+      invalidMessage="Complete the required opportunity fields before saving."
+      toastScope="opportunity-editor"
+    >
       <input
         type="hidden"
         name="formSchemaJson"
@@ -449,7 +457,7 @@ export function OpportunityEditor({
           </button>
         </div>
       </div>
-    </form>
+    </ToastForm>
   );
 }
 

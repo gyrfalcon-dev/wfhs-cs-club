@@ -1,3 +1,4 @@
+import { ToastForm } from "@/app/_components/toast-form";
 import type { Opportunity } from "@/lib/opportunities";
 
 type OpportunityResponseFormProps = {
@@ -183,10 +184,13 @@ export function OpportunityResponseForm({
   opportunity,
 }: OpportunityResponseFormProps) {
   return (
-    <form
+    <ToastForm
       action={`/api/opportunities/${opportunity.slug}/apply`}
       method="post"
       className="opportunity-form"
+      pendingMessage="Submitting your response..."
+      invalidMessage="Please complete the required fields before submitting."
+      toastScope={`opportunity-${opportunity.slug}`}
     >
       <input type="hidden" name="clubWebsite" value="" />
 
@@ -206,6 +210,6 @@ export function OpportunityResponseForm({
       <button type="submit" className="btn-primary submit-button">
         {opportunity.cta_label}
       </button>
-    </form>
+    </ToastForm>
   );
 }

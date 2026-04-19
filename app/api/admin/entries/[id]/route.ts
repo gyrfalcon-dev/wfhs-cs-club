@@ -22,7 +22,7 @@ export async function POST(request: Request, { params }: RouteProps) {
   if (intent === "delete") {
     await softDeleteEntry(id, admin.email);
     return NextResponse.redirect(
-      setRedirectToast(new URL("/admin", request.url), "success", "Entry archived."),
+      setRedirectToast(new URL("/admin", request.url), "success", "Entry archived.", "entry-editor"),
     );
   }
 
@@ -47,7 +47,7 @@ export async function POST(request: Request, { params }: RouteProps) {
           ? "Entry moved back to drafts."
           : "Entry archived.";
     return NextResponse.redirect(
-      setRedirectToast(new URL(`/admin/entries/${id}`, request.url), "success", message),
+      setRedirectToast(new URL(`/admin/entries/${id}`, request.url), "success", message, "entry-editor"),
     );
   }
 
@@ -58,6 +58,7 @@ export async function POST(request: Request, { params }: RouteProps) {
         new URL(`/admin/entries/${id}`, request.url),
         "error",
         parsed.error,
+        "entry-editor",
       ),
     );
   }
@@ -106,6 +107,7 @@ export async function POST(request: Request, { params }: RouteProps) {
         : intent === "archive"
           ? "Entry archived."
           : "Draft saved.",
+      "entry-editor",
     ),
   );
 }

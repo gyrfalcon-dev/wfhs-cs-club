@@ -10,6 +10,7 @@ export async function POST(request: Request) {
     new URL("/admin", request.url),
     "success",
     "Signed out.",
+    "admin-auth",
   );
 
   if (!isSupabaseConfigured) {

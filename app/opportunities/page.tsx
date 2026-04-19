@@ -16,90 +16,187 @@ export const dynamic = "force-dynamic";
 
 export default async function OpportunitiesPage() {
   const opportunities = await listPublishedOpportunities();
+  const featuredOpportunity = opportunities[0] ?? null;
+  const remainingOpportunities = opportunities.slice(1);
 
   return (
     <>
       <div className="page-header opportunities-header">
-        <div className="container">
-          <p className="admin-kicker">Get involved</p>
-          <h1 className="page-title">Opportunities</h1>
-          <p className="page-subtitle">
-            Show a project, submit a build update, sign up for an event, or put
-            your name on something the club needs help with.
-          </p>
+        <div className="container opportunities-hero-shell">
+          <div className="opportunities-hero-copy">
+            <p className="admin-kicker">Get involved</p>
+            <h1 className="page-title">Opportunities</h1>
+            <p className="page-subtitle">
+              Apply for showcases, submit progress updates, volunteer, and sign
+              up for the next thing the club is running.
+            </p>
+            <div className="opportunities-hero-pills">
+              <span>Project showcases</span>
+              <span>Dev log submissions</span>
+              <span>Volunteer shifts</span>
+              <span>Event signups</span>
+            </div>
+          </div>
+
+          <div className="card opportunities-hero-panel">
+            <h2>How this board works</h2>
+            <p>
+              Officers post signups and submission calls here. Some are quick
+              RSVP-style forms. Others collect enough detail to turn into a
+              published project or dev log later.
+            </p>
+            <div className="opportunities-hero-stats">
+              <div>
+                <strong>{opportunities.length}</strong>
+                <span>Listings</span>
+              </div>
+              <div>
+                <strong>{opportunities.filter(isOpportunityOpen).length}</strong>
+                <span>Open now</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <section className="opportunities-shell">
         <div className="container">
-          <div className="opportunities-lead">
-            <div className="card opportunity-lead-card">
-              <h2>One board, different ways to contribute</h2>
-              <p>
-                Some opportunities are quick signups. Others collect enough
-                detail for officers to turn them into a polished public post.
-              </p>
-            </div>
-            <div className="card opportunity-lead-card opportunity-lead-accent">
-              <h3>What belongs here?</h3>
-              <p>
-                Volunteering, showcases, build updates, workshops, signups,
-                event participation, and anything else that needs organized
-                member intake.
-              </p>
-            </div>
-          </div>
+          {featuredOpportunity ? (
+            <section className="opportunity-feature">
+              <div className="opportunity-feature-head">
+                <div>
+                  <p className="admin-kicker">Featured now</p>
+                  <h2 className="section-heading no-margin">
+                    Start with the main callout
+                  </h2>
+                </div>
+                <Link href={`/opportunities/${featuredOpportunity.slug}`} className="text-link">
+                  View details →
+                </Link>
+              </div>
+
+              <article className="card opportunity-feature-card">
+                <div className="opportunity-feature-copy">
+                  <div className="opportunity-card-top">
+                    <span className="tag">
+                      {getOpportunityKindLabel(featuredOpportunity.kind)}
+                    </span>
+                    <span
+                      className={`opportunity-status ${
+                        isOpportunityOpen(featuredOpportunity) ? "is-open" : "is-closed"
+                      }`}
+                    >
+                      {isOpportunityOpen(featuredOpportunity) ? "Open now" : "Closed"}
+                    </span>
+                  </div>
+                  <h3>{featuredOpportunity.title}</h3>
+                  <p>{featuredOpportunity.description}</p>
+                  <div className="opportunity-meta-list">
+                    {featuredOpportunity.location ? (
+                      <span>{featuredOpportunity.location}</span>
+                    ) : null}
+                    {featuredOpportunity.opens_at ? (
+                      <span>
+                        Opens{" "}
+                        {new Date(featuredOpportunity.opens_at).toLocaleDateString("en-US")}
+                      </span>
+                    ) : null}
+                    {featuredOpportunity.closes_at ? (
+                      <span>
+                        Closes{" "}
+                        {new Date(featuredOpportunity.closes_at).toLocaleDateString("en-US")}
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className="opportunity-feature-cta">
+                  <p className="admin-muted">
+                    Best for members who want to jump into the current club
+                    priority.
+                  </p>
+                  <Link
+                    href={`/opportunities/${featuredOpportunity.slug}`}
+                    className="btn-primary"
+                  >
+                    {isOpportunityOpen(featuredOpportunity)
+                      ? featuredOpportunity.cta_label
+                      : "View details"}
+                  </Link>
+                </div>
+              </article>
+            </section>
+          ) : null}
 
           {opportunities.length === 0 ? (
-            <div className="card admin-empty-state">
-              Nothing is open right now. Check back after the next officer
-              meeting.
-            </div>
-          ) : (
-            <div className="opportunity-grid">
-              {opportunities.map((opportunity) => {
-                const open = isOpportunityOpen(opportunity);
+            <section className="opportunities-section">
+              <div className="opportunity-feature-head">
+                <div>
+                  <p className="admin-kicker">Open board</p>
+                  <h2 className="section-heading no-margin">Current listings</h2>
+                </div>
+              </div>
+              <div className="card admin-empty-state">
+                Nothing is open right now. Check back after the next officer
+                meeting.
+              </div>
+            </section>
+          ) : remainingOpportunities.length > 0 || !featuredOpportunity ? (
+            <section className="opportunities-section">
+              <div className="opportunity-feature-head">
+                <div>
+                  <p className="admin-kicker">Open board</p>
+                  <h2 className="section-heading no-margin">Current listings</h2>
+                </div>
+              </div>
 
-                return (
-                  <article key={opportunity.id} className="card opportunity-card">
-                    <div className="opportunity-card-top">
-                      <span className="tag">
-                        {getOpportunityKindLabel(opportunity.kind)}
-                      </span>
-                      <span className={`opportunity-status ${open ? "is-open" : "is-closed"}`}>
-                        {open ? "Open" : "Closed"}
-                      </span>
-                    </div>
-                    <h2>{opportunity.title}</h2>
-                    <p className="card-summary">{opportunity.summary}</p>
-                    <div className="opportunity-meta-list">
-                      {opportunity.location ? (
-                        <span>{opportunity.location}</span>
-                      ) : null}
-                      {opportunity.opens_at ? (
-                        <span>
-                          Opens{" "}
-                          {new Date(opportunity.opens_at).toLocaleDateString("en-US")}
-                        </span>
-                      ) : null}
-                      {opportunity.closes_at ? (
-                        <span>
-                          Closes{" "}
-                          {new Date(opportunity.closes_at).toLocaleDateString("en-US")}
-                        </span>
-                      ) : null}
-                    </div>
-                    <Link
-                      href={`/opportunities/${opportunity.slug}`}
-                      className="btn-secondary"
-                    >
-                      {open ? opportunity.cta_label : "View details"}
-                    </Link>
-                  </article>
-                );
-              })}
-            </div>
-          )}
+              <div className="opportunity-grid">
+                {(featuredOpportunity ? remainingOpportunities : opportunities).map(
+                  (opportunity) => {
+                    const open = isOpportunityOpen(opportunity);
+
+                    return (
+                      <article key={opportunity.id} className="card opportunity-card">
+                        <div className="opportunity-card-top">
+                          <span className="tag">
+                            {getOpportunityKindLabel(opportunity.kind)}
+                          </span>
+                          <span
+                            className={`opportunity-status ${open ? "is-open" : "is-closed"}`}
+                          >
+                            {open ? "Open" : "Closed"}
+                          </span>
+                        </div>
+                        <h2>{opportunity.title}</h2>
+                        <p className="card-summary">{opportunity.summary}</p>
+                        <div className="opportunity-meta-list">
+                          {opportunity.location ? <span>{opportunity.location}</span> : null}
+                          {opportunity.opens_at ? (
+                            <span>
+                              Opens{" "}
+                              {new Date(opportunity.opens_at).toLocaleDateString("en-US")}
+                            </span>
+                          ) : null}
+                          {opportunity.closes_at ? (
+                            <span>
+                              Closes{" "}
+                              {new Date(opportunity.closes_at).toLocaleDateString("en-US")}
+                            </span>
+                          ) : null}
+                        </div>
+                        <Link
+                          href={`/opportunities/${opportunity.slug}`}
+                          className="btn-secondary"
+                        >
+                          {open ? opportunity.cta_label : "View details"}
+                        </Link>
+                      </article>
+                    );
+                  },
+                )}
+              </div>
+            </section>
+          ) : null}
         </div>
       </section>
     </>

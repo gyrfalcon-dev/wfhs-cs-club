@@ -1,0 +1,82 @@
+backend:
+  name: github
+  repo: gyrfalcon-dev/wfhs-cs-club
+  branch: master
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+site_url: "/"
+
+collections:
+  - name: "projects"
+    label: "Projects"
+    label_singular: "Project"
+    folder: "content/projects"
+    create: true
+    slug: "{{slug}}"
+    extension: "mdx"
+    format: "frontmatter"
+    editor:
+      preview: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - label: "Status"
+        name: "status"
+        widget: "select"
+        options: ["active", "planning", "archived"]
+      - label: "Project Type"
+        name: "projectType"
+        widget: "select"
+        options: ["project", "group"]
+        hint: "Use group for collections that contain other projects."
+      - label: "Featured"
+        name: "featured"
+        widget: "boolean"
+        required: false
+        default: false
+      - label: "Cover Image"
+        name: "cover"
+        widget: "image"
+        required: false
+        hint: "Optional preview image for the project card."
+      - label: "Stack"
+        name: "stack"
+        widget: "list"
+        required: false
+        hint: "Technologies or tags shown on the site."
+      - label: "Child Project Slugs"
+        name: "children"
+        widget: "list"
+        required: false
+        hint: "Only for collections. Example: scratch-maze-escape"
+      - { label: "Body", name: "body", widget: "markdown", required: false }
+
+  - name: "events"
+    label: "Events"
+    label_singular: "Event"
+    folder: "content/events"
+    create: true
+    slug: "{{slug}}"
+    extension: "mdx"
+    format: "frontmatter"
+    editor:
+      preview: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Description", name: "description", widget: "text" }
+      - label: "Kind"
+        name: "kind"
+        widget: "select"
+        options: ["event", "devlog"]
+        required: false
+        default: "event"
+      - {
+          label: "Location",
+          name: "location",
+          widget: "string",
+          required: false,
+        }
+      - { label: "Body", name: "body", widget: "markdown", required: false }

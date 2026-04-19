@@ -19,7 +19,7 @@ export async function POST(request: Request, { params }: RouteProps) {
 
   if (!opportunity) {
     return NextResponse.redirect(
-      setRedirectToast(redirectUrl, "error", "Opportunity not found."),
+      setRedirectToast(redirectUrl, "error", "Opportunity not found.", `opportunity-${slug}`),
     );
   }
 
@@ -29,6 +29,7 @@ export async function POST(request: Request, { params }: RouteProps) {
         redirectUrl,
         "warn",
         "This opportunity is not accepting responses right now.",
+        `opportunity-${slug}`,
       ),
     );
   }
@@ -38,7 +39,7 @@ export async function POST(request: Request, { params }: RouteProps) {
 
   if (!parsed.ok) {
     return NextResponse.redirect(
-      setRedirectToast(redirectUrl, "error", parsed.error),
+      setRedirectToast(redirectUrl, "error", parsed.error, `opportunity-${slug}`),
     );
   }
 
@@ -50,6 +51,7 @@ export async function POST(request: Request, { params }: RouteProps) {
         redirectUrl,
         "error",
         "Too many responses from this network. Try again later.",
+        `opportunity-${slug}`,
       ),
     );
   }
@@ -69,11 +71,16 @@ export async function POST(request: Request, { params }: RouteProps) {
     const message =
       error instanceof Error ? error.message : "Could not save your response.";
     return NextResponse.redirect(
-      setRedirectToast(redirectUrl, "error", message),
+      setRedirectToast(redirectUrl, "error", message, `opportunity-${slug}`),
     );
   }
 
   return NextResponse.redirect(
-    setRedirectToast(redirectUrl, "success", opportunity.success_message),
+    setRedirectToast(
+      redirectUrl,
+      "success",
+      opportunity.success_message,
+      `opportunity-${slug}`,
+    ),
   );
 }

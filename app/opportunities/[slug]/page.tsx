@@ -12,7 +12,7 @@ import { getToastFromSearchParams } from "@/lib/redirect-toast";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ toast?: string; message?: string }>;
+  searchParams: Promise<{ toast?: string; message?: string; toastScope?: string }>;
 };
 
 export async function generateMetadata({
@@ -53,7 +53,7 @@ export default async function OpportunityDetailPage({
   return (
     <>
       <div className="page-header opportunities-header">
-        <div className="container">
+        <div className="container opportunity-detail-hero-shell">
           <Link href="/opportunities" className="text-link">
             ← Back to opportunities
           </Link>
@@ -62,6 +62,19 @@ export default async function OpportunityDetailPage({
               <p className="admin-kicker">{getOpportunityKindLabel(opportunity.kind)}</p>
               <h1 className="page-title">{opportunity.title}</h1>
               <p className="page-subtitle">{opportunity.summary}</p>
+              <div className="opportunity-meta-list">
+                {opportunity.location ? <span>{opportunity.location}</span> : null}
+                {opportunity.opens_at ? (
+                  <span>
+                    Opens {new Date(opportunity.opens_at).toLocaleDateString("en-US")}
+                  </span>
+                ) : null}
+                {opportunity.closes_at ? (
+                  <span>
+                    Closes {new Date(opportunity.closes_at).toLocaleDateString("en-US")}
+                  </span>
+                ) : null}
+              </div>
             </div>
             <div className="opportunity-hero-status">
               <span className={`opportunity-status ${open ? "is-open" : "is-closed"}`}>
@@ -75,11 +88,26 @@ export default async function OpportunityDetailPage({
       <section className="opportunity-detail-shell">
         <div className="container opportunity-detail-grid">
           <article className="card opportunity-detail-card">
-            {toast ? <RouteToast tone={toast.tone} message={toast.message} /> : null}
-            <h2>About this opportunity</h2>
-            <p>{opportunity.description}</p>
+            {toast ? (
+              <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
+            ) : null}
+            <div className="opportunity-detail-section">
+              <h2>About this opportunity</h2>
+              <p>{opportunity.description}</p>
+            </div>
             {open ? (
-              <OpportunityResponseForm opportunity={opportunity} />
+              <div className="opportunity-detail-section">
+                <div className="opportunity-form-head">
+                  <div>
+                    <h2>Apply now</h2>
+                    <p className="admin-muted">
+                      Fill out the form below and an officer will review your
+                      response.
+                    </p>
+                  </div>
+                </div>
+                <OpportunityResponseForm opportunity={opportunity} />
+              </div>
             ) : (
               <div className="status-banner status-banner-warn">
                 This listing is currently closed. Officers can reopen it from

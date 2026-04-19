@@ -23,6 +23,7 @@ export async function POST(request: Request, { params }: RouteProps) {
         new URL(`/admin/entries/${id}`, request.url),
         "error",
         "Select a version to restore.",
+        "entry-editor",
       ),
     );
   }
@@ -33,6 +34,7 @@ export async function POST(request: Request, { params }: RouteProps) {
       new URL(`/admin/entries/${id}`, request.url),
       "success",
       "Version restored.",
+      "entry-editor",
     ),
   );
 }

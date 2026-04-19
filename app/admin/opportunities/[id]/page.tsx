@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { RouteToast } from "@/app/_components/route-toast";
+import { ToastForm } from "@/app/_components/toast-form";
 import { OpportunityEditor } from "@/app/admin/_components/opportunity-editor";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import {
@@ -12,7 +13,7 @@ import { getToastFromSearchParams } from "@/lib/redirect-toast";
 
 type PageProps = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ toast?: string; message?: string }>;
+  searchParams: Promise<{ toast?: string; message?: string; toastScope?: string }>;
 };
 
 export default async function AdminOpportunityDetailPage({
@@ -50,7 +51,9 @@ export default async function AdminOpportunityDetailPage({
       <section style={{ padding: "0 0 80px" }}>
         <div className="container opportunity-admin-layout">
           <div>
-            {toast ? <RouteToast tone={toast.tone} message={toast.message} /> : null}
+            {toast ? (
+              <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
+            ) : null}
             <OpportunityEditor
               action={`/api/admin/opportunities/${opportunity.id}`}
               opportunity={opportunity}
@@ -88,14 +91,16 @@ export default async function AdminOpportunityDetailPage({
                     {(opportunity.kind === "project_showcase" ||
                       opportunity.kind === "devlog_submission") &&
                     response.status !== "converted" ? (
-                      <form
+                      <ToastForm
                         action={`/api/admin/opportunity-responses/${response.id}/convert`}
                         method="post"
+                        pendingMessage="Converting response to a draft..."
+                        toastScope="opportunity-editor"
                       >
                         <button type="submit" className="btn-secondary">
                           Convert to draft
                         </button>
-                      </form>
+                      </ToastForm>
                     ) : null}
                   </article>
                 ))}

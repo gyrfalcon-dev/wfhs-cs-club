@@ -23,6 +23,7 @@ export async function POST(request: Request, { params }: RouteProps) {
         new URL(`/admin/opportunities/${id}`, request.url),
         "error",
         parsed.error,
+        "opportunity-editor",
       ),
     );
   }
@@ -33,6 +34,7 @@ export async function POST(request: Request, { params }: RouteProps) {
       new URL(`/admin/opportunities/${id}`, request.url),
       "success",
       "Opportunity saved.",
+      "opportunity-editor",
     ),
   );
 }

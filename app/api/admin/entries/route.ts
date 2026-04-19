@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
   if (!parsed.ok) {
     return NextResponse.redirect(
-      setRedirectToast(new URL("/admin", request.url), "error", parsed.error),
+      setRedirectToast(new URL("/admin", request.url), "error", parsed.error, "entry-editor"),
     );
   }
 
@@ -55,6 +55,7 @@ export async function POST(request: Request) {
       new URL(`/admin/entries/${entry.id}`, request.url),
       "success",
       intent === "publish" ? "Entry published." : "Draft saved.",
+      "entry-editor",
     ),
   );
 }

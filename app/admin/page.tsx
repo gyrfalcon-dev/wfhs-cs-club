@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { RouteToast } from "@/app/_components/route-toast";
+import { ToastForm } from "@/app/_components/toast-form";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { listDashboardEntries } from "@/lib/content-store";
 import { getJoinSubmissions } from "@/lib/content";
@@ -12,7 +13,7 @@ import {
 import { getToastFromSearchParams } from "@/lib/redirect-toast";
 
 type PageProps = {
-  searchParams: Promise<{ toast?: string; message?: string }>;
+  searchParams: Promise<{ toast?: string; message?: string; toastScope?: string }>;
 };
 
 export const dynamic = "force-dynamic";
@@ -48,7 +49,9 @@ export default async function AdminPage({ searchParams }: PageProps) {
 
       <section style={{ padding: "0 0 80px" }}>
         <div className="container">
-          {toast ? <RouteToast tone={toast.tone} message={toast.message} /> : null}
+          {toast ? (
+            <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
+          ) : null}
 
           {!isSupabaseConfigured && (
             <div className="status-banner status-banner-warn">
@@ -61,13 +64,20 @@ export default async function AdminPage({ searchParams }: PageProps) {
             <div className="card admin-login-shell">
               <div>
                 <p className="admin-eyebrow">Officer access</p>
-                <h2 style={{ margin: "8px 0" }}>Sign in with a magic link</h2>
+                <h2 style={{ margin: "8px 0" }}>Sign in with email and password</h2>
                 <p style={{ margin: 0 }}>
-                  Enter an approved officer email and we&apos;ll send a link that
-                  signs you into the dashboard.
+                  Use a Supabase Auth account that is also listed in the admin
+                  allowlist.
                 </p>
               </div>
-              <form action="/api/admin/login" method="post" className="admin-login-form">
+              <ToastForm
+                action="/api/admin/login"
+                method="post"
+                className="admin-login-form"
+                pendingMessage="Signing you in..."
+                invalidMessage="Enter both your email and password."
+                toastScope="admin-auth"
+              >
                 <input
                   type="email"
                   name="email"
@@ -75,10 +85,17 @@ export default async function AdminPage({ searchParams }: PageProps) {
                   placeholder="officer@students.wcpss.net"
                   className="form-input"
                 />
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  placeholder="Password"
+                  className="form-input"
+                />
                 <button type="submit" className="btn-primary submit-button">
-                  Send Link
+                  Sign In
                 </button>
-              </form>
+              </ToastForm>
             </div>
           ) : (
             <div className="admin-command-center">
@@ -107,11 +124,16 @@ export default async function AdminPage({ searchParams }: PageProps) {
                   <Link href="/admin/submissions" className="btn-secondary">
                     Join inbox
                   </Link>
-                  <form action="/api/admin/logout" method="post">
+                  <ToastForm
+                    action="/api/admin/logout"
+                    method="post"
+                    pendingMessage="Signing you out..."
+                    toastScope="admin-auth"
+                  >
                     <button type="submit" className="btn-secondary">
                       Sign out
                     </button>
-                  </form>
+                  </ToastForm>
                 </div>
               </section>
 
