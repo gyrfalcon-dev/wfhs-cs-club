@@ -1714,6 +1714,37 @@ body::after {
   border-color: rgba(107, 91, 119, 0.2);
 }
 
+.admin-action-menu-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-action-select-label {
+  display: grid;
+  gap: 4px;
+}
+
+.admin-action-select-label span {
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.admin-action-select {
+  min-width: 220px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid rgba(49, 42, 60, 0.24);
+  background: #fffdfa;
+  color: var(--text-primary);
+  padding: 0 10px;
+  font-family: inherit;
+  font-size: 0.88rem;
+}
+
 .admin-metric-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
