@@ -41,8 +41,8 @@ export default async function AdminPage({ searchParams }: PageProps) {
         <div className="container">
           <h1 className="page-title">Admin</h1>
           <p className="page-subtitle">
-            Review submissions, publish updates, and keep the club site in sync
-            with what members are doing.
+            Run the club from one place: clear queues, publish updates, and keep
+            members in the loop.
           </p>
         </div>
       </div>
@@ -61,7 +61,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
           )}
 
           {!admin ? (
-            <div className="card admin-login-shell">
+            <div className="admin-login-shell">
               <div>
                 <p className="admin-eyebrow">Officer access</p>
                 <h2 style={{ margin: "8px 0" }}>Sign in with email and password</h2>
@@ -99,13 +99,13 @@ export default async function AdminPage({ searchParams }: PageProps) {
             </div>
           ) : (
             <div className="admin-command-center">
-              <section className="card admin-command-bar">
+              <section className="admin-command-strip">
                 <div>
                   <p className="admin-eyebrow">Signed in as</p>
                   <h2 className="admin-command-title">{admin.email}</h2>
                   <p className="admin-muted admin-command-copy">
-                    Start with the review queue, then update live content and
-                    active opportunities.
+                    Start in the review lane, then move into publishing and
+                    member follow-up.
                   </p>
                 </div>
                 <div className="admin-command-actions">
@@ -137,37 +137,37 @@ export default async function AdminPage({ searchParams }: PageProps) {
                 </div>
               </section>
 
-              <section className="admin-metric-grid">
-                <article className="card admin-metric-card admin-metric-emphasis">
+              <section className="admin-metric-rail" aria-label="Admin metrics">
+                <article className="admin-metric-chip admin-metric-chip-strong">
                   <span className="admin-metric-label">Needs review</span>
                   <strong className="admin-metric-value">{pendingEntries.length}</strong>
-                  <p>Pending member submissions waiting for a decision.</p>
+                  <p>Pending member submissions.</p>
                 </article>
-                <article className="card admin-metric-card">
-                  <span className="admin-metric-label">Drafts in progress</span>
+                <article className="admin-metric-chip">
+                  <span className="admin-metric-label">Drafts</span>
                   <strong className="admin-metric-value">{draftEntries.length}</strong>
-                  <p>Entries that still need edits before they go live.</p>
+                  <p>In-progress entries not yet live.</p>
                 </article>
-                <article className="card admin-metric-card">
+                <article className="admin-metric-chip">
                   <span className="admin-metric-label">Live opportunities</span>
                   <strong className="admin-metric-value">{openOpportunities.length}</strong>
-                  <p>Published listings currently collecting responses.</p>
+                  <p>Published listings accepting responses.</p>
                 </article>
-                <article className="card admin-metric-card">
+                <article className="admin-metric-chip">
                   <span className="admin-metric-label">Fresh responses</span>
                   <strong className="admin-metric-value">{recentResponses.length}</strong>
-                  <p>Recent opportunity applications waiting for follow-up.</p>
+                  <p>Recent applications to review.</p>
                 </article>
-                <article className="card admin-metric-card">
+                <article className="admin-metric-chip">
                   <span className="admin-metric-label">Join inbox</span>
                   <strong className="admin-metric-value">{joinSubmissions.length}</strong>
-                  <p>Students who asked to join and need a response.</p>
+                  <p>Students waiting for a reply.</p>
                 </article>
               </section>
 
-              <div className="admin-command-grid">
+              <div className="admin-workbench">
                 <div className="admin-column-main">
-                  <section className="card admin-spotlight-panel">
+                  <section className="admin-board">
                     <div className="admin-section-head admin-section-head-tight">
                       <div>
                         <p className="admin-eyebrow">Primary queue</p>
@@ -180,8 +180,8 @@ export default async function AdminPage({ searchParams }: PageProps) {
                       </Link>
                     </div>
 
-                    <div className="admin-focus-split">
-                      <div className="admin-focus-block">
+                    <div className="admin-activity-split">
+                      <div className="admin-activity-lane">
                         <div className="admin-focus-header">
                           <h3>Pending review</h3>
                           <span className="admin-count">{pendingEntries.length}</span>
@@ -189,28 +189,26 @@ export default async function AdminPage({ searchParams }: PageProps) {
                         {pendingEntries.length === 0 ? (
                           <p className="admin-muted">Nothing is waiting right now.</p>
                         ) : (
-                          <div className="admin-queue-list">
+                          <div className="admin-activity-list">
                             {pendingEntries.slice(0, 5).map((entry) => (
                               <Link
                                 key={entry.id}
                                 href={`/admin/entries/${entry.id}`}
-                                className="admin-queue-row"
+                                className="admin-activity-row"
                               >
                                 <div>
                                   <span className="admin-row-status">{entry.type}</span>
                                   <h3>{entry.title}</h3>
                                   <p>{entry.summary}</p>
                                 </div>
-                                <span className="admin-queue-meta">
-                                  {entry.author_name}
-                                </span>
+                                <span className="admin-queue-meta">{entry.author_name}</span>
                               </Link>
                             ))}
                           </div>
                         )}
                       </div>
 
-                      <div className="admin-focus-block">
+                      <div className="admin-activity-lane">
                         <div className="admin-focus-header">
                           <h3>Recent opportunity responses</h3>
                           <span className="admin-count">{recentResponses.length}</span>
@@ -218,12 +216,12 @@ export default async function AdminPage({ searchParams }: PageProps) {
                         {recentResponses.length === 0 ? (
                           <p className="admin-muted">No new responses yet.</p>
                         ) : (
-                          <div className="admin-queue-list">
+                          <div className="admin-activity-list">
                             {recentResponses.slice(0, 5).map((response) => (
                               <Link
                                 key={response.id}
                                 href={`/admin/opportunities/${response.opportunity_id}`}
-                                className="admin-queue-row"
+                                className="admin-activity-row"
                               >
                                 <div>
                                   <span className="admin-row-status">{response.status}</span>
@@ -241,7 +239,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
                     </div>
                   </section>
 
-                  <section className="card admin-publishing-panel">
+                  <section className="admin-pipeline-board">
                     <div className="admin-section-head admin-section-head-tight">
                       <div>
                         <p className="admin-eyebrow">Publishing desk</p>
@@ -251,49 +249,42 @@ export default async function AdminPage({ searchParams }: PageProps) {
                       </div>
                     </div>
 
-                    <div className="admin-pipeline-grid">
-                      <div className="admin-pipeline-lane">
-                        <div className="admin-focus-header">
-                          <h3>Drafts</h3>
-                          <span className="admin-count">{draftEntries.length}</span>
+                    <div className="admin-pipeline-rows">
+                      <div className="admin-pipeline-row">
+                        <div>
+                          <p className="admin-row-status">Drafts</p>
+                          <h3>{draftEntries.length} entries in progress</h3>
                         </div>
                         {draftEntries.length === 0 ? (
                           <p className="admin-muted">No drafts in progress.</p>
                         ) : (
-                          <div className="admin-queue-list">
+                          <div className="admin-inline-link-list">
                             {draftEntries.slice(0, 4).map((entry) => (
-                              <Link
-                                key={entry.id}
-                                href={`/admin/entries/${entry.id}`}
-                                className="admin-queue-row admin-queue-row-compact"
-                              >
-                                <div>
-                                  <span className="admin-row-status">{entry.type}</span>
-                                  <h3>{entry.title}</h3>
-                                </div>
+                              <Link key={entry.id} href={`/admin/entries/${entry.id}`}>
+                                {entry.title}
                               </Link>
                             ))}
                           </div>
                         )}
                       </div>
 
-                      <div className="admin-pipeline-lane">
-                        <div className="admin-focus-header">
-                          <h3>Published</h3>
-                          <span className="admin-count">{publishedEntries.length}</span>
+                      <div className="admin-pipeline-row">
+                        <div>
+                          <p className="admin-row-status">Published</p>
+                          <h3>{publishedEntries.length} items currently live</h3>
                         </div>
                         <p className="admin-muted">
-                          {publishedEntries.length} items are currently visible on the site.
+                          Published entries are visible across the site now.
                         </p>
                       </div>
 
-                      <div className="admin-pipeline-lane">
-                        <div className="admin-focus-header">
-                          <h3>Archive</h3>
-                          <span className="admin-count">{archivedEntries.length}</span>
+                      <div className="admin-pipeline-row">
+                        <div>
+                          <p className="admin-row-status">Archive</p>
+                          <h3>{archivedEntries.length} archived entries</h3>
                         </div>
                         <p className="admin-muted">
-                          Archived items stay recoverable from the edit history.
+                          Archived items can still be restored from edit history.
                         </p>
                       </div>
                     </div>
@@ -301,7 +292,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
                 </div>
 
                 <aside className="admin-column-side">
-                  <section className="card admin-sidebar-panel">
+                  <section className="admin-note-panel">
                     <div className="admin-section-head admin-section-head-tight">
                       <div>
                         <p className="admin-eyebrow">Opportunity board</p>
@@ -316,12 +307,12 @@ export default async function AdminPage({ searchParams }: PageProps) {
                     {opportunities.length === 0 ? (
                       <p className="admin-muted">No opportunities have been created yet.</p>
                     ) : (
-                      <div className="admin-mini-list">
+                      <div className="admin-plain-list">
                         {opportunities.slice(0, 4).map((opportunity) => (
                           <Link
                             key={opportunity.id}
                             href={`/admin/opportunities/${opportunity.id}`}
-                            className="admin-mini-card"
+                            className="admin-plain-row"
                           >
                             <span className="admin-row-status">
                               {getOpportunityKindLabel(opportunity.kind)}
@@ -337,7 +328,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
                     )}
                   </section>
 
-                  <section className="card admin-sidebar-panel">
+                  <section className="admin-note-panel">
                     <div className="admin-section-head admin-section-head-tight">
                       <div>
                         <p className="admin-eyebrow">Join requests</p>
@@ -352,9 +343,9 @@ export default async function AdminPage({ searchParams }: PageProps) {
                     {joinSubmissions.length === 0 ? (
                       <p className="admin-muted">No join requests yet.</p>
                     ) : (
-                      <div className="admin-mini-list">
+                      <div className="admin-plain-list">
                         {joinSubmissions.slice(0, 4).map((submission) => (
-                          <article key={submission.id} className="admin-mini-card">
+                          <article key={submission.id} className="admin-plain-row">
                             <span className="admin-row-status">{submission.grade}</span>
                             <h3>{submission.name}</h3>
                             <p>{submission.email}</p>

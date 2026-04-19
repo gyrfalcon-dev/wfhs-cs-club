@@ -26,9 +26,10 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
       <div className="page-header">
         <div className="container">
           <p className="admin-kicker">Admin</p>
-          <h1 className="page-title">Manage opportunities</h1>
+          <h1 className="page-title">Opportunity management</h1>
           <p className="page-subtitle">
-            Publish signups, showcases, and member intake forms from one board.
+            Run every listing from one ledger: publish calls, watch responses,
+            and keep deadlines visible.
           </p>
         </div>
       </div>
@@ -39,12 +40,15 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
             <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
           ) : null}
 
-          <div className="admin-toolbar">
+          <div className="admin-command-strip">
             <div>
               <p className="admin-eyebrow">Live workflow</p>
               <h2 style={{ margin: "8px 0" }}>{opportunities.length} opportunities</h2>
+              <p className="admin-muted" style={{ margin: 0 }}>
+                Use this board as the source of truth for current club calls.
+              </p>
             </div>
-            <div className="admin-actions">
+            <div className="admin-command-actions">
               <Link href="/admin/opportunities/new" className="btn-primary">
                 New opportunity
               </Link>
@@ -55,35 +59,39 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
           </div>
 
           {opportunities.length === 0 ? (
-            <div className="card admin-empty-state">
-              No opportunities yet. Create the first one from the admin.
+            <div className="admin-empty-panel">
+              No opportunities yet. Publish your first call and it will appear
+              on the public board immediately.
             </div>
           ) : (
-            <div className="opportunity-grid">
-              {opportunities.map((opportunity) => (
-                <Link
-                  key={opportunity.id}
-                  href={`/admin/opportunities/${opportunity.id}`}
-                  className="card opportunity-card"
-                >
-                  <div className="opportunity-card-top">
-                    <span className="tag">
-                      {getOpportunityKindLabel(opportunity.kind)}
-                    </span>
-                    <span className="admin-row-status">
+            <section className="opportunity-ledger" aria-label="Opportunity ledger">
+              <div className="opportunity-ledger-head">
+                <span>Listing</span>
+                <span>Status</span>
+                <span>Responses</span>
+                <span>Mode</span>
+              </div>
+              <div className="opportunity-ledger-body">
+                {opportunities.map((opportunity) => (
+                  <Link
+                    key={opportunity.id}
+                    href={`/admin/opportunities/${opportunity.id}`}
+                    className="opportunity-ledger-row"
+                  >
+                    <div>
+                      <p className="admin-row-status">{getOpportunityKindLabel(opportunity.kind)}</p>
+                      <h2>{opportunity.title}</h2>
+                      <p className="admin-muted">{opportunity.summary}</p>
+                    </div>
+                    <span className="opportunity-ledger-pill">
                       {opportunity.published ? "Published" : "Draft"}
                     </span>
-                  </div>
-                  <h2>{opportunity.title}</h2>
-                  <p className="card-summary">{opportunity.summary}</p>
-                  <div className="opportunity-meta-list">
-                    <span>{opportunity.status}</span>
-                    <span>{opportunity.form_mode}</span>
-                    <span>{opportunity.response_count ?? 0} responses</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                    <span>{opportunity.response_count ?? 0}</span>
+                    <span className="opportunity-ledger-mode">{opportunity.form_mode}</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
           )}
         </div>
       </section>
