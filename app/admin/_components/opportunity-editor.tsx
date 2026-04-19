@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ToastForm } from "@/app/_components/toast-form";
 import {
   getDefaultFormSchema,
@@ -17,6 +18,9 @@ type OpportunityEditorProps = {
   action: string;
   opportunity?: Opportunity | null;
 };
+
+const draftStoragePrefix = "opportunity-editor-draft:v1:";
+const editorFormId = "opportunity-editor-form";
 
 const defaultField = (): OpportunityField => ({
   id: `field_${Math.random().toString(36).slice(2, 8)}`,
@@ -55,18 +59,129 @@ function parseOptions(value: string) {
     .filter((option) => option.id && option.label);
 }
 
+function serializeDraft(formData: FormData) {
+  const values: Record<string, string | string[]> = {};
+
+  formData.forEach((value, key) => {
+    const nextValue = String(value);
+    const existing = values[key];
+
+    if (existing === undefined) {
+      values[key] = nextValue;
+      return;
+    }
+
+    values[key] = Array.isArray(existing)
+      ? [...existing, nextValue]
+      : [existing, nextValue];
+  });
+
+  return values;
+}
+
+function getSavedDraft(
+  draftKey: string,
+  shouldRestoreDraft: boolean,
+): Record<string, string | string[]> | null {
+  if (!shouldRestoreDraft || typeof window === "undefined") {
+    return null;
+  }
+
+  const rawDraft = window.sessionStorage.getItem(draftKey);
+  if (!rawDraft) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(rawDraft) as Record<string, string | string[]>;
+  } catch {
+    return null;
+  }
+}
+
+function getDraftString(
+  draft: Record<string, string | string[]> | null,
+  key: string,
+  fallback: string,
+) {
+  const value = draft?.[key];
+  if (Array.isArray(value)) {
+    return value[0] ?? fallback;
+  }
+  return typeof value === "string" ? value : fallback;
+}
+
+function getDraftChecked(
+  draft: Record<string, string | string[]> | null,
+  key: string,
+  fallback: boolean,
+) {
+  const value = draft?.[key];
+  if (Array.isArray(value)) {
+    return value.includes("on") || value.includes("true");
+  }
+  if (typeof value === "string") {
+    return value === "on" || value === "true";
+  }
+  return fallback;
+}
+
+function getDraftFields(
+  draft: Record<string, string | string[]> | null,
+  fallback: OpportunityField[],
+) {
+  const rawSchema = draft?.formSchemaJson;
+  const schemaJson = Array.isArray(rawSchema) ? rawSchema[0] : rawSchema;
+  if (!schemaJson) {
+    return fallback;
+  }
+
+  try {
+    const parsed = JSON.parse(schemaJson) as { fields?: OpportunityField[] };
+    return Array.isArray(parsed.fields) ? parsed.fields : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function getDraftKind(
+  draft: Record<string, string | string[]> | null,
+  fallback: OpportunityKind,
+) {
+  const value = getDraftString(draft, "kind", fallback);
+  return opportunityKinds.includes(value as OpportunityKind)
+    ? (value as OpportunityKind)
+    : fallback;
+}
+
+function getDraftMode(
+  draft: Record<string, string | string[]> | null,
+  fallback: OpportunityFormMode,
+) {
+  const value = getDraftString(draft, "formMode", fallback);
+  return value === "content" || value === "structured" ? value : fallback;
+}
+
 export function OpportunityEditor({
   action,
   opportunity,
 }: OpportunityEditorProps) {
+  const searchParams = useSearchParams();
+  const shouldRestoreDraft = searchParams.get("restoreDraft") === "1";
+  const draftKey = `${draftStoragePrefix}${opportunity?.id ?? "new"}`;
+  const savedDraft = getSavedDraft(draftKey, shouldRestoreDraft);
   const [kind, setKind] = useState<OpportunityKind>(
-    opportunity?.kind || "custom",
+    () => getDraftKind(savedDraft, opportunity?.kind || "custom"),
   );
   const [formMode, setFormMode] = useState<OpportunityFormMode>(
-    opportunity?.form_mode || "structured",
+    () => getDraftMode(savedDraft, opportunity?.form_mode || "structured"),
   );
   const [fields, setFields] = useState<OpportunityField[]>(
-    opportunity?.form_schema.fields || getDefaultFormSchema("custom").fields,
+    () =>
+      getDraftFields(
+        savedDraft,
+        opportunity?.form_schema.fields || getDefaultFormSchema("custom").fields,
+      ),
   );
 
   const syncKind = (nextKind: OpportunityKind) => {
@@ -102,12 +217,17 @@ export function OpportunityEditor({
 
   return (
     <ToastForm
+      id={editorFormId}
       action={action}
       method="post"
       className="opportunity-admin-editor"
       pendingMessage={opportunity ? "Saving opportunity..." : "Creating opportunity..."}
       invalidMessage="Complete the required opportunity fields before saving."
       toastScope="opportunity-editor"
+      onSubmit={(event) => {
+        const draft = serializeDraft(new FormData(event.currentTarget));
+        window.sessionStorage.setItem(draftKey, JSON.stringify(draft));
+      }}
     >
       <input
         type="hidden"
@@ -124,7 +244,7 @@ export function OpportunityEditor({
             <input
               name="title"
               required
-              defaultValue={opportunity?.title || ""}
+              defaultValue={getDraftString(savedDraft, "title", opportunity?.title || "")}
               className="form-input"
             />
           </div>
@@ -132,7 +252,7 @@ export function OpportunityEditor({
             <label className="form-label">Slug</label>
             <input
               name="slug"
-              defaultValue={opportunity?.slug || ""}
+              defaultValue={getDraftString(savedDraft, "slug", opportunity?.slug || "")}
               placeholder="leave blank to auto-generate"
               className="form-input"
             />
@@ -145,7 +265,7 @@ export function OpportunityEditor({
             name="summary"
             required
             rows={3}
-            defaultValue={opportunity?.summary || ""}
+            defaultValue={getDraftString(savedDraft, "summary", opportunity?.summary || "")}
             className="form-input"
           />
         </div>
@@ -156,7 +276,7 @@ export function OpportunityEditor({
             name="description"
             required
             rows={6}
-            defaultValue={opportunity?.description || ""}
+            defaultValue={getDraftString(savedDraft, "description", opportunity?.description || "")}
             className="form-input"
           />
         </div>
@@ -198,7 +318,7 @@ export function OpportunityEditor({
             <label className="form-label">Status</label>
             <select
               name="status"
-              defaultValue={opportunity?.status || "draft"}
+              defaultValue={getDraftString(savedDraft, "status", opportunity?.status || "draft")}
               className="form-input"
             >
               <option value="draft">draft</option>
@@ -217,7 +337,11 @@ export function OpportunityEditor({
             <label className="form-label">CTA Label</label>
             <input
               name="ctaLabel"
-              defaultValue={opportunity?.cta_label || "Apply now"}
+              defaultValue={getDraftString(
+                savedDraft,
+                "ctaLabel",
+                opportunity?.cta_label || "Apply now",
+              )}
               className="form-input"
             />
           </div>
@@ -225,7 +349,7 @@ export function OpportunityEditor({
             <label className="form-label">Location</label>
             <input
               name="location"
-              defaultValue={opportunity?.location || ""}
+              defaultValue={getDraftString(savedDraft, "location", opportunity?.location || "")}
               className="form-input"
             />
           </div>
@@ -237,7 +361,11 @@ export function OpportunityEditor({
             <input
               type="datetime-local"
               name="opensAt"
-              defaultValue={toDateInputValue(opportunity?.opens_at)}
+              defaultValue={getDraftString(
+                savedDraft,
+                "opensAt",
+                toDateInputValue(opportunity?.opens_at),
+              )}
               className="form-input"
             />
           </div>
@@ -246,7 +374,11 @@ export function OpportunityEditor({
             <input
               type="datetime-local"
               name="closesAt"
-              defaultValue={toDateInputValue(opportunity?.closes_at)}
+              defaultValue={getDraftString(
+                savedDraft,
+                "closesAt",
+                toDateInputValue(opportunity?.closes_at),
+              )}
               className="form-input"
             />
           </div>
@@ -258,7 +390,11 @@ export function OpportunityEditor({
             <input
               name="sortOrder"
               type="number"
-              defaultValue={String(opportunity?.sort_order ?? 0)}
+              defaultValue={getDraftString(
+                savedDraft,
+                "sortOrder",
+                String(opportunity?.sort_order ?? 0),
+              )}
               className="form-input"
             />
           </div>
@@ -266,10 +402,11 @@ export function OpportunityEditor({
             <label className="form-label">Success Message</label>
             <input
               name="successMessage"
-              defaultValue={
-                opportunity?.success_message ||
-                "Thanks. Your response has been received."
-              }
+              defaultValue={getDraftString(
+                savedDraft,
+                "successMessage",
+                opportunity?.success_message || "Thanks. Your response has been received.",
+              )}
               className="form-input"
             />
           </div>
@@ -279,7 +416,11 @@ export function OpportunityEditor({
           <input
             type="checkbox"
             name="published"
-            defaultChecked={opportunity ? Boolean(opportunity.published) : true}
+            defaultChecked={getDraftChecked(
+              savedDraft,
+              "published",
+              opportunity ? Boolean(opportunity.published) : true,
+            )}
           />
           Show on public opportunities
         </label>
@@ -289,7 +430,7 @@ export function OpportunityEditor({
           <textarea
             name="adminNotes"
             rows={3}
-            defaultValue={opportunity?.admin_notes || ""}
+            defaultValue={getDraftString(savedDraft, "adminNotes", opportunity?.admin_notes || "")}
             className="form-input"
           />
         </div>

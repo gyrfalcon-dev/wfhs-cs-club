@@ -650,11 +650,32 @@ export function parseOpportunityAdminForm(formData: FormData) {
 
   const parsed = adminOpportunitySchema.safeParse(raw);
   if (!parsed.success) {
+    const firstIssue = parsed.error.issues[0];
+    const field = String(firstIssue?.path?.[0] || "");
+    const fieldLabelMap: Record<string, string> = {
+      title: "Title",
+      slug: "Slug",
+      summary: "Summary",
+      description: "Description",
+      kind: "Kind",
+      formMode: "Form mode",
+      status: "Status",
+      ctaLabel: "CTA label",
+      opensAt: "Opens at",
+      closesAt: "Closes at",
+      sortOrder: "Sort order",
+      successMessage: "Success message",
+      adminNotes: "Admin notes",
+    };
+
+    const issueText = firstIssue?.message || "Please check the form values.";
+    const friendlyError = field
+      ? `${fieldLabelMap[field] || field}: ${issueText}`
+      : issueText;
+
     return {
       ok: false as const,
-      error:
-        parsed.error.issues[0]?.message ||
-        "Please check the opportunity form and try again.",
+      error: friendlyError,
     };
   }
 
