@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ToastForm } from "@/app/_components/toast-form";
 import {
@@ -79,87 +79,66 @@ function serializeDraft(formData: FormData) {
   return values;
 }
 
-function getSavedDraft(
-  draftKey: string,
-  shouldRestoreDraft: boolean,
-): Record<string, string | string[]> | null {
-  if (!shouldRestoreDraft || typeof window === "undefined") {
-    return null;
+function firstDraftValue(
+  draft: Record<string, string | string[]>,
+  key: string,
+) {
+  const value = draft[key];
+  if (Array.isArray(value)) {
+    return value[0] || "";
   }
+  return value || "";
+}
 
-  const rawDraft = window.sessionStorage.getItem(draftKey);
-  if (!rawDraft) {
-    return null;
-  }
+function draftFieldSchema(
+  draft: Record<string, string | string[]>,
+) {
+  const schemaText = firstDraftValue(draft, "formSchemaJson");
+  if (!schemaText) return null;
 
   try {
-    return JSON.parse(rawDraft) as Record<string, string | string[]>;
+    const parsed = JSON.parse(schemaText) as { fields?: OpportunityField[] };
+    return Array.isArray(parsed.fields) ? parsed.fields : null;
   } catch {
     return null;
   }
 }
 
-function getDraftString(
-  draft: Record<string, string | string[]> | null,
-  key: string,
-  fallback: string,
+function applyDraftToForm(
+  form: HTMLFormElement,
+  draft: Record<string, string | string[]>,
 ) {
-  const value = draft?.[key];
-  if (Array.isArray(value)) {
-    return value[0] ?? fallback;
-  }
-  return typeof value === "string" ? value : fallback;
-}
+  Object.entries(draft).forEach(([name, value]) => {
+    const values = Array.isArray(value) ? value : [value];
+    const elements = Array.from(
+      form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+        `[name="${name}"]`,
+      ),
+    );
 
-function getDraftChecked(
-  draft: Record<string, string | string[]> | null,
-  key: string,
-  fallback: boolean,
-) {
-  const value = draft?.[key];
-  if (Array.isArray(value)) {
-    return value.includes("on") || value.includes("true");
-  }
-  if (typeof value === "string") {
-    return value === "on" || value === "true";
-  }
-  return fallback;
-}
+    if (elements.length === 0) return;
 
-function getDraftFields(
-  draft: Record<string, string | string[]> | null,
-  fallback: OpportunityField[],
-) {
-  const rawSchema = draft?.formSchemaJson;
-  const schemaJson = Array.isArray(rawSchema) ? rawSchema[0] : rawSchema;
-  if (!schemaJson) {
-    return fallback;
-  }
+    const first = elements[0];
+    if (first instanceof HTMLInputElement && first.type === "checkbox") {
+      elements.forEach((element) => {
+        if (element instanceof HTMLInputElement) {
+          element.checked = values.includes(element.value || "on");
+        }
+      });
+      return;
+    }
 
-  try {
-    const parsed = JSON.parse(schemaJson) as { fields?: OpportunityField[] };
-    return Array.isArray(parsed.fields) ? parsed.fields : fallback;
-  } catch {
-    return fallback;
-  }
-}
+    if (elements.length === 1) {
+      elements[0].value = values[0] || "";
+      return;
+    }
 
-function getDraftKind(
-  draft: Record<string, string | string[]> | null,
-  fallback: OpportunityKind,
-) {
-  const value = getDraftString(draft, "kind", fallback);
-  return opportunityKinds.includes(value as OpportunityKind)
-    ? (value as OpportunityKind)
-    : fallback;
-}
-
-function getDraftMode(
-  draft: Record<string, string | string[]> | null,
-  fallback: OpportunityFormMode,
-) {
-  const value = getDraftString(draft, "formMode", fallback);
-  return value === "content" || value === "structured" ? value : fallback;
+    elements.forEach((element) => {
+      if (element instanceof HTMLInputElement) {
+        element.checked = values.includes(element.value);
+      }
+    });
+  });
 }
 
 export function OpportunityEditor({
@@ -169,19 +148,14 @@ export function OpportunityEditor({
   const searchParams = useSearchParams();
   const shouldRestoreDraft = searchParams.get("restoreDraft") === "1";
   const draftKey = `${draftStoragePrefix}${opportunity?.id ?? "new"}`;
-  const savedDraft = getSavedDraft(draftKey, shouldRestoreDraft);
   const [kind, setKind] = useState<OpportunityKind>(
-    () => getDraftKind(savedDraft, opportunity?.kind || "custom"),
+    opportunity?.kind || "custom",
   );
   const [formMode, setFormMode] = useState<OpportunityFormMode>(
-    () => getDraftMode(savedDraft, opportunity?.form_mode || "structured"),
+    opportunity?.form_mode || "structured",
   );
   const [fields, setFields] = useState<OpportunityField[]>(
-    () =>
-      getDraftFields(
-        savedDraft,
-        opportunity?.form_schema.fields || getDefaultFormSchema("custom").fields,
-      ),
+    opportunity?.form_schema.fields || getDefaultFormSchema("custom").fields,
   );
 
   const syncKind = (nextKind: OpportunityKind) => {
@@ -215,6 +189,44 @@ export function OpportunityEditor({
     );
   };
 
+  useEffect(() => {
+    if (!shouldRestoreDraft) return;
+
+    const rawDraft = window.sessionStorage.getItem(draftKey);
+    if (!rawDraft) return;
+
+    let parsedDraft: Record<string, string | string[]> | null = null;
+    try {
+      parsedDraft = JSON.parse(rawDraft) as Record<string, string | string[]>;
+    } catch {
+      parsedDraft = null;
+    }
+    if (!parsedDraft) return;
+
+    const nextKind = firstDraftValue(parsedDraft, "kind");
+    const nextMode = firstDraftValue(parsedDraft, "formMode");
+    const nextFields = draftFieldSchema(parsedDraft);
+
+    window.requestAnimationFrame(() => {
+      if (nextKind && opportunityKinds.includes(nextKind as OpportunityKind)) {
+        setKind(nextKind as OpportunityKind);
+      }
+
+      if (nextMode === "structured" || nextMode === "content") {
+        setFormMode(nextMode);
+      }
+
+      if (nextFields) {
+        setFields(nextFields);
+      }
+
+      const form = document.getElementById(editorFormId) as HTMLFormElement | null;
+      if (form) {
+        applyDraftToForm(form, parsedDraft);
+      }
+    });
+  }, [draftKey, shouldRestoreDraft]);
+
   return (
     <ToastForm
       id={editorFormId}
@@ -244,7 +256,7 @@ export function OpportunityEditor({
             <input
               name="title"
               required
-              defaultValue={getDraftString(savedDraft, "title", opportunity?.title || "")}
+              defaultValue={opportunity?.title || ""}
               className="form-input"
             />
           </div>
@@ -252,7 +264,7 @@ export function OpportunityEditor({
             <label className="form-label">Slug</label>
             <input
               name="slug"
-              defaultValue={getDraftString(savedDraft, "slug", opportunity?.slug || "")}
+              defaultValue={opportunity?.slug || ""}
               placeholder="leave blank to auto-generate"
               className="form-input"
             />
@@ -265,7 +277,7 @@ export function OpportunityEditor({
             name="summary"
             required
             rows={3}
-            defaultValue={getDraftString(savedDraft, "summary", opportunity?.summary || "")}
+            defaultValue={opportunity?.summary || ""}
             className="form-input"
           />
         </div>
@@ -276,7 +288,7 @@ export function OpportunityEditor({
             name="description"
             required
             rows={6}
-            defaultValue={getDraftString(savedDraft, "description", opportunity?.description || "")}
+            defaultValue={opportunity?.description || ""}
             className="form-input"
           />
         </div>
@@ -318,7 +330,7 @@ export function OpportunityEditor({
             <label className="form-label">Status</label>
             <select
               name="status"
-              defaultValue={getDraftString(savedDraft, "status", opportunity?.status || "draft")}
+              defaultValue={opportunity?.status || "draft"}
               className="form-input"
             >
               <option value="draft">draft</option>
@@ -337,11 +349,7 @@ export function OpportunityEditor({
             <label className="form-label">CTA Label</label>
             <input
               name="ctaLabel"
-              defaultValue={getDraftString(
-                savedDraft,
-                "ctaLabel",
-                opportunity?.cta_label || "Apply now",
-              )}
+              defaultValue={opportunity?.cta_label || "Apply now"}
               className="form-input"
             />
           </div>
@@ -349,7 +357,7 @@ export function OpportunityEditor({
             <label className="form-label">Location</label>
             <input
               name="location"
-              defaultValue={getDraftString(savedDraft, "location", opportunity?.location || "")}
+              defaultValue={opportunity?.location || ""}
               className="form-input"
             />
           </div>
@@ -361,11 +369,7 @@ export function OpportunityEditor({
             <input
               type="datetime-local"
               name="opensAt"
-              defaultValue={getDraftString(
-                savedDraft,
-                "opensAt",
-                toDateInputValue(opportunity?.opens_at),
-              )}
+              defaultValue={toDateInputValue(opportunity?.opens_at)}
               className="form-input"
             />
           </div>
@@ -374,11 +378,7 @@ export function OpportunityEditor({
             <input
               type="datetime-local"
               name="closesAt"
-              defaultValue={getDraftString(
-                savedDraft,
-                "closesAt",
-                toDateInputValue(opportunity?.closes_at),
-              )}
+              defaultValue={toDateInputValue(opportunity?.closes_at)}
               className="form-input"
             />
           </div>
@@ -390,11 +390,7 @@ export function OpportunityEditor({
             <input
               name="sortOrder"
               type="number"
-              defaultValue={getDraftString(
-                savedDraft,
-                "sortOrder",
-                String(opportunity?.sort_order ?? 0),
-              )}
+              defaultValue={String(opportunity?.sort_order ?? 0)}
               className="form-input"
             />
           </div>
@@ -402,11 +398,9 @@ export function OpportunityEditor({
             <label className="form-label">Success Message</label>
             <input
               name="successMessage"
-              defaultValue={getDraftString(
-                savedDraft,
-                "successMessage",
-                opportunity?.success_message || "Thanks. Your response has been received.",
-              )}
+              defaultValue={
+                opportunity?.success_message || "Thanks. Your response has been received."
+              }
               className="form-input"
             />
           </div>
@@ -416,11 +410,7 @@ export function OpportunityEditor({
           <input
             type="checkbox"
             name="published"
-            defaultChecked={getDraftChecked(
-              savedDraft,
-              "published",
-              opportunity ? Boolean(opportunity.published) : true,
-            )}
+            defaultChecked={opportunity ? Boolean(opportunity.published) : true}
           />
           Show on public opportunities
         </label>
@@ -430,7 +420,7 @@ export function OpportunityEditor({
           <textarea
             name="adminNotes"
             rows={3}
-            defaultValue={getDraftString(savedDraft, "adminNotes", opportunity?.admin_notes || "")}
+            defaultValue={opportunity?.admin_notes || ""}
             className="form-input"
           />
         </div>
