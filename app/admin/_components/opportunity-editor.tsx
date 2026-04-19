@@ -17,6 +17,7 @@ import {
 type OpportunityEditorProps = {
   action: string;
   opportunity?: Opportunity | null;
+  presetKind?: OpportunityKind;
 };
 
 const draftStoragePrefix = "opportunity-editor-draft:v1:";
@@ -144,18 +145,22 @@ function applyDraftToForm(
 export function OpportunityEditor({
   action,
   opportunity,
+  presetKind,
 }: OpportunityEditorProps) {
   const searchParams = useSearchParams();
   const shouldRestoreDraft = searchParams.get("restoreDraft") === "1";
   const draftKey = `${draftStoragePrefix}${opportunity?.id ?? "new"}`;
+  const initialKind = opportunity?.kind || presetKind || "custom";
+  const initialMode: OpportunityFormMode =
+    opportunity?.form_mode || (presetKind ? "content" : "structured");
   const [kind, setKind] = useState<OpportunityKind>(
-    opportunity?.kind || "custom",
+    initialKind,
   );
   const [formMode, setFormMode] = useState<OpportunityFormMode>(
-    opportunity?.form_mode || "structured",
+    initialMode,
   );
   const [fields, setFields] = useState<OpportunityField[]>(
-    opportunity?.form_schema.fields || getDefaultFormSchema("custom").fields,
+    opportunity?.form_schema.fields || getDefaultFormSchema(initialKind).fields,
   );
 
   const syncKind = (nextKind: OpportunityKind) => {

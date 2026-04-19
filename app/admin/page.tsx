@@ -122,12 +122,33 @@ export default async function AdminPage({ searchParams }: PageProps) {
                   <div className="admin-command-actions">
                     <QuickActionsMenu
                       includeSignOut
-                      items={[
-                        { href: "/admin/opportunities/new", label: "Start opportunity" },
-                        { href: "/admin/new?type=event", label: "Create event" },
-                        { href: "/admin/new?type=project", label: "Create project" },
-                        { href: "/admin/new?type=devlog", label: "Create devlog" },
-                        { href: "/admin/submissions", label: "Open join inbox" },
+                      groups={[
+                        {
+                          label: "Opportunities",
+                          items: [
+                            { href: "/admin/opportunities/new", label: "Start opportunity" },
+                            {
+                              href: "/admin/opportunities/new?preset=project_showcase",
+                              label: "Showcase call",
+                            },
+                            {
+                              href: "/admin/opportunities/new?preset=devlog_submission",
+                              label: "Devlog call",
+                            },
+                          ],
+                        },
+                        {
+                          label: "Content",
+                          items: [
+                            { href: "/admin/new?type=event", label: "Create event" },
+                            { href: "/admin/new?type=project", label: "Create project" },
+                            { href: "/admin/new?type=devlog", label: "Create devlog" },
+                          ],
+                        },
+                        {
+                          label: "Inbox",
+                          items: [{ href: "/admin/submissions", label: "Open join inbox" }],
+                        },
                       ]}
                     />
                   </div>

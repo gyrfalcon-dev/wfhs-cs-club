@@ -37,6 +37,63 @@
   --font-code: "IBM Plex Mono", "Consolas", monospace;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #15131a;
+    --bg-secondary: #1c1823;
+    --bg-tertiary: #231e2d;
+    --text-primary: #ece7f5;
+    --text-secondary: #c0b7d3;
+    --text-muted: #9f94b8;
+    --accent-green: #b09bcb;
+    --accent-gold: #d7aa88;
+    --accent-deep: #85749d;
+    --border-subtle: #3a3248;
+    --border-highlight: rgba(176, 155, 203, 0.38);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.24);
+    --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 14px 30px rgba(0, 0, 0, 0.36);
+  }
+
+  body::before {
+    background: radial-gradient(
+      circle at 20% 0%,
+      rgba(176, 155, 203, 0.14) 0%,
+      rgba(176, 155, 203, 0) 48%
+    );
+  }
+
+  body::after {
+    background-image:
+      linear-gradient(rgba(197, 186, 219, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(197, 186, 219, 0.06) 1px, transparent 1px);
+  }
+
+  .navbar {
+    background: rgba(21, 19, 26, 0.88);
+  }
+
+  .card,
+  .admin-empty-panel,
+  .editorial-ledger-row,
+  .opportunity-list-row,
+  .opportunity-ledger,
+  .opportunity-editor-shell,
+  .opportunity-content-note,
+  .admin-ops-ledger,
+  .admin-stream-pane,
+  .admin-side-block {
+    background: rgba(30, 26, 38, 0.9);
+  }
+
+  .form-input,
+  .admin-action-select {
+    background: rgba(31, 27, 39, 0.95);
+    color: var(--text-primary);
+    border-color: var(--border-subtle);
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -2204,12 +2261,33 @@ body::after {
   border-radius: 18px;
   padding: 18px;
   background: rgba(255, 253, 249, 0.65);
+  margin: 0;
+}
+
+.opportunity-fieldset-legend {
+  margin: 0;
+  padding: 0 6px;
 }
 
 .opportunity-option-list {
   display: grid;
   gap: 12px;
-  margin-top: 12px;
+  margin-top: 10px;
+}
+
+.opportunity-fieldset-timeslots {
+  padding-top: 12px;
+}
+
+.opportunity-slot-list {
+  gap: 8px;
+}
+
+.opportunity-slot-option {
+  border: 1px solid rgba(49, 42, 60, 0.12);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: rgba(247, 245, 242, 0.7);
 }
 
 .opportunity-option,
@@ -2543,9 +2621,9 @@ body::after {
   gap: 24px;
   padding: 30px;
   border-radius: 26px;
-  background: linear-gradient(145deg, rgba(49, 42, 60, 0.98), rgba(87, 72, 100, 0.96));
-  color: #faf7f2;
-  border: 1px solid rgba(87, 72, 100, 0.35);
+  background: rgba(255, 253, 250, 0.93);
+  color: var(--text-primary);
+  border: 1px solid rgba(49, 42, 60, 0.14);
 }
 
 .opportunity-spotlight-main {
@@ -2561,12 +2639,12 @@ body::after {
 
 .opportunity-spotlight-main p {
   margin: 0;
-  color: rgba(250, 247, 242, 0.82);
+  color: var(--text-secondary);
 }
 
 .opportunity-spotlight .opportunity-meta-list span {
-  background: rgba(255, 255, 255, 0.1);
-  color: #faf7f2;
+  background: rgba(107, 91, 119, 0.08);
+  color: var(--text-primary);
 }
 
 .opportunity-spotlight-side {

@@ -5,7 +5,12 @@ import { getAdminIdentity } from "@/lib/admin-auth";
 import { getToastFromSearchParams } from "@/lib/redirect-toast";
 
 type PageProps = {
-  searchParams: Promise<{ toast?: string; message?: string; toastScope?: string }>;
+  searchParams: Promise<{
+    toast?: string;
+    message?: string;
+    toastScope?: string;
+    preset?: string;
+  }>;
 };
 
 export default async function AdminNewOpportunityPage({ searchParams }: PageProps) {
@@ -15,6 +20,10 @@ export default async function AdminNewOpportunityPage({ searchParams }: PageProp
   }
   const query = await searchParams;
   const toast = getToastFromSearchParams(query);
+  const preset =
+    query.preset === "project_showcase" || query.preset === "devlog_submission"
+      ? query.preset
+      : undefined;
 
   return (
     <>
@@ -33,7 +42,7 @@ export default async function AdminNewOpportunityPage({ searchParams }: PageProp
           {toast ? (
             <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
           ) : null}
-          <OpportunityEditor action="/api/admin/opportunities" />
+          <OpportunityEditor action="/api/admin/opportunities" presetKind={preset} />
         </div>
       </section>
     </>

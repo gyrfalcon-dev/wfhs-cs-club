@@ -139,12 +139,19 @@ function renderField(opportunity: Opportunity) {
     }
 
     if (field.type === "multi_select" || field.type === "date_slot_group") {
+      const isTimeSlots = field.type === "date_slot_group";
       return (
-        <fieldset key={field.id} className="opportunity-fieldset">
-          <legend className="form-label">{field.label}</legend>
-          <div className="opportunity-option-list">
+        <fieldset
+          key={field.id}
+          className={`opportunity-fieldset ${isTimeSlots ? "opportunity-fieldset-timeslots" : ""}`}
+        >
+          <legend className="form-label opportunity-fieldset-legend">{field.label}</legend>
+          <div className={`opportunity-option-list ${isTimeSlots ? "opportunity-slot-list" : ""}`}>
             {(field.options ?? []).map((option) => (
-              <label key={option.id} className="opportunity-option">
+              <label
+                key={option.id}
+                className={`opportunity-option ${isTimeSlots ? "opportunity-slot-option" : ""}`}
+              >
                 <input type="checkbox" name={inputName} value={option.id} />
                 <span>{option.label}</span>
               </label>

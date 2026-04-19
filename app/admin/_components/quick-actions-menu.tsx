@@ -9,14 +9,21 @@ type QuickActionItem = {
   label: string;
 };
 
-type QuickActionsMenuProps = {
+type QuickActionGroup = {
+  label: string;
   items: QuickActionItem[];
+};
+
+type QuickActionsMenuProps = {
+  items?: QuickActionItem[];
+  groups?: QuickActionGroup[];
   includeSignOut?: boolean;
   label?: string;
 };
 
 export function QuickActionsMenu({
-  items,
+  items = [],
+  groups = [],
   includeSignOut = false,
   label = "Quick actions",
 }: QuickActionsMenuProps) {
@@ -40,11 +47,21 @@ export function QuickActionsMenu({
           }}
         >
           <option value="">Choose action</option>
-          {items.map((item) => (
-            <option key={item.href} value={item.href}>
-              {item.label}
-            </option>
-          ))}
+          {groups.length > 0
+            ? groups.map((group) => (
+                <optgroup key={group.label} label={group.label}>
+                  {group.items.map((item) => (
+                    <option key={item.href} value={item.href}>
+                      {item.label}
+                    </option>
+                  ))}
+                </optgroup>
+              ))
+            : items.map((item) => (
+                <option key={item.href} value={item.href}>
+                  {item.label}
+                </option>
+              ))}
         </select>
       </label>
 

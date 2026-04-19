@@ -73,9 +73,25 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
             </div>
             <div className="admin-command-actions">
               <QuickActionsMenu
-                items={[
-                  { href: "/admin/opportunities/new", label: "Start opportunity" },
-                  { href: "/opportunities", label: "Open public board" },
+                groups={[
+                  {
+                    label: "Create",
+                    items: [
+                      { href: "/admin/opportunities/new", label: "Start opportunity" },
+                      {
+                        href: "/admin/opportunities/new?preset=project_showcase",
+                        label: "Showcase call",
+                      },
+                      {
+                        href: "/admin/opportunities/new?preset=devlog_submission",
+                        label: "Devlog call",
+                      },
+                    ],
+                  },
+                  {
+                    label: "View",
+                    items: [{ href: "/opportunities", label: "Open public board" }],
+                  },
                 ]}
               />
             </div>
