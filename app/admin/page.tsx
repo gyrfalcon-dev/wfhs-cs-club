@@ -39,7 +39,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
   const metrics = [
     { label: "Needs Review", value: pendingEntries.length, detail: "Queue" },
     { label: "Drafts", value: draftEntries.length, detail: "In progress" },
-    { label: "Live Ops", value: openOpportunities.length, detail: "Open calls" },
+    { label: "Open Opportunities", value: openOpportunities.length, detail: "Active now" },
     { label: "New Responses", value: recentResponses.length, detail: "Last updates" },
     { label: "Join Inbox", value: joinSubmissions.length, detail: "Students waiting" },
   ];
@@ -119,31 +119,38 @@ export default async function AdminPage({ searchParams }: PageProps) {
                     </p>
                   </div>
                   <div className="admin-command-actions">
-                    <Link href="/admin/new?type=project" className="btn-secondary admin-action-btn">
-                      New project
-                    </Link>
-                    <Link href="/admin/new?type=devlog" className="btn-secondary admin-action-btn">
-                      New devlog
-                    </Link>
-                    <Link href="/admin/new?type=event" className="btn-secondary admin-action-btn">
-                      New event
-                    </Link>
-                    <Link href="/admin/opportunities/new" className="btn-primary admin-action-btn admin-action-btn-primary">
-                      New opportunity
-                    </Link>
-                    <Link href="/admin/submissions" className="btn-secondary admin-action-btn">
-                      Join inbox
-                    </Link>
-                    <ToastForm
-                      action="/api/admin/logout"
-                      method="post"
-                      pendingMessage="Signing you out..."
-                      toastScope="admin-auth"
-                    >
-                      <button type="submit" className="btn-secondary admin-action-btn">
-                        Sign out
-                      </button>
-                    </ToastForm>
+                    <details className="admin-action-menu">
+                      <summary className="btn-primary admin-action-btn admin-action-btn-primary">
+                        Quick actions
+                      </summary>
+                      <div className="admin-action-popover">
+                        <Link href="/admin/opportunities/new" className="admin-menu-link">
+                          Start opportunity
+                        </Link>
+                        <Link href="/admin/new?type=event" className="admin-menu-link">
+                          Create event
+                        </Link>
+                        <Link href="/admin/new?type=project" className="admin-menu-link">
+                          Create project
+                        </Link>
+                        <Link href="/admin/new?type=devlog" className="admin-menu-link">
+                          Create devlog
+                        </Link>
+                        <Link href="/admin/submissions" className="admin-menu-link">
+                          Open join inbox
+                        </Link>
+                        <ToastForm
+                          action="/api/admin/logout"
+                          method="post"
+                          pendingMessage="Signing you out..."
+                          toastScope="admin-auth"
+                        >
+                          <button type="submit" className="admin-menu-button">
+                            Sign out
+                          </button>
+                        </ToastForm>
+                      </div>
+                    </details>
                   </div>
                 </section>
 
@@ -181,20 +188,20 @@ export default async function AdminPage({ searchParams }: PageProps) {
                       <em>Edit and publish</em>
                     </Link>
                     <Link href="/admin/opportunities" className="admin-ops-row">
-                      <span>Live opportunities</span>
+                      <span>Open opportunities</span>
                       <strong>{openOpportunities.length}</strong>
                       <em>Collecting responses</em>
                     </Link>
-                    <div className="admin-ops-row">
+                    <Link href="/admin?lane=published" className="admin-ops-row">
                       <span>Published entries</span>
                       <strong>{publishedEntries.length}</strong>
                       <em>Visible now</em>
-                    </div>
-                    <div className="admin-ops-row">
+                    </Link>
+                    <Link href="/admin?lane=archived" className="admin-ops-row">
                       <span>Archived entries</span>
                       <strong>{archivedEntries.length}</strong>
                       <em>Recoverable history</em>
-                    </div>
+                    </Link>
                   </div>
                 </section>
 
@@ -263,7 +270,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
                     <div>
                       <p className="admin-eyebrow">Opportunity board</p>
                       <h2 className="section-heading" style={{ margin: 0 }}>
-                        Live calls
+                        Active opportunities
                       </h2>
                     </div>
                     <Link href="/admin/opportunities" className="text-link">

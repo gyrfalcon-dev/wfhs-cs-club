@@ -1663,6 +1663,63 @@ body::after {
   box-shadow: none;
 }
 
+.admin-action-menu {
+  position: relative;
+}
+
+.admin-action-menu summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.admin-action-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-action-menu[open] .admin-action-btn-primary {
+  background: linear-gradient(135deg, #51405f 0%, #625372 100%);
+}
+
+.admin-action-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid rgba(49, 42, 60, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 253, 250, 0.98);
+  box-shadow: var(--shadow-md);
+  z-index: 20;
+}
+
+.admin-menu-link,
+.admin-menu-button {
+  width: 100%;
+  display: block;
+  text-align: left;
+  text-decoration: none;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 0.88rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  padding: 9px 10px;
+}
+
+.admin-menu-button {
+  cursor: pointer;
+}
+
+.admin-menu-link:hover,
+.admin-menu-button:hover {
+  background: rgba(107, 91, 119, 0.08);
+  border-color: rgba(107, 91, 119, 0.2);
+}
+
 .admin-metric-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -2850,6 +2907,12 @@ body::after {
 
   .admin-stream-row {
     grid-template-columns: 1fr;
+  }
+
+  .admin-action-popover {
+    right: auto;
+    left: 0;
+    min-width: min(260px, calc(100vw - 48px));
   }
 }
 

@@ -48,12 +48,19 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
               </p>
             </div>
             <div className="admin-command-actions">
-              <Link href="/admin/opportunities/new" className="btn-primary admin-action-btn admin-action-btn-primary">
-                New opportunity
-              </Link>
-              <Link href="/opportunities" className="btn-secondary admin-action-btn">
-                View public board
-              </Link>
+              <details className="admin-action-menu">
+                <summary className="btn-primary admin-action-btn admin-action-btn-primary">
+                  Quick actions
+                </summary>
+                <div className="admin-action-popover">
+                  <Link href="/admin/opportunities/new" className="admin-menu-link">
+                    Start opportunity
+                  </Link>
+                  <Link href="/opportunities" className="admin-menu-link">
+                    Open public board
+                  </Link>
+                </div>
+              </details>
             </div>
           </div>
 
