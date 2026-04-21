@@ -7,10 +7,10 @@
   --color-ghost: #f7f5f2;
   --color-ash: #7e7587;
   --color-muted: #625b6d;
-  --color-accent-volt: #6b5b77;
+  --color-accent-volt: #7751a0;
   --color-accent-gold: #c1845e;
   --color-border-dim: #ddd7cf;
-  --color-border-glow: rgba(107, 91, 119, 0.24);
+  --color-border-glow: rgba(119, 81, 160, 0.24);
   --font-main: "Sora", "Avenir Next", "Segoe UI", sans-serif;
   --font-code: "IBM Plex Mono", "Consolas", monospace;
 }
@@ -22,13 +22,13 @@
   --text-primary: #312a3c;
   --text-secondary: #625b6d;
   --text-muted: #7e7587;
-  --accent-green: #6b5b77;
+  --accent-green: #7751a0;
   --accent-gold: #c1845e;
-  --accent-deep: #574864;
+  --accent-deep: #64378e;
   --border-subtle: #ddd7cf;
-  --border-highlight: rgba(107, 91, 119, 0.34);
-  --gradient-primary: linear-gradient(135deg, #312a3c 0%, #6b5b77 100%);
-  --gradient-accent: linear-gradient(135deg, #6b5b77 0%, #857397 100%);
+  --border-highlight: rgba(119, 81, 160, 0.34);
+  --gradient-primary: linear-gradient(135deg, #312a3c 0%, #7751a0 100%);
+  --gradient-accent: linear-gradient(135deg, #7751a0 0%, #9270bc 100%);
   --shadow-sm: 0 2px 8px rgba(43, 34, 54, 0.05);
   --shadow-md: 0 8px 20px rgba(43, 34, 54, 0.08);
   --shadow-lg: 0 14px 30px rgba(43, 34, 54, 0.12);
@@ -3042,7 +3042,7 @@ body::after {
 }
 
 .editorial-split {
-  border-left: 4px solid rgba(255, 255, 255, 0.28);
+  border-left: none;
 }
 
 .admin-console-shell {
@@ -3267,17 +3267,11 @@ html[data-theme="dark"] body {
 }
 
 html[data-theme="dark"] body::before {
-  background: radial-gradient(
-    circle at 20% 0%,
-    rgba(187, 168, 206, 0.14) 0%,
-    rgba(187, 168, 206, 0) 50%
-  );
+  background: none;
 }
 
 html[data-theme="dark"] body::after {
-  background-image:
-    linear-gradient(rgba(200, 184, 167, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(200, 184, 167, 0.06) 1px, transparent 1px);
+  background-image: none;
 }
 
 html[data-theme="dark"] .navbar {
@@ -3286,17 +3280,7 @@ html[data-theme="dark"] .navbar {
 }
 
 html[data-theme="dark"] .hero-bg {
-  background:
-    radial-gradient(
-      circle at 50% 8%,
-      rgba(187, 168, 206, 0.14) 0%,
-      rgba(187, 168, 206, 0) 48%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(52, 43, 37, 0.42) 0%,
-      rgba(22, 20, 18, 0) 100%
-    );
+  background: none;
 }
 
 html[data-theme="dark"] .shape-1 {
@@ -3312,9 +3296,7 @@ html[data-theme="dark"] .shape-3 {
 }
 
 html[data-theme="dark"] .opportunities-header::after {
-  background:
-    linear-gradient(180deg, rgba(22, 20, 18, 0) 0%, rgba(22, 20, 18, 0.97) 100%),
-    radial-gradient(circle at 15% 10%, rgba(212, 165, 128, 0.12), transparent 42%);
+  background: none;
 }
 
 html[data-theme="dark"] .opportunities-hero-pills span {
@@ -3402,6 +3384,28 @@ html[data-theme="dark"] .admin-action-btn.btn-secondary {
   background: rgba(38, 33, 29, 0.94);
   border-color: var(--border-subtle);
   color: var(--text-primary);
+}
+
+html[data-theme="dark"] .btn-primary,
+html[data-theme="dark"] .nav-cta,
+html[data-theme="dark"] .cta-card {
+  background: #8c63ba;
+  border-color: rgba(182, 154, 219, 0.72);
+  color: #fffdf9;
+  box-shadow: 0 14px 30px rgba(10, 8, 15, 0.34);
+}
+
+html[data-theme="dark"] .btn-primary:hover,
+html[data-theme="dark"] .nav-cta:hover,
+html[data-theme="dark"] .cta-card:hover {
+  background: #9c72cb;
+  border-color: rgba(208, 187, 235, 0.88);
+}
+
+html[data-theme="dark"] .cta-card h3,
+html[data-theme="dark"] .cta-card p,
+html[data-theme="dark"] .card-arrow {
+  color: #fffdf9;
 }
 
 html[data-theme="dark"] .btn-secondary:hover,
