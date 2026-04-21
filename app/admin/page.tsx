@@ -38,11 +38,11 @@ export default async function AdminPage({ searchParams }: PageProps) {
   const adminHandle = admin?.email.split("@")[0] || admin?.email || "";
 
   const metrics = [
-    { label: "Needs Review", value: pendingEntries.length, detail: "Queue" },
-    { label: "Drafts", value: draftEntries.length, detail: "In progress" },
-    { label: "Open Opportunities", value: openOpportunities.length, detail: "Active now" },
-    { label: "New Responses", value: recentResponses.length, detail: "Last updates" },
-    { label: "Join Inbox", value: joinSubmissions.length, detail: "Students waiting" },
+    { label: "Review", value: pendingEntries.length, detail: "Pending" },
+    { label: "Drafts", value: draftEntries.length, detail: "Editing" },
+    { label: "Open Calls", value: openOpportunities.length, detail: "Live" },
+    { label: "Responses", value: recentResponses.length, detail: "Recent" },
+    { label: "Join", value: joinSubmissions.length, detail: "Inbox" },
   ];
 
   return (
@@ -110,14 +110,11 @@ export default async function AdminPage({ searchParams }: PageProps) {
             <div className="admin-console-grid">
               <div className="admin-console-main">
                 <section className="admin-command-bar-v2">
-                  <div>
-                    <p className="admin-eyebrow">Signed in</p>
+                  <div className="admin-command-identity">
+                    <span className="admin-command-label">Signed in</span>
                     <h2 className="admin-command-title" title={admin.email}>
                       {adminHandle}
                     </h2>
-                    <p className="admin-muted admin-command-copy">
-                      Start with review, then publish and close the loop on responses.
-                    </p>
                   </div>
                   <div className="admin-command-actions">
                     <QuickActionsMenu

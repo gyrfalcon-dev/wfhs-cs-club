@@ -70,7 +70,6 @@ export function QuickActionsMenu({
           onClick={() => setOpen((current) => !current)}
         >
           <span>{label}</span>
-          <strong>Choose action</strong>
           <em aria-hidden="true">{open ? "−" : "+"}</em>
         </button>
 

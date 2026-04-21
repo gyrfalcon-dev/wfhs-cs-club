@@ -5,6 +5,7 @@ import { ToastProvider } from "@/app/_components/toast-provider";
 import "./globals.css";
 
 const primaryNavLinks = [
+  { label: "Home", href: "/" },
   { label: "About", href: "/compilers" },
   { label: "Projects", href: "/projects" },
   { label: "Opportunities", href: "/opportunities" },
