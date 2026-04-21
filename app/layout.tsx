@@ -1,16 +1,18 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ThemeToggle } from "@/app/_components/theme-toggle";
+import { SiteUtilityMenu } from "@/app/_components/site-utility-menu";
 import { ToastProvider } from "@/app/_components/toast-provider";
 import "./globals.css";
 
-const navLinks = [
-  { label: "Home", href: "/" },
+const primaryNavLinks = [
   { label: "About", href: "/compilers" },
   { label: "Projects", href: "/projects" },
-  { label: "Events", href: "/terminal" },
   { label: "Opportunities", href: "/opportunities" },
+];
+
+const utilityNavLinks = [
   { label: "Dev Logs", href: "/devlogs" },
+  { label: "Events", href: "/terminal" },
   { label: "Sponsored", href: "/sponsored" },
 ];
 
@@ -43,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
       </head>
@@ -61,12 +63,16 @@ export default function RootLayout({
                 </Link>
               </div>
               <div className="nav-links">
-                {navLinks.map((link) => (
-                  <Link key={link.href} href={link.href} className="nav-link">
-                    {link.label}
-                  </Link>
-                ))}
-                <ThemeToggle />
+                <div className="nav-primary-links">
+                  {primaryNavLinks.map((link) => (
+                    <Link key={link.href} href={link.href} className="nav-link">
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+                <div className="nav-utility-group">
+                  <SiteUtilityMenu links={utilityNavLinks} />
+                </div>
                 <Link href="/join" className="nav-cta">
                   Join Us
                 </Link>
