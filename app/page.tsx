@@ -32,18 +32,27 @@ export default async function HomePage() {
           <p className="hero-subtitle">
             We build useful software, test ideas quickly, and share what we learn in public.
           </p>
-          <div className="hero-command-list">
-            <Link href="/terminal" className="hero-command-link">
-              <span>Upcoming Events</span>
-              <em>See the next build session, deadline, or demo day</em>
+          <div className="hero-cta-grid">
+            <Link href="/terminal" className="cta-card">
+              <div>
+                <h3>Upcoming Events</h3>
+                <p>See the next build session, deadline, or demo day</p>
+              </div>
+              <span className="card-arrow" aria-hidden="true">→</span>
             </Link>
-            <Link href="/projects" className="hero-command-link">
-              <span>Project Archive</span>
-              <em>Review what members have shipped this year</em>
+            <Link href="/projects" className="cta-card">
+              <div>
+                <h3>Project Archive</h3>
+                <p>Review what members have shipped this year</p>
+              </div>
+              <span className="card-arrow" aria-hidden="true">→</span>
             </Link>
-            <Link href="/opportunities" className="hero-command-link">
-              <span>Open Opportunities</span>
-              <em>Find active calls for showcases, help, and submissions</em>
+            <Link href="/opportunities" className="cta-card">
+              <div>
+                <h3>Open Opportunities</h3>
+                <p>Find active calls for showcases, help, and submissions</p>
+              </div>
+              <span className="card-arrow" aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
