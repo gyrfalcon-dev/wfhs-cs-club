@@ -150,19 +150,21 @@ body::after {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 20px;
 }
 
 .nav-primary-links {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 20px;
 }
 
 .nav-utility-group {
   display: flex;
   align-items: center;
-  margin-left: -4px;
+  padding-left: 8px;
+  margin-left: 2px;
+  border-left: 1px solid rgba(49, 42, 60, 0.12);
 }
 
 .nav-link {
@@ -204,20 +206,32 @@ body::after {
 .site-utility-trigger {
   display: inline-flex;
   align-items: center;
-  border: none;
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
+  gap: 8px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 253, 250, 0.82);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .site-utility-trigger:hover {
-  transform: none;
+  transform: translateY(-1px);
+  border-color: var(--border-highlight);
+  background: rgba(255, 253, 250, 0.96);
+}
+
+.site-utility-trigger span {
+  font-size: 14px;
+  line-height: 1;
 }
 
 .site-utility-popover {
@@ -232,6 +246,7 @@ body::after {
   border-radius: 16px;
   background: rgba(255, 253, 250, 0.98);
   box-shadow: 0 18px 34px rgba(38, 29, 48, 0.16);
+  z-index: 1010;
 }
 
 .site-utility-group {
@@ -443,10 +458,10 @@ body::after {
 
 .hero-cta-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   width: 100%;
-  max-width: 710px;
+  max-width: 960px;
   margin: 0 auto;
 }
 
@@ -1129,6 +1144,11 @@ body::after {
 
   .nav-primary-links {
     gap: 14px;
+  }
+
+  .hero-cta-grid {
+    grid-template-columns: 1fr;
+    max-width: 640px;
   }
 
   .admin-command-bar-v2 {

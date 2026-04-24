@@ -47,13 +47,14 @@ export function SiteUtilityMenu({ links }: SiteUtilityMenuProps) {
     <div className={`site-utility-menu ${open ? "is-open" : ""}`} ref={menuRef}>
       <button
         type="button"
-        className="site-utility-trigger nav-link"
+        className="site-utility-trigger"
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpen((current) => !current)}
       >
         More
+        <span aria-hidden="true">{open ? "−" : "+"}</span>
       </button>
 
       {open ? (
