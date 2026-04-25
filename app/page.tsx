@@ -147,7 +147,8 @@ export default async function HomePage() {
         <div className="container">
           <h2 className="section-heading">Ready to join?</h2>
           <p className="join-copy">
-            We meet Tuesdays at 3 PM in Lab C204. Bring a laptop if you can, questions either way.
+            We meet every other Wednesday at 2:15 in room 1110. Bring a laptop if you can,
+            questions either way.
           </p>
           <Link href="/join" className="btn-primary">
             Get Started

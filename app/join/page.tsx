@@ -7,9 +7,8 @@ export default function JoinPage() {
         <div className="container">
           <h1 className="page-title">Join Us</h1>
           <p className="page-subtitle">
-            Tell us a little about yourself and we&apos;ll follow up with the
-            Discord link, meeting info, and a few project ideas that fit how you
-            like to work.
+            Tell us a little about yourself and we&apos;ll follow up with the Slack invite,
+            meeting info, and a few project ideas that fit how you like to work.
           </p>
         </div>
       </div>
@@ -24,12 +23,7 @@ export default function JoinPage() {
             >
               <div className="form-group">
                 <label className="form-label">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  className="form-input"
-                />
+                <input type="text" name="name" required className="form-input" />
               </div>
               <div
                 style={{
@@ -40,12 +34,7 @@ export default function JoinPage() {
               >
                 <div className="form-group">
                   <label className="form-label">Grade</label>
-                  <input
-                    name="grade"
-                    required
-                    placeholder="e.g. 10"
-                    className="form-input"
-                  />
+                  <input name="grade" required placeholder="e.g. 10" className="form-input" />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Experience</label>
@@ -58,12 +47,7 @@ export default function JoinPage() {
               </div>
               <div className="form-group">
                 <label className="form-label">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  className="form-input"
-                />
+                <input type="email" name="email" required className="form-input" />
               </div>
               <div className="form-group">
                 <label className="form-label">Message (optional)</label>
@@ -74,11 +58,7 @@ export default function JoinPage() {
                   style={{ resize: "vertical", minHeight: "100px" }}
                 />
               </div>
-              <button
-                type="submit"
-                className="btn-primary"
-                style={{ alignSelf: "flex-start" }}
-              >
+              <button type="submit" className="btn-primary" style={{ alignSelf: "flex-start" }}>
                 Send it over
               </button>
             </form>
@@ -94,14 +74,11 @@ export default function JoinPage() {
             }}
           >
             <div>
-              <h3 style={{ marginBottom: "4px" }}>Join the Discord</h3>
-              <p>
-                That&apos;s where most of the planning, memes, and last-minute
-                reminders happen
-              </p>
+              <h3 style={{ marginBottom: "4px" }}>Join the Slack</h3>
+              <p>That&apos;s where most of the planning, updates, and last-minute reminders happen.</p>
             </div>
-            <Link href="https://discord.gg/wfhs-cs" className="btn-secondary">
-              Get the link →
+            <Link href="/join" className="btn-secondary">
+              Request an invite {">"}
             </Link>
           </div>
         </div>

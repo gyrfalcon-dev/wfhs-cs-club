@@ -19,8 +19,7 @@ export default async function AdminSubmissionsPage() {
           <p className="admin-kicker">Admin</p>
           <h1 className="page-title">Join inbox</h1>
           <p className="page-subtitle">
-            Review students who asked to join the club and follow up from
-            Discord or email.
+            Review students who asked to join the club and follow up from Slack or email.
           </p>
         </div>
       </div>

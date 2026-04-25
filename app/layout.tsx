@@ -87,7 +87,7 @@ export default function RootLayout({
                   </div>
                   <div className="footer-section">
                     <h5>Connect</h5>
-                    <Link href="https://discord.gg/wfhs-cs">Discord</Link>
+                    <Link href="/join">Slack</Link>
                     <Link href="/devlogs">Dev Logs</Link>
                     <Link href="/admin">Admin</Link>
                   </div>
