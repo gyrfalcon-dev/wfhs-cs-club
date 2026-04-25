@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { z } from "zod";
 import { isSupabaseConfigured } from "@/lib/env";
 import { createEntry, slugify, type ContentInput } from "@/lib/content-store";
@@ -367,22 +368,9 @@ export function getDefaultFormSchema(kind: OpportunityKind): OpportunityFormSche
   return { fields: [] };
 }
 
-export async function listPublishedOpportunities() {
+const fetchPublishedOpportunities = cache(async () => {
   const client = getClient();
   if (!client) return [];
-
-  const { data: responseRows } = await client
-    .from("opportunity_responses")
-    .select("opportunity_id");
-
-  const responseCounts = (responseRows ?? []).reduce<Record<string, number>>(
-    (accumulator, row) => {
-      const key = String((row as { opportunity_id: string }).opportunity_id);
-      accumulator[key] = (accumulator[key] ?? 0) + 1;
-      return accumulator;
-    },
-    {},
-  );
 
   const { data, error } = await client
     .from("opportunities")
@@ -397,15 +385,10 @@ export async function listPublishedOpportunities() {
     return [];
   }
 
-  return (data ?? []).map((row) =>
-    mapOpportunity({
-      ...(row as Record<string, unknown>),
-      response_count: responseCounts[String((row as { id: string }).id)] ?? 0,
-    }),
-  );
-}
+  return (data ?? []).map((row) => mapOpportunity(row as Record<string, unknown>));
+});
 
-export async function getPublishedOpportunityBySlug(slug: string) {
+const fetchPublishedOpportunityBySlug = cache(async (slug: string) => {
   const client = getClient();
   if (!client) return null;
 
@@ -423,6 +406,14 @@ export async function getPublishedOpportunityBySlug(slug: string) {
   }
 
   return data ? mapOpportunity(data as Record<string, unknown>) : null;
+});
+
+export async function listPublishedOpportunities() {
+  return fetchPublishedOpportunities();
+}
+
+export async function getPublishedOpportunityBySlug(slug: string) {
+  return fetchPublishedOpportunityBySlug(slug);
 }
 
 export async function listAdminOpportunities() {

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     "Sign up for showcases, dev logs, volunteering, and other WFHS Computer Science Club opportunities.",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function OpportunitiesPage() {
   const opportunities = await listPublishedOpportunities();
