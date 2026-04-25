@@ -184,10 +184,10 @@ body::after {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid transparent;
-  border-radius: 999px;
+  border: 0;
+  border-radius: 0;
   background: transparent;
-  padding: 8px 12px;
+  padding: 8px 2px;
   cursor: pointer;
 }
 
@@ -201,8 +201,7 @@ body::after {
 .nav-menu-trigger:hover,
 .nav-menu-trigger:focus-visible {
   color: var(--text-primary);
-  background: rgba(53, 45, 65, 0.14);
-  border-color: var(--border-highlight);
+  background: transparent;
   outline: none;
 }
 
@@ -3405,7 +3404,6 @@ html[data-theme="dark"] .admin-action-btn.btn-secondary:hover {
   border-color: var(--border-highlight);
 }
 
-html[data-theme="dark"] .nav-menu-trigger,
 html[data-theme="dark"] .nav-menu-popover,
 html[data-theme="dark"] .admin-action-trigger,
 html[data-theme="dark"] .hero-command-link {
@@ -3414,12 +3412,18 @@ html[data-theme="dark"] .hero-command-link {
   color: var(--text-primary);
 }
 
+html[data-theme="dark"] .nav-menu-trigger {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-secondary);
+}
+
 html[data-theme="dark"] .nav-menu-trigger:hover,
 html[data-theme="dark"] .nav-dropdown.is-open .nav-menu-trigger,
 html[data-theme="dark"] .admin-action-trigger:hover,
 html[data-theme="dark"] .hero-command-link:hover {
-  background: rgba(46, 39, 53, 0.98);
-  border-color: rgba(182, 154, 219, 0.46);
+  background: transparent;
+  border-color: transparent;
 }
 
 html[data-theme="dark"] .nav-menu-link:hover,
