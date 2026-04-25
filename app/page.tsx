@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import Link from "next/link";
+import { HomeSectionsShell } from "@/app/_components/public-route-shells";
 import { getFeaturedProjects, getUpcomingEvents } from "@/lib/content";
 
 const stats = [
@@ -9,10 +11,7 @@ const stats = [
 
 export const revalidate = 300;
 
-export default async function HomePage() {
-  const featuredProjects = await getFeaturedProjects();
-  const upcomingEvents = await getUpcomingEvents(2);
-
+export default function HomePage() {
   return (
     <>
       <section className="hero editorial-header">
@@ -88,6 +87,31 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <Suspense fallback={<HomeSectionsShell />}>
+        <HomeContentSections />
+      </Suspense>
+
+      <section className="homepage-section join-section">
+        <div className="container">
+          <h2 className="section-heading">Ready to join?</h2>
+          <p className="join-copy">
+            We meet Tuesdays at 3 PM in Lab C204. Bring a laptop if you can, questions either way.
+          </p>
+          <Link href="/join" className="btn-primary">
+            Get Started
+          </Link>
+        </div>
+      </section>
+    </>
+  );
+}
+
+async function HomeContentSections() {
+  const featuredProjects = await getFeaturedProjects();
+  const upcomingEvents = await getUpcomingEvents(2);
+
+  return (
+    <>
       <section className="homepage-section homepage-section-tight-top">
         <div className="container">
           <div className="homepage-section-header">
@@ -142,18 +166,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
-      <section className="homepage-section join-section">
-        <div className="container">
-          <h2 className="section-heading">Ready to join?</h2>
-          <p className="join-copy">
-            We meet Tuesdays at 3 PM in Lab C204. Bring a laptop if you can, questions either way.
-          </p>
-          <Link href="/join" className="btn-primary">
-            Get Started
-          </Link>
-        </div>
-      </section>
     </>
   );
 }

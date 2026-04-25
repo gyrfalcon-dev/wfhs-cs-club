@@ -1,9 +1,26 @@
+import { Suspense } from "react";
+import { LoadingCardGrid, LoadingHeader } from "@/app/_components/public-route-shells";
 import { ContentCard } from "@/components/content-card";
 import { getAllProjects } from "@/lib/content";
 
 export const revalidate = 300;
 
-export default async function ProjectsIndexPage() {
+export default function ProjectsIndexPage() {
+  return (
+    <Suspense
+      fallback={
+        <>
+          <LoadingHeader titleWidth="13rem" subtitleWidth="35rem" />
+          <LoadingCardGrid />
+        </>
+      }
+    >
+      <ProjectsIndexContent />
+    </Suspense>
+  );
+}
+
+async function ProjectsIndexContent() {
   const projects = await getAllProjects();
 
   const colorPalette = [

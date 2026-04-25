@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { ArticleLoadingShell } from "@/app/_components/public-route-shells";
 import { ArticleLayout } from "@/components/article-layout";
 import { MarkdownContent } from "@/components/markdown-content";
 import { getDevLogBySlug } from "@/lib/content";
@@ -22,10 +24,15 @@ export async function generateMetadata(
   };
 }
 
-export default async function DevLogDetailPage(
-  props: PageProps<"/devlogs/[slug]">,
-) {
-  const { slug } = await props.params;
+export default function DevLogDetailPage(props: PageProps<"/devlogs/[slug]">) {
+  return (
+    <Suspense fallback={<ArticleLoadingShell backLabel="← Back to meetups and updates" tag="Dev Log" />}>
+      {props.params.then(({ slug }) => <DevLogDetailContent slug={slug} />)}
+    </Suspense>
+  );
+}
+
+async function DevLogDetailContent({ slug }: { slug: string }) {
   const devLog = await getDevLogBySlug(slug);
 
   if (!devLog) {

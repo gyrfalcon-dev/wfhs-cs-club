@@ -1,9 +1,26 @@
+import { Suspense } from "react";
 import Link from "next/link";
+import { LoadingHeader, LoadingList } from "@/app/_components/public-route-shells";
 import { getUpcomingEvents } from "@/lib/content";
 
 export const revalidate = 300;
 
-export default async function TerminalPage() {
+export default function TerminalPage() {
+  return (
+    <Suspense
+      fallback={
+        <>
+          <LoadingHeader titleWidth="10rem" subtitleWidth="34rem" />
+          <LoadingList />
+        </>
+      }
+    >
+      <TerminalPageContent />
+    </Suspense>
+  );
+}
+
+async function TerminalPageContent() {
   const events = await getUpcomingEvents();
 
   return (

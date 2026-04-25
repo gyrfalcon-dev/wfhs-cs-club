@@ -1,9 +1,26 @@
+import { Suspense } from "react";
+import { LoadingCardGrid, LoadingHeader } from "@/app/_components/public-route-shells";
 import { ContentCard } from "@/components/content-card";
 import { getDevLogs } from "@/lib/content";
 
 export const revalidate = 300;
 
-export default async function DevLogsIndexPage() {
+export default function DevLogsIndexPage() {
+  return (
+    <Suspense
+      fallback={
+        <>
+          <LoadingHeader titleWidth="12rem" subtitleWidth="38rem" />
+          <LoadingCardGrid />
+        </>
+      }
+    >
+      <DevLogsIndexContent />
+    </Suspense>
+  );
+}
+
+async function DevLogsIndexContent() {
   const devLogs = await getDevLogs();
 
   const colorPalette = [
