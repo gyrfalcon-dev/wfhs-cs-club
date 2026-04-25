@@ -1,8 +1,6 @@
-import { Suspense } from "react";
 import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArticleLoadingShell } from "@/app/_components/public-route-shells";
 import { ArticleLayout } from "@/components/article-layout";
 import { MarkdownContent } from "@/components/markdown-content";
 import { getProjectBySlug, getProjectChildren } from "@/lib/content";
@@ -25,15 +23,10 @@ export async function generateMetadata(
   };
 }
 
-export default function ProjectDetailPage(props: PageProps<"/projects/[slug]">) {
-  return (
-    <Suspense fallback={<ArticleLoadingShell backLabel="← Back to projects" showCover tag="Project" />}>
-      {props.params.then(({ slug }) => <ProjectDetailContent slug={slug} />)}
-    </Suspense>
-  );
-}
-
-async function ProjectDetailContent({ slug }: { slug: string }) {
+export default async function ProjectDetailPage(
+  props: PageProps<"/projects/[slug]">,
+) {
+  const { slug } = await props.params;
   const project = await getProjectBySlug(slug);
 
   if (!project) {
