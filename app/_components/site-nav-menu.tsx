@@ -70,7 +70,6 @@ export function SiteNavMenu({ groups }: SiteNavMenuProps) {
               onClick={() => setOpenIndex((current) => (current === index ? null : index))}
             >
               <span>{group.label}</span>
-              <em aria-hidden="true">{open ? "-" : "+"}</em>
             </button>
 
             {open ? (

@@ -176,25 +176,20 @@ body::after {
 
 .nav-dropdown {
   position: relative;
-  padding-bottom: 10px;
-  margin-bottom: -10px;
+  padding-bottom: 18px;
+  margin-bottom: -18px;
 }
 
 .nav-menu-trigger {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   border: 0;
   border-radius: 0;
   background: transparent;
-  padding: 8px 2px;
+  padding: 8px 4px;
   cursor: pointer;
-}
-
-.nav-menu-trigger em {
-  font-style: normal;
-  font-size: 12px;
-  color: var(--text-muted);
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .nav-dropdown.is-open .nav-menu-trigger,
@@ -207,7 +202,7 @@ body::after {
 
 .nav-menu-popover {
   position: absolute;
-  top: calc(100% + 2px);
+  top: 100%;
   left: 0;
   min-width: 184px;
   display: grid;
@@ -1101,8 +1096,7 @@ body::after {
   }
 
   .nav-menu-trigger {
-    gap: 6px;
-    padding: 7px 10px;
+    padding: 7px 4px;
   }
 
   .nav-menu-popover {
