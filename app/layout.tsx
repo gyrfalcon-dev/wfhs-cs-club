@@ -1,14 +1,31 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ThemeToggle } from "@/app/_components/theme-toggle";
+import { SiteNavMenu } from "@/app/_components/site-nav-menu";
 import { ToastProvider } from "@/app/_components/toast-provider";
 import "./globals.css";
 
-const primaryNavLinks = [
-  { label: "About", href: "/compilers" },
-  { label: "Projects", href: "/projects" },
-  { label: "Events", href: "/terminal" },
-  { label: "Opportunities", href: "/opportunities" },
+const navGroups = [
+  {
+    label: "About",
+    items: [
+      { label: "Our Team", href: "/compilers" },
+      { label: "Sponsors", href: "/sponsored" },
+    ],
+  },
+  {
+    label: "Learn",
+    items: [
+      { label: "Projects", href: "/projects" },
+      { label: "Dev Logs", href: "/devlogs" },
+    ],
+  },
+  {
+    label: "Get Involved",
+    items: [
+      { label: "Events", href: "/terminal" },
+      { label: "Opportunities", href: "/opportunities" },
+    ],
+  },
 ];
 
 export const metadata: Metadata = {
@@ -17,33 +34,13 @@ export const metadata: Metadata = {
     "Wake Forest High School students building games, robots, tools, and real club projects.",
 };
 
-const themeBootstrapScript = `
-(() => {
-  try {
-    const stored = window.localStorage.getItem("wfhs-theme");
-    const resolved =
-      stored === "light" || stored === "dark"
-        ? stored
-        : window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
-    document.documentElement.setAttribute("data-theme", resolved);
-  } catch {
-    document.documentElement.setAttribute("data-theme", "light");
-  }
-})();
-`;
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
-      </head>
+    <html lang="en" data-theme="dark">
       <body>
         <ToastProvider>
           <nav className="navbar">
@@ -58,16 +55,7 @@ export default function RootLayout({
                 </Link>
               </div>
               <div className="nav-links">
-                <div className="nav-primary-links">
-                  {primaryNavLinks.map((link) => (
-                    <Link key={link.href} href={link.href} className="nav-link">
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-                <div className="nav-utility-group">
-                  <ThemeToggle />
-                </div>
+                <SiteNavMenu groups={navGroups} />
                 <Link href="/join" className="nav-cta">
                   Join Us
                 </Link>
@@ -89,18 +77,18 @@ export default function RootLayout({
                 <div className="footer-links">
                   <div className="footer-section">
                     <h5>Navigation</h5>
-                    <Link href="/compilers">About</Link>
+                    <Link href="/compilers">Our Team</Link>
                     <Link href="/projects">Projects</Link>
                     <Link href="/terminal">Events</Link>
                     <Link href="/opportunities">Opportunities</Link>
                     <Link href="/devlogs">Dev Logs</Link>
-                    <Link href="/sponsored">Sponsored</Link>
+                    <Link href="/sponsored">Sponsors</Link>
                     <Link href="/join">Join Us</Link>
                   </div>
                   <div className="footer-section">
                     <h5>Connect</h5>
                     <Link href="https://discord.gg/wfhs-cs">Discord</Link>
-                    <Link href="/devlogs">Build Log</Link>
+                    <Link href="/devlogs">Dev Logs</Link>
                     <Link href="/admin">Admin</Link>
                   </div>
                 </div>
