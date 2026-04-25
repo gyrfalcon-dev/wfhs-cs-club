@@ -176,6 +176,8 @@ body::after {
 
 .nav-dropdown {
   position: relative;
+  padding-bottom: 10px;
+  margin-bottom: -10px;
 }
 
 .nav-menu-trigger {
@@ -206,7 +208,7 @@ body::after {
 
 .nav-menu-popover {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 2px);
   left: 0;
   min-width: 184px;
   display: grid;
