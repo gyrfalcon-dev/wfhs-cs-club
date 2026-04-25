@@ -1,20 +1,14 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { SiteUtilityMenu } from "@/app/_components/site-utility-menu";
+import { ThemeToggle } from "@/app/_components/theme-toggle";
 import { ToastProvider } from "@/app/_components/toast-provider";
 import "./globals.css";
 
 const primaryNavLinks = [
-  { label: "Home", href: "/" },
   { label: "About", href: "/compilers" },
   { label: "Projects", href: "/projects" },
-  { label: "Opportunities", href: "/opportunities" },
-];
-
-const utilityNavLinks = [
-  { label: "Dev Logs", href: "/devlogs" },
   { label: "Events", href: "/terminal" },
-  { label: "Sponsored", href: "/sponsored" },
+  { label: "Opportunities", href: "/opportunities" },
 ];
 
 export const metadata: Metadata = {
@@ -72,7 +66,7 @@ export default function RootLayout({
                   ))}
                 </div>
                 <div className="nav-utility-group">
-                  <SiteUtilityMenu links={utilityNavLinks} />
+                  <ThemeToggle />
                 </div>
                 <Link href="/join" className="nav-cta">
                   Join Us

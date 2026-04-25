@@ -28,7 +28,7 @@ export function ThemeToggle({ compact = false, onToggle }: ThemeToggleProps) {
       className={`theme-toggle ${compact ? "theme-toggle-compact" : ""}`.trim()}
       onClick={toggleTheme}
     >
-      {compact ? "Toggle dark mode" : "Toggle theme"}
+      {compact ? "Toggle dark mode" : "Theme"}
     </button>
   );
 }
