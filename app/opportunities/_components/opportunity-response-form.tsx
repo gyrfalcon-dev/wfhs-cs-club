@@ -195,8 +195,8 @@ export function OpportunityResponseForm({
       action={`/api/opportunities/${opportunity.slug}/apply`}
       method="post"
       className="opportunity-form"
-      pendingMessage="Submitting your response..."
-      invalidMessage="Please complete the required fields before submitting."
+      pendingMessage="Sending..."
+      invalidMessage="Please fill out the required fields."
       toastScope={`opportunity-${opportunity.slug}`}
     >
       <input type="hidden" name="clubWebsite" value="" />

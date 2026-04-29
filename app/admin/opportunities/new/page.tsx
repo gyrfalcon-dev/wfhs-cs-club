@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { RouteToast } from "@/app/_components/route-toast";
+import { AdminSectionHeader } from "@/app/admin/_components/admin-section-header";
 import { OpportunityEditor } from "@/app/admin/_components/opportunity-editor";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { getToastFromSearchParams } from "@/lib/redirect-toast";
@@ -27,24 +28,16 @@ export default async function AdminNewOpportunityPage({ searchParams }: PageProp
 
   return (
     <>
-      <div className="page-header">
-        <div className="container">
-          <p className="admin-kicker">Opportunities</p>
-          <h1 className="page-title">Create opportunity</h1>
-          <p className="page-subtitle">
-            Post a clear call for students with only the fields you need.
-          </p>
-        </div>
-      </div>
+      <AdminSectionHeader
+        eyebrow="Opportunities"
+        title="Create opportunity"
+        description="Post a clear call for students with only the fields you need."
+      />
 
-      <section style={{ padding: "0 0 80px" }}>
-        <div className="container">
-          {toast ? (
-            <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
-          ) : null}
-          <OpportunityEditor action="/api/admin/opportunities" presetKind={preset} />
-        </div>
-      </section>
+      {toast ? (
+        <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
+      ) : null}
+      <OpportunityEditor action="/api/admin/opportunities" presetKind={preset} />
     </>
   );
 }

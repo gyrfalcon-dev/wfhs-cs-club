@@ -14,6 +14,8 @@ export async function POST(request: Request, { params }: RouteProps) {
   }
 
   const { id } = await params;
+  const formData = await request.formData();
+  const redirectTo = String(formData.get("redirectTo") || "/admin/responses");
 
   try {
     const entry = await convertResponseToDraftContent(id);
@@ -30,10 +32,10 @@ export async function POST(request: Request, { params }: RouteProps) {
       error instanceof Error ? error.message : "Could not convert response.";
     return NextResponse.redirect(
       setRedirectToast(
-        new URL("/admin/opportunities", request.url),
+        new URL(redirectTo, request.url),
         "error",
         message,
-        "opportunity-editor",
+        "response-review",
       ),
     );
   }

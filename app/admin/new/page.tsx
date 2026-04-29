@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { AdminSectionHeader } from "@/app/admin/_components/admin-section-header";
 import { EntryForm } from "@/app/admin/_components/entry-form";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import type { ContentType } from "@/lib/content-store";
@@ -21,20 +22,13 @@ export default async function AdminNewPage({ searchParams }: PageProps) {
 
   return (
     <>
-      <div className="page-header">
-        <div className="container">
-          <h1 className="page-title">New {type}</h1>
-          <p className="page-subtitle">
-            Create a new entry directly from the dashboard.
-          </p>
-        </div>
-      </div>
+      <AdminSectionHeader
+        eyebrow="Content"
+        title={`New ${type}`}
+        description="Create a new entry directly from the content workspace."
+      />
 
-      <section style={{ padding: "0 0 80px" }}>
-        <div className="container">
-          <EntryForm action="/api/admin/entries" type={type} />
-        </div>
-      </section>
+      <EntryForm action="/api/admin/entries" type={type} />
     </>
   );
 }

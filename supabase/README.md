@@ -18,7 +18,6 @@ Apply [`schema.sql`](./schema.sql) to the target Supabase project before using t
 ## Required environment variables
 
 ```bash
-SUPABASE_URL=...
 SUPABASE_SERVICE_ROLE_KEY=...
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
@@ -55,5 +54,12 @@ Join notification emails are optional and only sent when the Resend-related env 
 ## Admin bootstrap
 
 For local or production bootstrap, add the first officer email to
-`ADMIN_EMAIL_ALLOWLIST` or insert it into `admin_allowlist`. The site uses a
-Supabase magic-link flow for admin access.
+`ADMIN_EMAIL_ALLOWLIST` or insert it into `admin_allowlist`.
+
+Admin sign-in uses Supabase Auth email/password accounts plus the allowlist:
+
+1. Create the officer in Supabase Auth with an email and password.
+2. Add that same email to `ADMIN_EMAIL_ALLOWLIST` or `public.admin_allowlist`.
+3. Sign in at `/admin` with that Supabase Auth email and password.
+
+Passwords are managed by Supabase Auth, not stored in the app's `public` tables.

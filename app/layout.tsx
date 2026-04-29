@@ -54,12 +54,10 @@ export default function RootLayout({
                   </div>
                 </Link>
               </div>
-              <div className="nav-links">
-                <SiteNavMenu groups={navGroups} />
-                <Link href="/join" className="nav-cta">
-                  Join Us
-                </Link>
-              </div>
+              <SiteNavMenu
+                groups={navGroups}
+                cta={{ href: "/join", label: "Join Us" }}
+              />
             </div>
           </nav>
 
@@ -87,7 +85,7 @@ export default function RootLayout({
                   </div>
                   <div className="footer-section">
                     <h5>Connect</h5>
-                    <Link href="/join">Slack</Link>
+                    <Link href="/join">Join the Club</Link>
                     <Link href="/devlogs">Dev Logs</Link>
                     <Link href="/admin">Admin</Link>
                   </div>

@@ -7,138 +7,64 @@ import {
 } from "@/lib/opportunities";
 
 export const metadata: Metadata = {
-  title: "Opportunities · WFHS CS Club",
+  title: "Opportunities | WFHS CS Club",
   description:
-    "Sign up for showcases, dev logs, volunteering, and other WFHS Computer Science Club opportunities.",
+    "Ways to help, share work, and stay involved with the WFHS Computer Science Club.",
 };
 
 export const revalidate = 300;
 
 export default async function OpportunitiesPage() {
   const opportunities = await listPublishedOpportunities();
-  const featuredOpportunity = opportunities[0] ?? null;
-  const remainingOpportunities = opportunities.slice(1);
 
   return (
     <>
       <div className="page-header opportunities-header editorial-header">
         <div className="container opportunities-hero-shell">
           <div className="opportunities-hero-copy">
-            <p className="admin-kicker">Get involved</p>
             <h1 className="page-title">Opportunities</h1>
             <p className="page-subtitle">
-              A clear board of ways to contribute this week, from quick signups to deeper project calls.
+              Small ways to help, share your work, or pitch in.
             </p>
-            <div className="opportunities-hero-pills">
-              <span>Project showcases</span>
-              <span>Dev log submissions</span>
-              <span>Volunteer shifts</span>
-              <span>Event signups</span>
-            </div>
-          </div>
-
-          <div className="opportunities-hero-panel">
-            <h2>Board status</h2>
-            <p>
-              Officers publish every call here first. If something needs student help, it starts on this page.
-            </p>
-            <div className="opportunities-hero-stats">
-              <div>
-                <strong>{opportunities.length}</strong>
-                <span>Total listings</span>
-              </div>
-              <div>
-                <strong>{opportunities.filter(isOpportunityOpen).length}</strong>
-                <span>Open now</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
       <section className="opportunities-shell">
         <div className="container">
-          {featuredOpportunity ? (
-            <section className="opportunity-feature">
-              <div className="opportunity-feature-head">
-                <div>
-                  <p className="admin-kicker">Featured call</p>
-                  <h2 className="section-heading no-margin">Priority this week</h2>
-                </div>
-                <Link href={`/opportunities/${featuredOpportunity.slug}`} className="text-link">
-                  Open full brief →
-                </Link>
-              </div>
-
-              <article className="opportunity-spotlight editorial-split">
-                <div className="opportunity-spotlight-main">
-                  <div className="opportunity-card-top">
-                    <span className="tag">{getOpportunityKindLabel(featuredOpportunity.kind)}</span>
-                    <span
-                      className={`opportunity-status ${
-                        isOpportunityOpen(featuredOpportunity) ? "is-open" : "is-closed"
-                      }`}
-                    >
-                      {isOpportunityOpen(featuredOpportunity) ? "Open now" : "Closed"}
-                    </span>
-                  </div>
-                  <h3>{featuredOpportunity.title}</h3>
-                  <p>{featuredOpportunity.description}</p>
-                  <div className="opportunity-meta-list">
-                    {featuredOpportunity.location ? <span>{featuredOpportunity.location}</span> : null}
-                    {featuredOpportunity.opens_at ? (
-                      <span>
-                        Opens {new Date(featuredOpportunity.opens_at).toLocaleDateString("en-US")}
-                      </span>
-                    ) : null}
-                    {featuredOpportunity.closes_at ? (
-                      <span>
-                        Closes {new Date(featuredOpportunity.closes_at).toLocaleDateString("en-US")}
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-
-                <div className="opportunity-spotlight-side">
-                  <p className="admin-muted">Strong fit if you want a concrete next step today.</p>
-                  <Link href={`/opportunities/${featuredOpportunity.slug}`} className="btn-primary">
-                    {isOpportunityOpen(featuredOpportunity)
-                      ? featuredOpportunity.cta_label
-                      : "View details"}
-                  </Link>
-                </div>
-              </article>
-            </section>
-          ) : null}
-
           {opportunities.length === 0 ? (
             <section className="opportunities-section">
               <div className="opportunity-feature-head">
                 <div>
-                  <p className="admin-kicker">Open board</p>
-                  <h2 className="section-heading no-margin">Current listings</h2>
+                  <h2 className="section-heading no-margin">Open now</h2>
                 </div>
               </div>
               <div className="admin-empty-panel">
-                Nothing is open right now. Check back after the next officer planning cycle.
+                Nothing is open right now. Check back soon.
               </div>
-            </section>
-          ) : remainingOpportunities.length > 0 || !featuredOpportunity ? (
+            </section> 
+          ) : (
             <section className="opportunities-section">
               <div className="opportunity-feature-head">
                 <div>
-                  <p className="admin-kicker">All listings</p>
-                  <h2 className="section-heading no-margin">Opportunity ledger</h2>
+                  <h2 className="section-heading no-margin">Open now</h2>
                 </div>
               </div>
 
-              <div className="opportunity-list">
-                {(featuredOpportunity ? remainingOpportunities : opportunities).map((opportunity) => {
+              <div className="opportunity-list opportunity-public-list">
+                {opportunities.map((opportunity, index) => {
                   const open = isOpportunityOpen(opportunity);
+                  const showLocation =
+                    opportunity.location && opportunity.location !== "Website";
 
                   return (
-                    <article key={opportunity.id} className="opportunity-list-row">
-                      <div className="opportunity-list-main">
+                    <article
+                      key={opportunity.id}
+                      className={`opportunity-list-row opportunity-public-card ${
+                        index === 0 ? "is-priority" : ""
+                      }`}
+                    >
+                      <div className="opportunity-list-main opportunity-public-card-main">
                         <div className="opportunity-card-top">
                           <span className="tag">{getOpportunityKindLabel(opportunity.kind)}</span>
                           <span className={`opportunity-status ${open ? "is-open" : "is-closed"}`}>
@@ -146,9 +72,11 @@ export default async function OpportunitiesPage() {
                           </span>
                         </div>
                         <h2>{opportunity.title}</h2>
-                        <p className="card-summary">{opportunity.summary}</p>
+                        <p className="card-summary">
+                          {opportunity.summary || opportunity.description}
+                        </p>
                         <div className="opportunity-meta-list">
-                          {opportunity.location ? <span>{opportunity.location}</span> : null}
+                          {showLocation ? <span>{opportunity.location}</span> : null}
                           {opportunity.opens_at ? (
                             <span>Opens {new Date(opportunity.opens_at).toLocaleDateString("en-US")}</span>
                           ) : null}
@@ -156,18 +84,21 @@ export default async function OpportunitiesPage() {
                             <span>Closes {new Date(opportunity.closes_at).toLocaleDateString("en-US")}</span>
                           ) : null}
                         </div>
-                      </div>
-                      <div className="opportunity-list-cta">
-                        <Link href={`/opportunities/${opportunity.slug}`} className="btn-secondary">
-                          {open ? opportunity.cta_label : "View details"}
-                        </Link>
+                        <div className="opportunity-list-cta opportunity-public-card-cta">
+                          <Link
+                            href={`/opportunities/${opportunity.slug}`}
+                            className={open ? "btn-primary" : "btn-secondary"}
+                          >
+                            {open ? opportunity.cta_label : "View details"}
+                          </Link>
+                        </div>
                       </div>
                     </article>
                   );
                 })}
               </div>
             </section>
-          ) : null}
+          )}
         </div>
       </section>
     </>

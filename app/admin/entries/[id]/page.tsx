@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { RouteToast } from "@/app/_components/route-toast";
+import { AdminSectionHeader } from "@/app/admin/_components/admin-section-header";
 import { EntryForm } from "@/app/admin/_components/entry-form";
 import { getAdminIdentity } from "@/lib/admin-auth";
 import { getEntryById, getEntryVersions } from "@/lib/content-store";
@@ -28,28 +29,21 @@ export default async function AdminEntryPage({ params, searchParams }: PageProps
 
   return (
     <>
-      <div className="page-header">
-        <div className="container">
-          <h1 className="page-title">Edit {entry.title}</h1>
-          <p className="page-subtitle">
-            Full edit authority with restore points for previous versions.
-          </p>
-        </div>
-      </div>
+      <AdminSectionHeader
+        eyebrow="Content"
+        title={`Edit ${entry.title}`}
+        description="Full edit authority with restore points for previous versions."
+      />
 
-      <section style={{ padding: "0 0 80px" }}>
-        <div className="container">
-          {toast ? (
-            <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
-          ) : null}
-          <EntryForm
-            action={`/api/admin/entries/${entry.id}`}
-            type={entry.type}
-            entry={entry}
-            versions={versions}
-          />
-        </div>
-      </section>
+      {toast ? (
+        <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
+      ) : null}
+      <EntryForm
+        action={`/api/admin/entries/${entry.id}`}
+        type={entry.type}
+        entry={entry}
+        versions={versions}
+      />
     </>
   );
 }

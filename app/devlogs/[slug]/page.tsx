@@ -34,8 +34,8 @@ export default async function DevLogDetailPage(
 
   return (
     <ArticleLayout
-      backHref="/terminal"
-      backLabel="← Back to meetups and updates"
+      backHref="/devlogs"
+      backLabel="← Back to dev logs"
       coverImageUrl={devLog.coverImageUrl}
       meta={[
         new Date(devLog.publishedAt).toLocaleDateString("en-US", {

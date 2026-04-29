@@ -23,12 +23,12 @@ export async function generateMetadata({
 
   if (!opportunity) {
     return {
-      title: "Opportunity not found · WFHS CS Club",
+      title: "Opportunity not found | WFHS CS Club",
     };
   }
 
   return {
-    title: `${opportunity.title} · WFHS CS Club`,
+    title: `${opportunity.title} | WFHS CS Club`,
     description: opportunity.summary,
   };
 }
@@ -49,100 +49,60 @@ export default async function OpportunityDetailPage({
   }
 
   const open = isOpportunityOpen(opportunity);
+  const showLocation = opportunity.location && opportunity.location !== "Website";
 
   return (
     <>
       <div className="page-header opportunities-header">
         <div className="container opportunity-detail-hero-shell">
           <Link href="/opportunities" className="text-link">
-            ← Back to opportunities
+            {"<-"} Back
           </Link>
-          <div className="opportunity-hero">
-            <div>
-              <p className="admin-kicker">{getOpportunityKindLabel(opportunity.kind)}</p>
-              <h1 className="page-title">{opportunity.title}</h1>
-              <p className="page-subtitle">{opportunity.summary}</p>
-              <div className="opportunity-meta-list">
-                {opportunity.location ? <span>{opportunity.location}</span> : null}
-                {opportunity.opens_at ? (
-                  <span>
-                    Opens {new Date(opportunity.opens_at).toLocaleDateString("en-US")}
-                  </span>
-                ) : null}
-                {opportunity.closes_at ? (
-                  <span>
-                    Closes {new Date(opportunity.closes_at).toLocaleDateString("en-US")}
-                  </span>
-                ) : null}
-              </div>
-            </div>
-            <div className="opportunity-hero-status">
-              <span className={`opportunity-status ${open ? "is-open" : "is-closed"}`}>
-                {open ? "Accepting responses" : "Not accepting responses"}
-              </span>
-            </div>
-          </div>
         </div>
       </div>
 
       <section className="opportunity-detail-shell">
-        <div className="container opportunity-detail-grid">
-          <article className="card opportunity-detail-card">
+        <div className="container opportunity-detail-container">
+          <article className="card opportunity-detail-card opportunity-detail-card-main">
             {toast ? (
               <RouteToast tone={toast.tone} message={toast.message} scope={toast.scope} />
             ) : null}
             <div className="opportunity-detail-section">
-              <h2>About this opportunity</h2>
+              <div className="opportunity-detail-head">
+                <div className="opportunity-card-top">
+                  <span className="tag">{getOpportunityKindLabel(opportunity.kind)}</span>
+                  <span className={`opportunity-status ${open ? "is-open" : "is-closed"}`}>
+                    {open ? "Open" : "Closed"}
+                  </span>
+                </div>
+                <h1 className="page-title opportunity-detail-title">{opportunity.title}</h1>
+                <p className="page-subtitle opportunity-detail-summary">{opportunity.summary}</p>
+                <div className="opportunity-meta-list">
+                  {showLocation ? <span>{opportunity.location}</span> : null}
+                  {opportunity.opens_at ? (
+                    <span>
+                      Opens {new Date(opportunity.opens_at).toLocaleDateString("en-US")}
+                    </span>
+                  ) : null}
+                  {opportunity.closes_at ? (
+                    <span>
+                      Closes {new Date(opportunity.closes_at).toLocaleDateString("en-US")}
+                    </span>
+                  ) : null}
+                </div>
+              </div>
               <p>{opportunity.description}</p>
             </div>
             {open ? (
               <div className="opportunity-detail-section">
-                <div className="opportunity-form-head">
-                  <div>
-                    <h2>Apply now</h2>
-                    <p className="admin-muted">
-                      Send your response and an officer will follow up with next
-                      steps.
-                    </p>
-                  </div>
-                </div>
                 <OpportunityResponseForm opportunity={opportunity} />
               </div>
             ) : (
               <div className="status-banner status-banner-warn">
-                This listing is closed right now. Officers can reopen it if the
-                team needs more responses.
+                This one is closed for now.
               </div>
             )}
           </article>
-
-          <aside className="card opportunity-sidebar">
-            <h3>Before you submit</h3>
-            <dl className="opportunity-facts">
-              <div>
-                <dt>Type</dt>
-                <dd>{getOpportunityKindLabel(opportunity.kind)}</dd>
-              </div>
-              {opportunity.location ? (
-                <div>
-                  <dt>Location</dt>
-                  <dd>{opportunity.location}</dd>
-                </div>
-              ) : null}
-              {opportunity.opens_at ? (
-                <div>
-                  <dt>Opens</dt>
-                  <dd>{new Date(opportunity.opens_at).toLocaleString("en-US")}</dd>
-                </div>
-              ) : null}
-              {opportunity.closes_at ? (
-                <div>
-                  <dt>Closes</dt>
-                  <dd>{new Date(opportunity.closes_at).toLocaleString("en-US")}</dd>
-                </div>
-              ) : null}
-            </dl>
-          </aside>
         </div>
       </section>
     </>

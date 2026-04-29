@@ -16,14 +16,6 @@ export default async function HomePage() {
   return (
     <>
       <section className="hero editorial-header">
-        <div className="hero-bg">
-          <div className="grid-overlay" />
-          <div className="floating-shapes">
-            <div className="shape shape-1" />
-            <div className="shape shape-2" />
-            <div className="shape shape-3" />
-          </div>
-        </div>
         <div className="hero-container">
           <h1 className="hero-title">
             <span className="title-line-1">Wake Forest High School</span>

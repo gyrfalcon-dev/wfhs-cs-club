@@ -49,64 +49,30 @@ export function OpportunitiesListShell() {
       <div className="page-header opportunities-header editorial-header">
         <div className="container opportunities-hero-shell">
           <div className="opportunities-hero-copy loading-shell-stack">
-            <div className="loading-pill" />
             <div className="loading-line loading-line-title" style={{ width: "18rem" }} />
             <div className="loading-line loading-line-copy" style={{ width: "34rem" }} />
             <div className="loading-line loading-line-copy short" style={{ width: "26rem" }} />
-          </div>
-
-          <div className="opportunities-hero-panel loading-shell-stack">
-            <div className="loading-line loading-line-card-title" style={{ width: "8rem" }} />
-            <div className="loading-line loading-line-card-copy" />
-            <div className="loading-line loading-line-card-copy short" />
-            <div className="loading-opportunities-stats">
-              <div className="loading-opportunity-stat" />
-              <div className="loading-opportunity-stat" />
-            </div>
           </div>
         </div>
       </div>
 
       <section className="opportunities-shell">
         <div className="container">
-          <section className="opportunity-feature">
-            <div className="opportunity-feature-head">
-              <div className="loading-shell-stack">
-                <div className="loading-pill" />
-                <div className="loading-line loading-line-section-title" />
-              </div>
-              <div className="loading-line loading-line-inline-link" />
-            </div>
-
-            <article className="opportunity-spotlight editorial-split loading-opportunity-shell">
-              <div className="loading-shell-stack">
-                <div className="loading-opportunity-top">
-                  <div className="loading-pill" />
-                  <div className="loading-meta-chip" />
-                </div>
-                <div className="loading-line loading-line-card-title" style={{ width: "72%" }} />
-                <div className="loading-line loading-line-card-copy" />
-                <div className="loading-line loading-line-card-copy" />
-                <div className="loading-line loading-line-card-copy short" />
-              </div>
-              <div className="loading-shell-stack loading-opportunity-side">
-                <div className="loading-line loading-line-card-copy" />
-                <div className="loading-pill loading-pill-button" />
-              </div>
-            </article>
-          </section>
-
           <section className="opportunities-section">
             <div className="opportunity-feature-head">
               <div className="loading-shell-stack">
-                <div className="loading-pill" />
                 <div className="loading-line loading-line-section-title" style={{ width: "13rem" }} />
               </div>
             </div>
 
             <div className="opportunity-list">
-              {Array.from({ length: 3 }).map((_, index) => (
-                <article key={index} className="opportunity-list-row loading-opportunity-row">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <article
+                  key={index}
+                  className={`opportunity-list-row opportunity-public-card loading-opportunity-row ${
+                    index === 0 ? "is-priority" : ""
+                  }`}
+                >
                   <div className="loading-shell-stack">
                     <div className="loading-opportunity-top">
                       <div className="loading-pill" />
@@ -114,9 +80,16 @@ export function OpportunitiesListShell() {
                     </div>
                     <div className="loading-line loading-line-card-title" style={{ width: "62%" }} />
                     <div className="loading-line loading-line-card-copy" />
+                    <div className="loading-line loading-line-card-copy" />
                     <div className="loading-line loading-line-card-copy short" />
+                    <div className="loading-opportunity-meta">
+                      <div className="loading-meta-chip" />
+                      <div className="loading-meta-chip" />
+                    </div>
+                    <div className="loading-opportunity-actions">
+                      <div className="loading-pill loading-pill-button" />
+                    </div>
                   </div>
-                  <div className="loading-pill loading-pill-button" />
                 </article>
               ))}
             </div>
@@ -148,8 +121,8 @@ export function OpportunityDetailShell({
       </div>
 
       <section className="opportunity-detail-shell">
-        <div className="container opportunity-detail-grid">
-          <article className="card opportunity-detail-card loading-shell-stack">
+        <div className="container opportunity-detail-container">
+          <article className="card opportunity-detail-card opportunity-detail-card-main loading-shell-stack">
             <div className="loading-line loading-line-card-title" style={{ width: "12rem" }} />
             <div className="loading-line loading-line-card-copy" />
             <div className="loading-line loading-line-card-copy" />
@@ -168,13 +141,6 @@ export function OpportunityDetailShell({
               </>
             ) : null}
           </article>
-
-          <aside className="card opportunity-sidebar loading-shell-stack">
-            <div className="loading-line loading-line-card-title" style={{ width: "9rem" }} />
-            <div className="loading-line loading-line-card-copy" />
-            <div className="loading-line loading-line-card-copy short" />
-            <div className="loading-line loading-line-card-copy" />
-          </aside>
         </div>
       </section>
     </>

@@ -200,6 +200,74 @@ before update on public.opportunities
 for each row
 execute function public.set_updated_at();
 
+insert into public.opportunities (
+  slug,
+  title,
+  summary,
+  description,
+  kind,
+  form_mode,
+  status,
+  visibility,
+  cta_label,
+  location,
+  sort_order,
+  published,
+  form_schema,
+  success_message,
+  admin_notes
+)
+values (
+  'website-feedback',
+  'Website Feedback',
+  'Share anything that felt confusing, off, or worth improving on the club website.',
+  'If something felt confusing, broken, or just a little off, send it here. Short notes are completely fine.',
+  'custom',
+  'structured',
+  'published',
+  'public',
+  'Send feedback',
+  'Website',
+  -90,
+  true,
+  '{
+    "fields": [
+      {
+        "id": "feedback_message",
+        "type": "textarea",
+        "label": "What would you like us to know?",
+        "required": true,
+        "placeholder": "What worked, what felt off, or what should change?"
+      },
+      {
+        "id": "page_area",
+        "type": "text",
+        "label": "Page or area (optional)",
+        "required": false,
+        "placeholder": "Homepage hero, /projects, join form, admin page..."
+      }
+    ]
+  }'::jsonb,
+  'Thanks for the note.',
+  'Seeded public opportunity for collecting website feedback.'
+)
+on conflict (slug) do update
+set
+  title = excluded.title,
+  summary = excluded.summary,
+  description = excluded.description,
+  kind = excluded.kind,
+  form_mode = excluded.form_mode,
+  status = excluded.status,
+  visibility = excluded.visibility,
+  cta_label = excluded.cta_label,
+  location = excluded.location,
+  sort_order = excluded.sort_order,
+  published = excluded.published,
+  form_schema = excluded.form_schema,
+  success_message = excluded.success_message,
+  admin_notes = excluded.admin_notes;
+
 insert into storage.buckets (id, name, public)
 values ('content-media', 'content-media', true)
 on conflict (id) do update
